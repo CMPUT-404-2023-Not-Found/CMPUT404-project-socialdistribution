@@ -70,6 +70,7 @@ Contributors:
 
 | Package               | Version   | Usage                                 | Reference                                         |
 | -                     | -         | -                                     | -                                                 |
+| axios                 | 0.21.0    | Javascript HTTP client                | <https://www.npmjs.com/package/axios>             |
 | create-react-app      | 5.0.1     | React Boiler template engine          | <https://www.npmjs.com/package/create-react-app>  |
 
 # References

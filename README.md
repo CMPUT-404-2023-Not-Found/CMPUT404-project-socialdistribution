@@ -39,15 +39,16 @@ Contributors:
 
 # System Dependencies
 
-| Package               | Version   | Usage                         | Reference                         |
-| -                     | -         | -                             | -                                 |
+| Package               | Version   | Usage                         | Reference                                         |
+| -                     | -         | -                             | -                                                 |
+| heroku                | 7.68.0    | Heroku CLI                    | <https://devcenter.heroku.com/articles/heroku-cli>|
 | libpq-dev             | 14.6-0    | PostgreSQL libraries          | |
-| node                  | 18.14.0   | Frontend javascript engine    | <https://nodejs.org/en/>          |
+| node                  | 18.14.0   | Frontend javascript engine    | <https://nodejs.org/en/>                          |
 | npm                   | 9.3.1     | Node package manager          | |
 | npx                   | 9.3.1     | Node package manager          | |
-| nvm                   | 0.39.3    | Node version manager          | <https://github.com/nvm-sh/nvm>   |
+| nvm                   | 0.39.3    | Node version manager          | <https://github.com/nvm-sh/nvm>                   |
 | pip                   | 22.0.2    | Python package manager        | |
-| python3.8             | 3.8+      | Backend source code           | <https://www.python.org>          |
+| python3.8             | 3.8+      | Backend source code           | <https://www.python.org>                          |
 | python3.8-dev         | 3.8.16    | Python Headers                | |
 | python3.8-distutils   | 3.8.16    | Backend source code           | |
 

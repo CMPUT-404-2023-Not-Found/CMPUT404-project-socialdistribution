@@ -7,7 +7,7 @@
 
 if [ "#$OSTYPE" != "#linux-gnu" ]; then echo "ERR Sorry I don't work on non-linux"; exit 1; fi
 
-packages=('python3.8' 'python3.8-distutils' 'curl')
+packages=('python3.8' 'python3.8-distutils' 'curl' 'libpq-dev' 'python3.8-dev')
 echo -n "Looking for packages: "
 for pkg in "${packages[@]}"
 do

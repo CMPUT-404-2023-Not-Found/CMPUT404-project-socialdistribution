@@ -109,6 +109,8 @@ Now try turning on the Django backend, then in your browser go to: *<http://loca
 
 You should be presented with the default Django page & you are ready to begin work!
 
+You can also try going to: *<http://localhost:8000/health>*. This is a *hello world* like page to ensure the API is working. It returns the conent of *`api/health/ver.txt`*
+
 ## Frontend
 
 If you do not have node installed then follow these steps, or else skip to *installing node packages* steps.

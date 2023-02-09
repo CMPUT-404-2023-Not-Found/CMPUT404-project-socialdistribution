@@ -38,11 +38,13 @@ Contributors:
     Nhan Nguyen 
 
 # System Dependencies
+
 | Package               | Version   | Usage                         | Reference                         |
 | -                     | -         | -                             | -                                 |
 | libpq-dev             | 14.6-0    | PostgreSQL libraries          | |
 | node                  | 18.14.0   | Frontend javascript engine    | <https://nodejs.org/en/>          |
 | npm                   | 9.3.1     | Node package manager          | |
+| npx                   | 9.3.1     | Node package manager          | |
 | nvm                   | 0.39.3    | Node version manager          | <https://github.com/nvm-sh/nvm>   |
 | pip                   | 22.0.2    | Python package manager        | |
 | python3.8             | 3.8+      | Backend source code           | <https://www.python.org>          |
@@ -50,6 +52,7 @@ Contributors:
 | python3.8-distutils   | 3.8.16    | Backend source code           | |
 
 # Python Dependencies
+
 | Package               | Version   | Usage                                 | Reference                                         |
 | -                     | -         | -                                     | -                                                 |
 | django                | 3.1.6     | Backend source code                   | |
@@ -64,6 +67,10 @@ Contributors:
 | whitenoise            | 5.2.0     | Static file web server                | <https://pypi.org/project/whitenoise/>            |
 
 # UI Dependencies
+
+| Package               | Version   | Usage                                 | Reference                                         |
+| -                     | -         | -                                     | -                                                 |
+| create-react-app      | 5.0.1     | React Boiler template engine          | <https://www.npmjs.com/package/create-react-app>  |
 
 # References
 Rahiman M. 2020. Deploying React-Django App using Heroku. Retrieved from https://dev.to/mdrhmn/deploying-react-django-app-using-heroku-2gfa

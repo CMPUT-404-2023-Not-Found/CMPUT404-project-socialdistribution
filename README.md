@@ -81,7 +81,7 @@ Create a *`.env`* file with the following content
 
 The value for *`SECRET_KEY`* can be found in our *Discord -> resources* channel
 
-Now try turning on the Django backend, then in your browser go to: *<http://localhost:8000>*
+Now try turning on the Django backend, then in your browser go to: *<http://localhost:8000>*.
 
     python manage.py runserver
 

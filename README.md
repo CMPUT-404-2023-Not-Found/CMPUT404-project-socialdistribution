@@ -133,7 +133,7 @@ Now go the *`ui/`* and install the node packages.
     
 You should end up with a *`ui/node_modules`* folder with all node packages.
 
-Now from the *`ui/`* directory, turn on the React frontend then in your browser go to: *<http://localhost:3000>*
+Now from the *`ui/`* directory, turn on the React frontend then in your browser go to: *<http://localhost:3000>*.
     
     npm start
 

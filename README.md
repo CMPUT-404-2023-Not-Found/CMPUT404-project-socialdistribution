@@ -39,7 +39,7 @@ Contributors:
 
 # Setup, Dependencies, Project Spec
 
-For more information about required dependencies, setting up and environment to run the project, or the specification and requirements of the project refer to this [repo's wiki](wiki).
+For more information about required dependencies, setting up and environment to run the project, or the specification and requirements of the project refer to this [repo's wiki](https://github.com/CMPUT-404-2023-Not-Found/CMPUT404-project-socialdistribution/wiki).
 
 # References
 Rahiman M. 2020. Deploying React-Django App using Heroku. Retrieved from https://dev.to/mdrhmn/deploying-react-django-app-using-heroku-2gfa

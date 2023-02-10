@@ -85,4 +85,4 @@ Now try turning on the Django backend, then in your browser go to: *<http://loca
 
     python manage.py runserver
 
-You should be presented with the default Django page & you are ready to begin work!
+You should be presented with the default Django page & you are ready to begin work! ..

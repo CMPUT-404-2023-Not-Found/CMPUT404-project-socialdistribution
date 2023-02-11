@@ -1,6 +1,7 @@
 #!/bin/bash
-# This code came from a Heroku CLI article on 2023-02-11 on Heroku Dev Center 
-# Article here: https://devcenter.heroku.com/articles/heroku-cli#install-with-ubuntu-debian-apt-get
+# This code is from an article, on 2023-02-11 on Heroku Dev Center Website
+# Article here:
+# https://devcenter.heroku.com/articles/heroku-cli#install-with-ubuntu-debian-apt-get
 # Original command to run: `curl https://cli-assets.heroku.com/install.sh | sh`
 
 {

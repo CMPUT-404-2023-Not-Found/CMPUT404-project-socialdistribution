@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# This code came from a nvm GitHub README.md on 2023-02-11 on nvm GitHub repo
-# README here: https://github.com/nvm-sh/nvm#install--update-script
+# This code is from a GitHub repo, latest commit by Jordan Harband on Dec 23, 2022, on 2023-02-11 within the nvm repo
+# GitHub repo here:
+# https://github.com/nvm-sh/nvm/blob/master/install.sh
 # Original command to run: `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash`
 
 { # this ensures the entire script is downloaded #

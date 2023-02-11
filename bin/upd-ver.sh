@@ -2,7 +2,7 @@
 # Update the version for of a repo
 if echo "$1" | grep '^PR[0-9]\+' > /dev/null
 then
-    repo_dir=/home/adamva/repo/CMPUT404-project-socialdistribution/api/health
+    repo_dir=`pwd`/api/health
     cd $repo_dir
     PR=$1
     RL=`git rev-list --count HEAD` # get the "version" number

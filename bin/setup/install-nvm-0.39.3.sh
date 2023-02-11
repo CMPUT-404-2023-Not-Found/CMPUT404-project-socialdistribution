@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# To use this do `bash install-nvm-0.39.3.sh`
+# This code came from a nvm GitHub README.md on 2023-02-11 on nvm GitHub repo
+# README here: https://github.com/nvm-sh/nvm#install--update-script
+# Original command to run: `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash`
 
 { # this ensures the entire script is downloaded #
 

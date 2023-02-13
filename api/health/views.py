@@ -9,4 +9,4 @@ from django.http import FileResponse
 # Create your views here.
 def now(request):
     # ver = staticfiles_storage.url('ver.txt')
-    return FileResponse(open('health/ver.txt', 'rb'))
+    return FileResponse(open('api/health/ver.txt', 'rb'))

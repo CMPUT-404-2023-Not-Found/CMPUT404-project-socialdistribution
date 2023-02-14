@@ -1,6 +1,10 @@
+# 2023-02-13
+# author/urls.py
+
 from django.urls import path
-from .views import main
+
+from .views import AuthorView
 
 urlpatterns = [
-    path('', main)
+    path('', AuthorView.as_view())
 ]

@@ -1,6 +1,14 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+# 2023-02-13
+# author/views.py
 
-# Create your views here.
-def main(request):
-    return HttpResponse("testauthor")
+from django.shortcuts import render
+from rest_framework import generics
+
+from .models import Author
+from .serializers import AuthorSerializer
+
+class AuthorView(generics.CreateAPIView):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+
+

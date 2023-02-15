@@ -7,9 +7,9 @@
 if [ -r "../.env" ]; then echo "ERR Could not find ../.env"; exit 1; fi
 
 CRT_AUTHOR_URL="${APP_URL}/${AUTHOR_API}"
-RAND=`apg -n 1 -m 6 -x 6 -M NC 2`
+RAND=`apg -n 1 -m 8 -x 8 -M NC 2`
 
-USR_NAME="${MONIKER}-$RAND"
+USR_NAME="${MONIKER}$RAND"
 USR_PWD="$RAND"
 USR_HST="$APP_URL"
 CRT_BODY=`cat <<EOF

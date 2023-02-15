@@ -12,39 +12,54 @@ from django.contrib.auth.models import (
 import uuid
 
 class AuthorManager(BaseUserManager):
-    def create_author(self, username, password):
+    def create_author(self, username, password, **extra_fields):
+        """
+        Create an author entity
+        """
         if username is None:
             raise TypeError('You must provide a username')
         if password is None:
             raise TypeError('You must provide a password')
-        user = self.model(username=username)
+        user = self.model(username=username, **extra_fields)
         user.set_password(password)
         user.save()
         return user
+    # This code is modified from an article from Michael Herman on 2023-01-22 retrieved on 2023-02-15, to testdriven.io
+    # article here:
+    # https://testdriven.io/blog/django-custom-user-model/
+    def create_superuser(self, username, password, **extra_fields):
+        """
+        Inherit an author and include superuser status
+        """
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_active', True)
 
-    def create_superuser(self, username, password):
-        user = self.create_author(username, password)
-        user.is_superuser = True
-        user.is_staff = True
-        user.save()
-        return user
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True')
+        return self.create_author(username, password, **extra_fields)
 
 class Author(AbstractBaseUser, PermissionsMixin):
     # Identification fields
-    id              = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    host            = models.URLField(max_length=128)
-    username        = models.CharField(max_length=32, unique=True, db_index=True)
+    id                  = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    host                = models.URLField(max_length=128)
+    username            = models.CharField(max_length=32, unique=True, db_index=True)
 
     # Modification fields
-    createdAt       = models.DateTimeField(auto_now=False, auto_now_add=True, verbose_name='Created At')
-    isActive        = models.BooleanField(default=False)
-    updatedAt       = models.DateTimeField(auto_now=True, auto_now_add=False, verbose_name='Last Updated At')
-    rev             = models.IntegerField(default=0)
+    created_at          = models.DateTimeField(auto_now=False, auto_now_add=True, verbose_name='Created At')
+    updated_at          = models.DateTimeField(auto_now=True, auto_now_add=False, verbose_name='Last Updated At')
+    rev                 = models.IntegerField(default=0)
     
     # Personalization fields
-    displayName     = models.CharField(default='', max_length=128, verbose_name='Display Name')
-    github          = models.URLField(default='', max_length=128, verbose_name='GitHub')
-    profileImage    = models.URLField(default='', max_length=128, verbose_name='Profile Image')
+    display_name        = models.CharField(blank=True, default='', max_length=128, verbose_name='Display Name')
+    github              = models.URLField(blank=True, default='', max_length=128, verbose_name='GitHub')
+    profile_image       = models.URLField(blank=True, default='', max_length=128, verbose_name='Profile Image')
+
+    # System Fields
+    is_staff            = models.BooleanField(default=False)
+    is_active           = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['host']

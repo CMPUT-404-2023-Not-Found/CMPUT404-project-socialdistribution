@@ -2,13 +2,21 @@
 # author/views.py
 
 from django.shortcuts import render
-from rest_framework import generics
+from rest_framework import generics, status
+from rest_framework.response import Response
 
 from .models import Author
-from .serializers import AuthorSerializer
+from .serializers import CreateAuthorSerializer
 
-class AuthorView(generics.CreateAPIView):
-    queryset = Author.objects.all()
-    serializer_class = AuthorSerializer
+class CreateAuthorView(generics.GenericAPIView):
 
+    serializer_class = CreateAuthorSerializer
+    def post(self, request):
+        user = request.data
+        serializer = self.serializer_class(data = user)
+        serializer.is_valid(raise_exception = True)
+        serializer.save()
 
+        user_data = serializer.data
+
+        return Response(user_data, status = status.HTTP_201_CREATED)

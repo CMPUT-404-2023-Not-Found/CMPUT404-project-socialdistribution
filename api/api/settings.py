@@ -32,7 +32,13 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DJANGO_DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS").split(" ")
+# Allow CORS so that frontend react can talk to backend django
+# Either raw-dog and allow all origins or only whitelisted
+CORS_ORIGIN_ALLOW_ALL = True if os.getenv("DJANGO_CORS_ORIGIN_ALLOW_ALL") == 'True' else False
+CORS_ORIGIN_WHITELIST = []
+if not CORS_ORIGIN_ALLOW_ALL:
+    CORS_ORIGIN_WHITELIST = os.getenv("DJANGO_CORS_ORIGIN_WHITELIST").split(" ")
 
 
 # Application definition
@@ -130,10 +136,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-
-# Allow CORS so that frontend react can talk to backend django
-# Either raw-dog and allow all origins or only whitelisted
-CORS_ORIGIN_ALLOW_ALL = True if os.getenv("DJANGO_CORS_ORIGIN_ALLOW_ALL") == 'True' else False
-CORS_ORIGIN_WHITELIST = []
-if not CORS_ORIGIN_ALLOW_ALL:
-    CORS_ORIGIN_WHITELIST = os.getenv("DJANGO_CORS_ORIGIN_WHITELIST")

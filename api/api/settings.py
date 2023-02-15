@@ -42,6 +42,7 @@ if not CORS_ORIGIN_ALLOW_ALL:
 
 
 # Application definition
+AUTH_USER_MODEL = 'author.Author'
 
 INSTALLED_APPS = [
     'django.contrib.admin',

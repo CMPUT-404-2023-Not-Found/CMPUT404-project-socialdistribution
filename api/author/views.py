@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from .models import Author
 from .serializers import CreateAuthorSerializer
 
-class CreateAuthorView(generics.GenericAPIView):
+class AuthorView(generics.GenericAPIView):
 
     serializer_class = CreateAuthorSerializer
     def post(self, request):

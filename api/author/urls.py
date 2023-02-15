@@ -3,8 +3,8 @@
 
 from django.urls import path
 
-from .views import CreateAuthorView
+from .views import AuthorView
 
 urlpatterns = [
-    path('', CreateAuthorView.as_view(), name="register")
+    path('', AuthorView.as_view(), name="author")
 ]

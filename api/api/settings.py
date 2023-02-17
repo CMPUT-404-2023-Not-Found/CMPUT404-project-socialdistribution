@@ -145,7 +145,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-# This code is modified from an documentation page from Django Software Foundation retrieved on 2023-02-16, to docs.djangoproject.com
+# This code is modified from a documentation page from Django Software Foundation retrieved on 2023-02-16, to docs.djangoproject.com
 # documentation page here:
 # https://docs.djangoproject.com/en/3.2/topics/logging/
 LOGGING = {
@@ -163,19 +163,23 @@ LOGGING = {
             'formatter': 'simple'
         },
         'file': {
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-            'class': 'logging.FileHandler',
+            'backupCount': 2,
+            'maxBytes': 1000000*10, # 10MB
+            'class': 'logging.handlers.RotatingFileHandler',
             'filename': f"./logs/api-{TODAY_DATETIME.strftime('%Y-%m-%d')}.log",
-            'formatter': 'verbose'
+            'formatter': 'verbose',
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO')
         }
     },
     'formatters': {
         'verbose': {
-            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'datefmt': '%Y-%m-%dT%H:%M:%S%z',
+            'format': '{asctime} {levelname} {filename}:{funcName} {message}',
             'style': '{'
         },
         'simple': {
-            'format': '{levelname} {message}',
+            'datefmt': '%Y-%m-%dT%H:%M:%S%z',
+            'format': '{levelname} {module} {message}',
             'style': '{',
         }
     }

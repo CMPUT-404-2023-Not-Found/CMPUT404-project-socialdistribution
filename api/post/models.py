@@ -24,7 +24,7 @@ class Post(Model):
     ]
 
     # Identification fields
-    author_id           = models.ForeignKey(to=Author, on_delete=models.CASCADE, verbose_name="Owner's Author Id")
+    author_node_id      = models.URLField(blank=False, null=False, max_length=128, verbose_name="Owner's Node Id")
     host                = models.URLField(max_length=128, help_text='The node that created the post')
 
     # Modification fields
@@ -53,4 +53,4 @@ class Post(Model):
     title               = models.CharField(blank=False, null=False, max_length=128)
 
     def __str__(self):
-        return f'{self.author_id} {self.title}'
+        return f'{self.author_node_id} {self.title}'

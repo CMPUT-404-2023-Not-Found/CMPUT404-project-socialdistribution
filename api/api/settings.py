@@ -11,8 +11,11 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+from datetime import datetime
 import dotenv
 import os
+import pytz
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,6 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 dotenv_file = os.path.join(BASE_DIR, ".env")
 if os.path.isfile(dotenv_file):
     dotenv.load_dotenv(dotenv_file)
+
+TODAY_DATETIME = datetime.now(pytz.timezone(os.getenv("SD_TZ", 'America/Edmonton')))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -141,3 +146,42 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+# This code is modified from a documentation page from Django Software Foundation retrieved on 2023-02-16, to docs.djangoproject.com
+# documentation page here:
+# https://docs.djangoproject.com/en/3.2/topics/logging/
+LOGGING = {
+    'version': 1,
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG'
+        }
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'file': {
+            'backupCount': 2,
+            'maxBytes': 1000000*10, # 10MB
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': f"./logs/api-{TODAY_DATETIME.strftime('%Y-%m-%d')}.log",
+            'formatter': 'verbose',
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO')
+        }
+    },
+    'formatters': {
+        'verbose': {
+            'datefmt': '%Y-%m-%dT%H:%M:%S%z',
+            'format': '{asctime} {levelname} {filename}:{funcName} {message}',
+            'style': '{'
+        },
+        'simple': {
+            'datefmt': '%Y-%m-%dT%H:%M:%S%z',
+            'format': '{levelname} {module} {message}',
+            'style': '{',
+        }
+    }
+}

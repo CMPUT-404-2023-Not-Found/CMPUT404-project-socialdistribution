@@ -4,14 +4,19 @@
 from django.shortcuts import render
 from rest_framework import generics, status
 from rest_framework.response import Response
+import logging
 
 from .models import Author
 from .serializers import CreateAuthorSerializer
 
-class AuthorView(generics.GenericAPIView):
+logger = logging.getLogger('django')
+rev = 'rev: $xGahyt8$x'
 
+class AuthorView(generics.GenericAPIView):
+    logger.info(rev)
     serializer_class = CreateAuthorSerializer
     def post(self, request):
+        logger.info('Creating new author')
         user = request.data
         serializer = self.serializer_class(data = user)
         serializer.is_valid(raise_exception = True)

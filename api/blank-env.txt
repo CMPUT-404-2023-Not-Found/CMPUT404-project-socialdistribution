@@ -1,13 +1,25 @@
 # This is a blank environment variables file
 # 2023-02-09
-# You must:
+# YOU MUST:
 #   1. Fill this out with appropraite values
 #   2. Rename ths file to: .env
 
+# Social Distribution Development
+# string of one: ['local', 'heroku']
+SD_ENV_NAME = 
+# timezone string like: 'America/Edmonton'
+SD_TZ = 
+
 # DJANGO
-# The value for SECRET_KEY can be found in our 'Discord -> resources' channel
-DJANGO_ALLOWED_HOSTS = 
+# space seperated string of hosts
+DJANGO_ALLOWED_HOSTS =
+# boolean
 DJANGO_CORS_ORIGIN_ALLOW_ALL = 
+# space seperated string of urls
 DJANGO_CORS_ORIGIN_WHITELIST = 
+# boolean
 DJANGO_DEBUG = 
-DJANGO_SECRET_KEY = ''
+# string of one: ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
+DJANGO_LOG_LEVEL = 
+# string of key -- can be found in discord
+DJANGO_SECRET_KEY = 

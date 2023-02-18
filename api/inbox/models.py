@@ -2,10 +2,14 @@
 # inbox/models.py
 # For ERD refer here: https://github.com/CMPUT-404-2023-Not-Found/CMPUT404-project-socialdistribution/wiki/ERD
 
+from django.apps import apps
 from django.db import models
 
 from author.models import Author
 from utils.model_abstracts import Model
+
+def create_summary():
+    pass
 
 class Inbox(Model):
     class TypeChoices(models.TextChoices):
@@ -32,3 +36,6 @@ class Inbox(Model):
     context             = models.URLField(choices=W3ContextChoices.choices, default=W3ContextChoices.W3_AS, max_length=128)
     summary             = models.CharField(max_length=32)
     type                = models.CharField(choices=TypeChoices.choices, default=TypeChoices.POST, max_length=32)
+
+    def __str__(self):
+        return f'{self.id} {self.author_id}'

@@ -12,7 +12,7 @@ from .models import Author
 from .models import Post
 
 logger = logging.getLogger('django')
-rev = 'rev: $ximRuj4$x'
+rev = 'rev: $xujSyn7$x'
 
 # This code is modifed from a video tutorial from Cryce Truly on 2020-06-19 retrieved on 2023-02-16, to Youtube crycetruly
 # video here:
@@ -47,14 +47,18 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
         return super().get_object()
 
     def post(self, request, *args, **kwargs):
+        logger.info(rev)
         return self.update(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
+        logger.info(rev)
+        logger.info('Validating content for post id: [%s]', kwargs.get(self.lookup_field))
         serializer = PostSerializer(data=request.data)
         if serializer.is_valid():
             author_id = Author.objects.get(id=kwargs['author_id'])
             obj, created = Post.objects.update_or_create(id=kwargs['id'], author_id=author_id, defaults=serializer.validated_data)  # type: ignore
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED) if created else Response(serializer.data)
+            
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def perform_destroy(self, instance):

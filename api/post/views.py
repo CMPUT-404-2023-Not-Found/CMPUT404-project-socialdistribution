@@ -35,7 +35,6 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
     lookup_field = 'id'
-    author_id_key = 'author_id'
 
     def get_object(self):
         logger.info(rev)

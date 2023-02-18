@@ -3,7 +3,9 @@
 
 from django.shortcuts import render
 import logging
+from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.response import Response
 
 from .serializers import PostSerializer
 from .models import Author
@@ -31,7 +33,7 @@ class PostListCreateView(ListCreateAPIView):
         logger.info(rev)
         author_id = self.kwargs.get(self.lookup_url_kwarg)
         logger.info('Listing posts for author_id: [%s]', author_id)
-        return super().get_queryset()
+        return self.queryset.filter(author_id=author_id)
 
 class PostDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
@@ -44,11 +46,13 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
         logger.info('Getting content for post id: [%s]', post_id)
         return super().get_object()
 
-    def perform_update(self, serializer):
-        logger.info(rev)
-        post_id = self.kwargs.get(self.lookup_field)
-        logger.info('Updating content for post id: [%s]', post_id)
-        return serializer.save(id=post_id)
+    def put(self, request, *args, **kwargs):
+        serializer = PostSerializer(data=request.data)
+        if serializer.is_valid():
+            author_id = Author.objects.get(id=kwargs['author_id'])
+            obj, created = Post.objects.update_or_create(id=kwargs['id'], author_id=author_id, defaults=serializer.validated_data)  # type: ignore
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def perform_destroy(self, instance):
         logger.info(rev)

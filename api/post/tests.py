@@ -35,19 +35,17 @@ class PostTests(APITestCase):
     
     def test_create_post(self):
         test_post_data = {
-            'host': self.app_host,
             'unlisted': False,
             'visibility': 'PUBLIC',
-            'origin': self.app_host,
-            'source': self.app_host,
-            'content': 'Content: ' + get_random_string(128),
+            'content': 'Content ' + get_random_string(128),
             'contentType': 'text/plain',
-            'description': 'Description: ' + get_random_string(32),
-            'title': 'Title: ' + get_random_string(16)
+            'description': 'Description ' + get_random_string(32),
+            'title': 'Title ' + get_random_string(16)
         }
         response = self.client.post(self.url, test_post_data)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertDictContainsSubset(test_post_data, response.data)
     
     def test_list_author_single_post(self):
         pass

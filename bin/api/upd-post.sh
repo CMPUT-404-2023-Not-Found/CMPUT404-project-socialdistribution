@@ -24,19 +24,19 @@ crt_body=`cat <<EOF
 EOF`
 
 echo "$crt_body" | jq 2>&1 >/dev/null
-e=$?; if [ $e -ne 0 ]; then echo "ERR Invalid PUT body"; exit 1; fi
+e=$?; if [ $e -ne 0 ]; then echo "ERR Invalid POST body"; exit 1; fi
 
-rsp=`curl -sX PUT \
+rsp=`curl -sX POST \
      -d "$crt_body" \
      -H "Content-Type: application/json" \
      "$upd_post_url"`
-e=$?; if [ $e -ne 0 ]; then echo -n "ERR Could not PUT to $upd_post_url "; echo "$rsp"; exit $e; fi
+e=$?; if [ $e -ne 0 ]; then echo -n "ERR Could not POST to $upd_post_url "; echo "$rsp"; exit $e; fi
 
 echo "$rsp" | grep -q "$rand"
 e=$?
 if [ $e -ne 0 ]
 then
-    echo "ERR Failed PUT request"
+    echo "ERR Failed POST request"
     echo "$rsp"
 else
     echo "$rsp" | jq 2>/dev/null

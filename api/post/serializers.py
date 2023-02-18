@@ -2,7 +2,7 @@
 # post/serializers.py
 
 from rest_framework import serializers
-from rest_framework.fields import CharField, IntegerField
+from rest_framework.fields import ChoiceField, IntegerField
 
 from .models import Post
 
@@ -10,13 +10,14 @@ from .models import Post
 # video here:
 # https://youtu.be/B3HGwFlBvi8
 class PostSerializer(serializers.ModelSerializer):
-    contentType     = CharField(source='content_type', required=True)
-    commentCount    = IntegerField(source='comment_count', required=False)
-    likeCount       = IntegerField(source='like_count', required=False)
+    contentType     = ChoiceField(choices=Post.CONTENT_TYPE_OPTIONS, source='content_type', required=True)
+    commentCount    = IntegerField(source='comment_count', read_only=True, required=False)
+    likeCount       = IntegerField(source='like_count', read_only=True, required=False)
+    rev             = IntegerField(read_only=True)
 
     class Meta:
         model = Post
-        fields = [  'author_node_id', 'host',
+        fields = [  'author_id', 'host',
                     'published', 'updated_at', 'rev',
                     'commentCount', 'likeCount',
                     'unlisted', 'visibility',

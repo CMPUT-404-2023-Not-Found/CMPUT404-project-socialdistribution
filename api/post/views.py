@@ -46,6 +46,9 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
         logger.info('Getting content for post id: [%s]', post_id)
         return super().get_object()
 
+    def post(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
     def put(self, request, *args, **kwargs):
         serializer = PostSerializer(data=request.data)
         if serializer.is_valid():

@@ -10,6 +10,7 @@ from .models import Author
 # video here:
 # https://www.youtube.com/watch?v=tujhGdn1EMI
 # Module 4: Write unit tests 44:50
+
 class AuthorTestCase(APITestCase):
     '''
     Test suite for Author model
@@ -39,6 +40,15 @@ class AuthorTestCase(APITestCase):
         '''
         data = self.data
         data.pop("username")
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        
+    def test_create_author_without_password(self):
+        """
+        AuthorView: test when password is not present in data
+        """
+        data = self.data
+        data.pop("password")
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         

@@ -6,6 +6,7 @@ import logging
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
 from .serializers import PostSerializer
+from .models import Author
 from .models import Post
 
 logger = logging.getLogger('django')
@@ -22,8 +23,9 @@ class PostListCreateView(ListCreateAPIView):
     def perform_create(self, serializer):
         logger.info(rev)
         author_id = self.kwargs.get(self.lookup_url_kwarg)
+        author_obj = Author.objects.get(id=author_id)
         logger.info('Creating post for author_id: [%s]', author_id)
-        return serializer.save(author_id=author_id)
+        return serializer.save(author_id=author_obj)
     
     def get_queryset(self):
         logger.info(rev)

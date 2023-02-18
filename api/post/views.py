@@ -55,9 +55,12 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
         logger.info('Validating content for post id: [%s]', kwargs.get(self.lookup_field))
         serializer = PostSerializer(data=request.data)
         if serializer.is_valid():
-            author_id = Author.objects.get(id=kwargs['author_id'])
-            obj, created = Post.objects.update_or_create(id=kwargs['id'], author_id=author_id, defaults=serializer.validated_data)  # type: ignore
-            return Response(serializer.data, status=status.HTTP_201_CREATED) if created else Response(serializer.data)
+            if Author.objects.filter(id=kwargs['author_id']):
+                author_id = Author.objects.get(id=kwargs['author_id'])
+                obj, created = Post.objects.update_or_create(id=kwargs['id'], author_id=author_id, defaults=serializer.validated_data)  # type: ignore
+                return Response(serializer.data, status=status.HTTP_201_CREATED) if created else Response(serializer.data)
+            else:
+                logger.error('Cannot create/update post for unknown author id: [%s]', kwargs['author_id'])
             
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     

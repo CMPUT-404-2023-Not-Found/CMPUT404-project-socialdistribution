@@ -180,7 +180,7 @@ LOGGING = {
         },
         'simple': {
             'datefmt': '%Y-%m-%dT%H:%M:%S%z',
-            'format': '{levelname} {module} {message}',
+            'format': '{asctime} {levelname} {filename}:{funcName} {message}',
             'style': '{',
         }
     }

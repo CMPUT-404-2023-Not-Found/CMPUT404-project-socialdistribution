@@ -1,17 +1,18 @@
 #!/bin/sh
 # 2023-02-17
 # crt-post.sh
-# Create a post
+# Create a post for an author
 
 # set -x
 if [ "#$APP_URL" = "#" ]; then echo "ERR Could could not find $APP_URL in env, is your env setup?"; exit 1; fi
+if [ "#$1" = "#" ]; then echo "Usage $0 [author_uuid]"; exit 1; fi
+author_uuid="$1"
 
-crt_post_url=`printf "${POST_API}" $AUTHOR_UUID`
+crt_post_url=`printf "${POST_API}/" $author_uuid`
 rand=`apg -n 1 -m 8 -x 8 -M NC 2`
 
 crt_body=`cat <<EOF
 {
-  "author_id": "$AUTHOR_UUID",
   "host": "$APP_URL",
   "unlisted": false,
   "visibility": "PUBLIC",

@@ -25,12 +25,11 @@ class Inbox(Model):
     author_id           = models.ForeignKey(to=Author, on_delete=models.CASCADE, verbose_name="Inbox Author's UUID")
 
     # Modification fields
-    has_seen            = models.BooleanField(default=False, verbose_name='Has Seen')
     received_at         = models.DateTimeField(auto_now=False, auto_now_add=True, verbose_name='Received At')
 
     # Origin fields
-    item_id             = models.URLField(blank=False, null=False, max_length=128, verbose_name='Item Node ID')
-    item_author_id      = models.URLField(blank=False, null=False, max_length=128, verbose_name='Item Owner Node ID')
+    object_id             = models.URLField(blank=False, null=False, max_length=128, verbose_name='Object Node ID')
+    sender_author_id      = models.URLField(blank=False, null=False, max_length=128, verbose_name='Object Sender Author Node ID')
 
     # Content fields
     context             = models.URLField(choices=W3ContextChoices.choices, default=W3ContextChoices.W3_AS, max_length=128)

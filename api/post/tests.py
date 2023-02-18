@@ -12,6 +12,9 @@ from post.views import PostListCreateView
 
 Author = get_user_model()
 
+# This code is modified from a video tutorial from Ssali Jonathan on 2022-06-08 retrieved on 2023-02-18, to Youtube @SsaliJonathan
+# video here:
+# https://youtu.be/NyWY2OktDAs
 class PostTests(APITestCase):
     '''
     Test suite for Post model
@@ -45,7 +48,7 @@ class PostTests(APITestCase):
         response = self.client.post(self.url, test_post_data)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertDictContainsSubset(test_post_data, response.data)
+        self.assertDictContainsSubset(test_post_data, response.data) # type: ignore
     
     def test_list_author_single_post(self):
         pass

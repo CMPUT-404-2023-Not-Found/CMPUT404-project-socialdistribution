@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react';
 // Dynamic linking and fetching from django
 // https://www.youtube.com/watch?v=9dwyXq9G_MQ&t=5062s
 import { Link, useNavigate } from 'react-router-dom';
+import PostSummary from '../components/PostSummary';
 
 const baseURL = 'https://jsonplaceholder.typicode.com';
 
@@ -24,6 +25,7 @@ const Stream = () => {
 
         if (response.ok) {
             console.log(data)
+            setPosts(data)
         } else {
             console.log("Failed network Request")
         }
@@ -37,11 +39,6 @@ const Stream = () => {
 
     return (
         <>
-            <div>
-                Place holder for stream
-            </div>
-
-
             <button onClick={() => {
                 navigate('/createpost');
             }}>
@@ -54,6 +51,19 @@ const Stream = () => {
             }}> 
                 View a post
             </button>
+
+            <div>
+            {
+                posts.map( () => {
+                    return (
+                        <>
+                            <PostSummary/>
+                            <br/>
+                        </>
+                    )
+                })
+            }
+            </div>
 
         </>
     );

@@ -60,7 +60,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'health',
     'author',
-    'post'
+    'post',
+    'inbox'
 ]
 
 MIDDLEWARE = [

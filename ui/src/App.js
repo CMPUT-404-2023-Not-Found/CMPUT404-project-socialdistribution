@@ -6,6 +6,7 @@ import { Routes, Route } from 'react-router-dom';
 import CreatePost from './pages/CreatePost';
 import Stream from './pages/Stream';
 import Post from './pages/Post';
+import NoMatch from './components/NoMatch';
 
 const App = () => {
  return (
@@ -14,6 +15,7 @@ const App = () => {
           <Route path="/" element={<Stream />} />
           <Route path="/createpost" element={<CreatePost />} />
           <Route path="/post" element={<Post />} />
+          <Route path="*" element={<NoMatch />} />
        </Routes>
     </>
  );

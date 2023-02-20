@@ -1,0 +1,44 @@
+[
+    {
+        "model": "author.author",
+        "pk": "664925be-f3ce-42b0-9d34-1659d078f840",
+        "fields": {
+            "password": "pbkdf2_sha256$216000$Jw7a6lPIHiJn$HCCliFGoVGIalBvRiwHqoi4HHlqJtr/oOuI+19e5clg=",
+            "last_login": null,
+            "is_superuser": true,
+            "host": "http://localhost:8000",
+            "username": "stephenking",
+            "created_at": "2023-02-20T02:05:19.665Z",
+            "updated_at": "2023-02-20T02:05:19.665Z",
+            "rev": 0,
+            "display_name": "",
+            "github": "",
+            "profile_image": "",
+            "is_staff": true,
+            "is_active": true,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "author.author",
+        "pk": "de52020f-f5df-4361-b771-2829a99f16a2",
+        "fields": {
+            "password": "pbkdf2_sha256$216000$etehMeoW9N5M$D70HxIIWxb0hpiTP9XkKFM4k0q8spHnrief2ejgZjgc=",
+            "last_login": null,
+            "is_superuser": false,
+            "host": "http://localhost:8000",
+            "username": "edgarallenpoe",
+            "created_at": "2023-02-20T02:04:06.320Z",
+            "updated_at": "2023-02-20T02:04:06.321Z",
+            "rev": 0,
+            "display_name": "",
+            "github": "",
+            "profile_image": "",
+            "is_staff": false,
+            "is_active": false,
+            "groups": [],
+            "user_permissions": []
+        }
+    }
+]

@@ -132,3 +132,6 @@ dmypy.json
 *~
 *#
 *.bak
+
+# other
+.DS_Store

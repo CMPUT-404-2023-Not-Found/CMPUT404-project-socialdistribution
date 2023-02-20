@@ -11,15 +11,16 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PostSummary from '../components/PostSummary';
 
-const baseURL = 'https://jsonplaceholder.typicode.com';
+const baseURL = 'http://localhost:8000';
 
 const Stream = () => {
+    const authoruuid = 'ed2ca973-7f15-4934-b355-c119fc086d57'
     let navigate = useNavigate();
 
     const [posts, setPosts] = useState([]);
 
     const getPosts = async () => {
-        const response = await fetch(`${baseURL}/posts`)
+        const response = await fetch(`${baseURL}/api/authors/${authoruuid}/posts`)
 
         const data = await response.json()
 
@@ -53,16 +54,21 @@ const Stream = () => {
             </button>
 
             <div>
-            {
-                posts.map( () => {
+            { posts.length > 0 ? (
+                posts.map( (post) => {
                     return (
-                        <>
-                            <PostSummary/>
+                        <div key={post.id}>
+                            <PostSummary 
+                                authorUsername={post.author_id}
+                                description={post.description}
+                            />
                             <br/>
-                        </>
+                        </div>
                     )
                 })
-            }
+            ) : (
+                <div>No posts</div>
+            ) }
             </div>
 
         </>

@@ -1,9 +1,17 @@
 import React from 'react'
 
-const PostSummary = () => {
+const PostSummary = ({
+        authorUsername="placeholder name",
+        description="placeholder description"
+    }
+    ) => {
   return (
     <>
-        place holder for post summary
+        <p>
+            Post id: {}
+            This post was made by {authorUsername} <br></br>
+            The description is {description}
+        </p>
     </>
   )
 }

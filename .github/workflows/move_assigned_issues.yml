@@ -26,4 +26,4 @@ jobs:
         with:
           project: socialdistribution-board
           column: In Progress
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ secrets.ISSUE_BOARD_PAT }}

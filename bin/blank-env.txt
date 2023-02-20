@@ -1,0 +1,12 @@
+# 2023-02-14
+# .env
+# This file is an env to be used for running scripts under the bin/ directory
+
+# App
+export APP_HOST='localhost:8000'
+export APP_URL="http://${APP_HOST}"
+export AUTHOR_API="${APP_URL}/api/authors"
+export POST_API="${AUTHOR_API}/%s/posts"
+
+# Personalization
+export MONIKER= # String of whatever you want

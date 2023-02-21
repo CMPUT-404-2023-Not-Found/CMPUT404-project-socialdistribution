@@ -2,11 +2,11 @@
 # author/serializers.py
 
 from rest_framework import serializers
-from rest_framework.fields import CharField, URLField
+from rest_framework.fields import CharField, URLField, UUIDField
 from .models import Author
 
 class CreateAuthorSerializer(serializers.ModelSerializer):
-    id              = URLField(read_only=True)
+    id              = UUIDField(read_only=True)
     username        = CharField(max_length = 32, min_length = 8)
     password        = CharField(max_length = 64, min_length = 8, write_only = True)
     host            = URLField(max_length = 128)

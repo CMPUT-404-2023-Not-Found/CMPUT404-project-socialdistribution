@@ -6,7 +6,7 @@ from rest_framework.test import APIClient, APITestCase
 
 class HealthTestCase(APITestCase):
     '''
-    Simple Test Suite for the health check
+    Simple Test Suite for the health app
     '''
     def setUp(self):
         self.client = APIClient()

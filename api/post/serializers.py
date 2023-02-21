@@ -30,9 +30,14 @@ class PostSerializer(serializers.ModelSerializer):
     origin          = URLField(required=False)
     source          = URLField(required=False)
 
+    categories      = serializers.SerializerMethodField('get_categories')
+    def get_categories(self, obj): return ['this', 'is', 'a', 'hack']
     contentType     = ChoiceField(choices=Post.CONTENT_TYPE_OPTIONS, source='content_type', required=True)
     type            = serializers.SerializerMethodField('get_type')
     def get_type(self, obj): return 'post'
+
+    comments        = serializers.SerializerMethodField('get_comments')
+    def get_comments(self, obj): return 'http://this.is.a/hack/'
 
     class Meta:
         model = Post
@@ -40,7 +45,8 @@ class PostSerializer(serializers.ModelSerializer):
                     'origin', 'source',
                     'description', 'contentType', 'content',
                     'author',
-                    'commentCount', 'likeCount',
+                    'categories',
+                    'commentCount', 'likeCount', 'comments',
                     'published', 'visibility', 'unlisted',
                     'rev', 'updated_at'
                 ]

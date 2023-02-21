@@ -11,8 +11,10 @@ env:
 on:
   push:
     branches: [ "dev", "master" ]
+    paths: 'api/**'
   pull_request:
     branches: [ "dev", "master" ]
+    paths: 'api/**'
 
 jobs:
   build:

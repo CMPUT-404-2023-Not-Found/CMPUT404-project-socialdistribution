@@ -72,3 +72,6 @@ class Author(AbstractBaseUser, PermissionsMixin):
 
     def tokens(self):
         return ''
+    
+    def get_node_id(self):
+        return f'{self.host}/authors/{self.id}'

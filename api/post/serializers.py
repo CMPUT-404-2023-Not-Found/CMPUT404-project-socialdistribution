@@ -1,18 +1,24 @@
 # 2023-02-16
 # post/serializers.py
 
+import logging
 from rest_framework import serializers
 from rest_framework.fields import ChoiceField, DateTimeField, IntegerField, URLField, UUIDField
 
 from author.serializers import CreateAuthorSerializer
 from .models import Post
 
+logger = logging.getLogger('django')
+rev = 'rev: $xani93n$x'
+
 # This code is modifed from a video tutorial from Cryce Truly on 2020-06-19 retrieved on 2023-02-16, to Youtube crycetruly
 # video here:
 # https://youtu.be/B3HGwFlBvi8
 class PostSerializer(serializers.ModelSerializer):
     author          = CreateAuthorSerializer(required=False, read_only=True)
-    id              = UUIDField(read_only=True)
+    id              = serializers.SerializerMethodField('get_id')
+    # http://localhost:8000/authors/<UUID>/posts/<UUID>
+    def get_id(self, obj): return obj.author.get_node_id() + '/posts/' + str(obj.id)
 
     published       = DateTimeField(read_only=True, required=False)
     updated_at      = DateTimeField(read_only=True, required=False)

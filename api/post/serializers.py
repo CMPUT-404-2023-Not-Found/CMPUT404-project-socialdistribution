@@ -11,9 +11,8 @@ from .models import Post
 # video here:
 # https://youtu.be/B3HGwFlBvi8
 class PostSerializer(serializers.ModelSerializer):
-    author          = CreateAuthorSerializer(required=False)
+    author          = CreateAuthorSerializer(required=False, read_only=True)
     id              = UUIDField(read_only=True)
-    host            = URLField(read_only=True)
 
     published       = DateTimeField(read_only=True, required=False)
     updated_at      = DateTimeField(read_only=True, required=False)
@@ -26,14 +25,16 @@ class PostSerializer(serializers.ModelSerializer):
     source          = URLField(required=False)
 
     contentType     = ChoiceField(choices=Post.CONTENT_TYPE_OPTIONS, source='content_type', required=True)
-    
+    type            = serializers.SerializerMethodField('get_type')
+    def get_type(self, obj): return 'post'
+
     class Meta:
         model = Post
-        fields = [  'id',
-                    'author', 'host',
-                    'published', 'updated_at', 'rev',
-                    'commentCount', 'likeCount',
-                    'unlisted', 'visibility',
+        fields = [  'type', 'title', 'id',
                     'origin', 'source',
-                    'content', 'contentType', 'description', 'title'
-        ]
+                    'description', 'contentType', 'content',
+                    'author',
+                    'commentCount', 'likeCount',
+                    'published', 'visibility', 'unlisted',
+                    'rev', 'updated_at'
+                ]

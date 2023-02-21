@@ -11,7 +11,7 @@ from .models import Post
 # https://youtu.be/B3HGwFlBvi8
 class PostSerializer(serializers.ModelSerializer):
     author_id       = UUIDField(read_only=True)
-    id              = URLField(read_only=True)
+    id              = UUIDField(read_only=True)
     host            = URLField(read_only=True)
 
     published       = DateTimeField(read_only=True, required=False)

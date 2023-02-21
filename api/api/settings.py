@@ -108,7 +108,9 @@ DATABASES = {
     }
 }
 
+# Django Rest Framework (DRF) Configuration
 REST_FRAMEWORK = {
+    'DATETIME_FORMAT': '%Y-%d-%mT%H:%M:%S%z',
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'NON_FIELD_ERRORS_KEY': 'error'
 }

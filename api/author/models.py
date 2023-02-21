@@ -43,7 +43,7 @@ class AuthorManager(BaseUserManager):
 
 class Author(AbstractBaseUser, PermissionsMixin):
     # Identification fields
-    id                  = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    id                  = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     host                = models.URLField(max_length=128)
     username            = models.CharField(max_length=32, unique=True, db_index=True)
 

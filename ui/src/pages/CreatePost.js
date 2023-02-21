@@ -48,7 +48,7 @@ const CreatePost = () => {
     return (
         <>
             <button onClick={() => {
-                navigate('/');
+                navigate(-1);
             }}>
                 Go back to stream
             </button>

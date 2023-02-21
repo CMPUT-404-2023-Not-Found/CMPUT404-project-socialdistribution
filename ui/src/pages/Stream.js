@@ -59,9 +59,7 @@ const Stream = () => {
                     return (
                         <div key={post.id}>
                             <PostSummary 
-                                authorobject={{
-                                    "username" : post.author_id,
-                                }}
+                                authorobject={post.author_id}
                                 description={post.description}
                                 postid={post.id}
                             />

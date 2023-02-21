@@ -11,7 +11,7 @@ const Post = () => {
             </div>
 
             <button onClick={() => {
-                navigate('/')
+                navigate(-1)
             }}>
                 go back to stream
             </button>

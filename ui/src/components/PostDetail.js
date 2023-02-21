@@ -34,6 +34,8 @@ const PostDetail = () => {
         <div>
         placehodler for a detailed post - {post.author_id}
         <br></br>
+        title is: {post.title}
+        <br></br>
         content is : {post.content}
         <br></br>
         was posted on : {post.published}

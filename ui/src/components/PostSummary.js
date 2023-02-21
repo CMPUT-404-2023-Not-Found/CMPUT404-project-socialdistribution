@@ -1,15 +1,23 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 
 const PostSummary = ({
-        authorUsername="placeholder name",
-        description="placeholder description"
-    }
-    ) => {
+        authorobject={},
+        description="placeholder description",
+        title="placehodler title",
+        postid="dlfkajlkdjlkfja"
+    }) => {
+  
+  const navigate = useNavigate();
+
   return (
     <>
+        <button onClick={() => navigate(`posts/${postid}`)}>
+          view in detail
+        </button>
         <p>
-            Post id: {}
-            This post was made by {authorUsername} <br></br>
+            Title: {title} <br></br>
+            This post was made by {authorobject.username} <br></br>
             The description is {description}
         </p>
     </>

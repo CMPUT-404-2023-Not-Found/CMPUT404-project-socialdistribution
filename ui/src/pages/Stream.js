@@ -12,9 +12,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import PostSummary from '../components/PostSummary';
 
 const baseURL = 'http://localhost:8000';
+const authoruuid = 'ed2ca973-7f15-4934-b355-c119fc086d57';
 
 const Stream = () => {
-    const authoruuid = 'ed2ca973-7f15-4934-b355-c119fc086d57'
     let navigate = useNavigate();
 
     const [posts, setPosts] = useState([]);
@@ -59,8 +59,11 @@ const Stream = () => {
                     return (
                         <div key={post.id}>
                             <PostSummary 
-                                authorUsername={post.author_id}
+                                authorobject={{
+                                    "username" : post.author_id,
+                                }}
                                 description={post.description}
+                                postid={post.id}
                             />
                             <br/>
                         </div>

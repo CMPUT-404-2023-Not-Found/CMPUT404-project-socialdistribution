@@ -4,13 +4,14 @@
 from rest_framework import serializers
 from rest_framework.fields import ChoiceField, DateTimeField, IntegerField, URLField, UUIDField
 
+from author.serializers import CreateAuthorSerializer
 from .models import Post
 
 # This code is modifed from a video tutorial from Cryce Truly on 2020-06-19 retrieved on 2023-02-16, to Youtube crycetruly
 # video here:
 # https://youtu.be/B3HGwFlBvi8
 class PostSerializer(serializers.ModelSerializer):
-    author_id       = UUIDField(read_only=True)
+    author_id       = CreateAuthorSerializer()
     id              = UUIDField(read_only=True)
     host            = URLField(read_only=True)
 

@@ -107,6 +107,8 @@ DATABASES = {
 }
 
 REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'utils.pagination.CustomPagination',
+    'PAGE_SIZE': 5,
     'NON_FIELD_ERRORS_KEY': 'error'
 }
 

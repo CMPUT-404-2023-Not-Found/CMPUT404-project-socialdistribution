@@ -3,7 +3,9 @@ omit=
     */venv/*
     */tests/*
     */staticfiles/*
+    */static/*
     */migrations/*
+    */logs/*
     */__init__.py
     */manage.py
     */api/settings.py

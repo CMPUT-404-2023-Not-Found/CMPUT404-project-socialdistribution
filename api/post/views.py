@@ -32,8 +32,11 @@ class PostListCreateView(ListCreateAPIView):
     def get_queryset(self):
         logger.info(rev)
         author_id = self.kwargs.get(self.lookup_url_kwarg)
-        logger.info('Listing posts for author_id: [%s]', author_id)
-        return self.queryset.filter(author_id=author_id)
+        if (self.request.query_params): # type: ignore
+            logger.info('Get recent posts for author_id: [%s] with query_params [%s]', author_id, str(self.request.query_params)) # type: ignore
+        else:
+            logger.info('Get recent posts for author_id: [%s]', author_id)
+        return self.queryset.filter(author_id=author_id).order_by('-published')
 
 class PostDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer

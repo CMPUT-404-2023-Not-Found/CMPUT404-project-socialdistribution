@@ -16,11 +16,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('health/', include('health.urls')),
     path('api/authors/', include('author.urls')),
     path('api/authors/<uuid:author_id>/posts/', include('post.urls')),
-    path('api/authors/<uuid:author_id>/inbox/', include('inbox.urls'))
+    path('api/authors/<uuid:author_id>/inbox/', include('inbox.urls')),
+    path('api/token/', include('authentication.urls')),
 ]

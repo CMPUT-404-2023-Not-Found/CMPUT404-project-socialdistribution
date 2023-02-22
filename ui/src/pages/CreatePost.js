@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 const baseURL = 'http://localhost:8000';
-const authoruuid = 'ed2ca973-7f15-4934-b355-c119fc086d57';
+const authoruuid = 'de52020f-f5df-4361-b771-2829a99f16a2';
 
 const CreatePost = () => {
     let navigate = useNavigate();

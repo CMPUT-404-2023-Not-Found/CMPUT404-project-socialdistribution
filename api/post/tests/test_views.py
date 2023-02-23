@@ -98,6 +98,18 @@ class PostViewTests(Base):
     '''
     def test_get_post_detail(self):
         pass
+    
+    def test_get_public_post_as_stranger(self):
+        pass
+
+    def test_get_friend_post_as_a_friend(self):
+        pass
+
+    def test_get_friend_post_as_a_stranger(self):
+        pass
+
+    def test_get_unlisted_post(self):
+        pass
 
     def test_get_post_without_author_uuid(self):
         pass

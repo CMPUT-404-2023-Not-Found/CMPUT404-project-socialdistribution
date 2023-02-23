@@ -4,11 +4,12 @@
 from rest_framework import serializers
 from rest_framework.fields import DateTimeField, UUIDField, URLField
 
+from author.serializers import CreateAuthorSerializer
 from .models import Inbox
 
 class InboxSerializer(serializers.ModelSerializer):
     id              = UUIDField(read_only=True)
-    author_id       = UUIDField(read_only=True)
+    author          = UUIDField(read_only=True)
     receivedAt      = DateTimeField(source='received_at', read_only=True)
     object          = URLField(source='object_id', required=True)
     senderAuthorId  = URLField(source='sender_author_id', required=True)
@@ -16,7 +17,7 @@ class InboxSerializer(serializers.ModelSerializer):
     class Meta:
         model = Inbox
         fields = [  'id',
-                    'author_id',
+                    'author',
                     'receivedAt',
                     'object', 'senderAuthorId',
                     'context', 'summary', 'type',

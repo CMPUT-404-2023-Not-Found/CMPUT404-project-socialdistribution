@@ -1,10 +1,27 @@
-name: Django CI
+# 2023-02-20
+# workflows/run_django_tests.yml
+
+# This code is modified from a tutorial article from GitHub, retrieved 2023-02-21 at docs.github.com
+# Tutorial article here:
+# https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+name: Django CI Run Tests
+env:
+  PROJECT_PATH: api/
+  DJANGO_ALLOWED_HOSTS: testserver
+  DJANGO_CORS_ORIGIN_ALLOW_ALL: False
+  DJANGO_CORS_ORIGIN_WHITELIST: 'http://localhost:3000'
+  DJANGO_DEBUG: True
+  DJANGO_LOG_LEVEL: INFO
+  DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+  SD_APP_URL: 'http://localhost'
 
 on:
   push:
     branches: [ "dev", "master" ]
+    paths: 'api/**'
   pull_request:
     branches: [ "dev", "master" ]
+    paths: 'api/**'
 
 jobs:
   build:
@@ -13,7 +30,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.7, 3.8, 3.9]
+        python-version: [3.8]
 
     steps:
     - uses: actions/checkout@v3
@@ -21,11 +38,12 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install Dependencies
+    - name: Install Python Dependencies
       run: |
-        cd ${{ vars.API_PROJECT_PATH }}
+        cd $PROJECT_PATH
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    - name: Run Tests
+    - name: Run All Django Tests
       run: |
+        cd $PROJECT_PATH
         python manage.py test

@@ -25,7 +25,8 @@ dotenv_file = os.path.join(BASE_DIR, ".env")
 if os.path.isfile(dotenv_file):
     dotenv.load_dotenv(dotenv_file)
 
-TODAY_DATETIME = datetime.now(pytz.timezone(os.getenv("SD_TZ", 'America/Edmonton')))
+# App configuration
+APP_URL = os.getenv("SD_APP_URL")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -38,13 +39,13 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DJANGO_DEBUG")
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS").split(" ") # type: ignore
 # Allow CORS so that frontend react can talk to backend django
 # Either raw-dog and allow all origins or only whitelisted
 CORS_ORIGIN_ALLOW_ALL = True if os.getenv("DJANGO_CORS_ORIGIN_ALLOW_ALL") == 'True' else False
 CORS_ORIGIN_WHITELIST = []
 if not CORS_ORIGIN_ALLOW_ALL:
-    CORS_ORIGIN_WHITELIST = os.getenv("DJANGO_CORS_ORIGIN_WHITELIST").split(" ")
+    CORS_ORIGIN_WHITELIST = os.getenv("DJANGO_CORS_ORIGIN_WHITELIST").split(" ") # type: ignore
 
 
 # Application definition
@@ -57,6 +58,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_spectacular',
     'corsheaders',
     'rest_framework',
     'health',
@@ -109,11 +111,14 @@ DATABASES = {
     }
 }
 
+# Django Rest Framework (DRF) Configuration
 REST_FRAMEWORK = {
-    'NON_FIELD_ERRORS_KEY': 'error',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DATETIME_FORMAT': '%Y-%d-%mT%H:%M:%S%z',
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'NON_FIELD_ERRORS_KEY': 'error'
 }
 
 
@@ -142,6 +147,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
+TODAY_DATETIME = datetime.now(pytz.timezone(os.getenv("SD_TZ", TIME_ZONE)))
 
 USE_I18N = True
 
@@ -194,6 +200,7 @@ LOGGING = {
     }
 }
 
+# Settings for authentication
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
@@ -231,4 +238,9 @@ SIMPLE_JWT = {
     "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
+}
+
+# Settings for drf-spectactular & Swagger/OpenAPI
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Social Distribution - CMPUT404W23T07 H01'
 }

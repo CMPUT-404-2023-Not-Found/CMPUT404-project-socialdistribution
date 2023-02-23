@@ -16,7 +16,6 @@ CRT_BODY=`cat <<EOF
 {
 "username": "$USR_NAME",
 "password": "$USR_PWD",
-"host": "$USR_HST",
 "displayName": "$USR_NAME $USR_HST",
 "github": "http://github.com/${USR_NAME}_git",
 "profileImage": "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=140&q=80"

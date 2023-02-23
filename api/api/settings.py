@@ -24,7 +24,8 @@ dotenv_file = os.path.join(BASE_DIR, ".env")
 if os.path.isfile(dotenv_file):
     dotenv.load_dotenv(dotenv_file)
 
-TODAY_DATETIME = datetime.now(pytz.timezone(os.getenv("SD_TZ", 'America/Edmonton')))
+# App configuration
+APP_URL = os.getenv("SD_APP_URL")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -107,7 +108,9 @@ DATABASES = {
     }
 }
 
+# Django Rest Framework (DRF) Configuration
 REST_FRAMEWORK = {
+    'DATETIME_FORMAT': '%Y-%d-%mT%H:%M:%S%z',
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'NON_FIELD_ERRORS_KEY': 'error'
 }
@@ -137,6 +140,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
+TODAY_DATETIME = datetime.now(pytz.timezone(os.getenv("SD_TZ", TIME_ZONE)))
 
 USE_I18N = True
 

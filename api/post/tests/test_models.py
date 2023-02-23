@@ -137,6 +137,9 @@ class PostModelTests(Base):
     def test_create_with_multiple_categories(self):
         pass
 
+    def test_create_with_too_many_categories(self):
+        pass
+
     def test_create_with_missing_visibility(self):
         pass
 

@@ -34,3 +34,21 @@ class PostModelTests(Base):
 
     def test_create_with_blank_title(self):
         pass
+
+    def test_create_with_long_title(self):
+        pass
+
+    def test_create_with_blacklist_title(self):
+        pass
+    
+    def test_create_with_missing_desc(self):
+        pass
+
+    def test_create_with_blank_desc(self):
+        pass
+
+    def test_create_with_long_desc(self):
+        pass
+
+    def test_create_with_blacklist_desc(self):
+        pass

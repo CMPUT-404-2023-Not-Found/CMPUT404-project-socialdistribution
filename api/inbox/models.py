@@ -22,7 +22,7 @@ class Inbox(Model):
         W3_AS=('https://www.w3.org/ns/activitystreams', 'W3 Activity Streams')
 
     # Identification fields
-    author_id           = models.ForeignKey(to=Author, on_delete=models.CASCADE, verbose_name="Inbox Author's UUID")
+    author              = models.ForeignKey(to=Author, on_delete=models.CASCADE, verbose_name="Inbox Author's UUID")
 
     # Modification fields
     received_at         = models.DateTimeField(auto_now=False, auto_now_add=True, verbose_name='Received At')
@@ -37,4 +37,4 @@ class Inbox(Model):
     type                = models.CharField(choices=TypeChoices.choices, default=TypeChoices.POST, max_length=32)
 
     def __str__(self):
-        return f'{self.id} {self.author_id}'
+        return f'{self.id} {self.author}'

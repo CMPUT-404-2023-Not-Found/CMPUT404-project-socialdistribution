@@ -20,23 +20,23 @@ rev = 'rev: $xujSyn7$x'
 class PostListCreateView(ListCreateAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
-    lookup_url_kwarg = 'author_id'
+    lookup_url_kwarg = 'author_uuid'
 
     def perform_create(self, serializer):
         logger.info(rev)
-        author_id = self.kwargs.get(self.lookup_url_kwarg)
-        author_obj = Author.objects.get(id=author_id)
-        logger.info('Creating post for author_id: [%s]', author_id)
-        return serializer.save(author_id=author_obj)
+        author_uuid = self.kwargs.get(self.lookup_url_kwarg)
+        author_obj = Author.objects.get(id=author_uuid)
+        logger.info('Creating post for author_uuid: [%s]', author_uuid)
+        return serializer.save(author=author_obj)
     
     def get_queryset(self):
         logger.info(rev)
-        author_id = self.kwargs.get(self.lookup_url_kwarg)
+        author_uuid = self.kwargs.get(self.lookup_url_kwarg)
         if (self.request.query_params): # type: ignore
-            logger.info('Get recent posts for author_id: [%s] with query_params [%s]', author_id, str(self.request.query_params)) # type: ignore
+            logger.info('Get recent posts for author_uuid: [%s] with query_params [%s]', author_uuid, str(self.request.query_params)) # type: ignore
         else:
-            logger.info('Get recent posts for author_id: [%s]', author_id)
-        return self.queryset.filter(author_id=author_id).order_by('-published')
+            logger.info('Get recent posts for author_uuid: [%s]', author_uuid)
+        return self.queryset.filter(author_id=author_uuid).order_by('-published')
 
 class PostDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
@@ -58,12 +58,12 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
         logger.info('Validating content for post id: [%s]', kwargs.get(self.lookup_field))
         serializer = PostSerializer(data=request.data)
         if serializer.is_valid():
-            if Author.objects.filter(id=kwargs['author_id']):
-                author_id = Author.objects.get(id=kwargs['author_id'])
-                obj, created = Post.objects.update_or_create(id=kwargs['id'], author_id=author_id, defaults=serializer.validated_data)  # type: ignore
+            if Author.objects.filter(id=kwargs['author_uuid']):
+                author_uuid = Author.objects.get(id=kwargs['author_uuid'])
+                obj, created = Post.objects.update_or_create(id=kwargs['id'], author=author_uuid, defaults=serializer.validated_data)  # type: ignore
                 return Response(serializer.data, status=status.HTTP_201_CREATED) if created else Response(serializer.data)
             else:
-                logger.error('Cannot create/update post for unknown author id: [%s]', kwargs['author_id'])
+                logger.error('Cannot create/update post for unknown author id: [%s]', kwargs['author_uuid'])
             
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     

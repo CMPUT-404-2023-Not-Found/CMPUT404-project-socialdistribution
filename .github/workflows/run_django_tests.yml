@@ -1,3 +1,9 @@
+# 2023-02-20
+# workflows/run_django_tests.yml
+
+# This code is modified from a tutorial article from GitHub, retrieved 2023-02-21 at docs.github.com
+# Tutorial article here:
+# https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 name: Django CI Run Tests
 env:
   PROJECT_PATH: api/

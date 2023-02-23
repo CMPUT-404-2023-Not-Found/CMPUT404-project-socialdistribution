@@ -1,7 +1,8 @@
 openapi: 3.0.3
 info:
   title: Social Distribution - CMPUT404W23T07 H01
-  version: 0.0.0
+  version: 0.0.1
+  description: This is the API documentation for Team 7's Social Distribution App
 paths:
   /api/authors/:
     get:
@@ -384,7 +385,7 @@ paths:
                 $ref: '#/components/schemas/CreateAuthor'
           description: ''
     post:
-      operationId: authors_create_2
+      operationId: authors_update
       description: POST /api/authors/uuid
       parameters:
       - in: path

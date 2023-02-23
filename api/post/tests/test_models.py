@@ -14,7 +14,7 @@ from .base import Base
 
 class PostModelTests(Base):
     '''
-    Test suite for Post views
+    Test suite for Post model
     '''
 
     '''
@@ -29,6 +29,15 @@ class PostModelTests(Base):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertDictContainsSubset(test_post_data, response.data) # type: ignore
     
+    '''
+    Test Post model post.type
+    '''
+    def test_create_has_type(self):
+        pass
+
+    '''
+    Test Post model post.title
+    '''
     def test_create_with_missing_title(self):
         pass
 
@@ -40,7 +49,19 @@ class PostModelTests(Base):
 
     def test_create_with_blacklist_title(self):
         pass
-    
+
+    '''
+    Test Post model post.id
+    '''
+    def test_create_id_is_node_id_format(self):
+        '''
+        Test id node id format: http://sitename/authors/<uuid>/posts/<uuid>
+        '''
+        pass
+
+    '''
+    Test Post model post.source
+    '''
     def test_create_with_missing_source(self):
         pass
 
@@ -56,6 +77,9 @@ class PostModelTests(Base):
     def test_create_with_source_of_unknown_node(self):
         pass
 
+    '''
+    Test Post model post.origin
+    '''
     def test_create_with_missing_origin(self):
         pass
 
@@ -71,6 +95,9 @@ class PostModelTests(Base):
     def test_create_with_origin_of_unknown_node(self):
         pass
     
+    '''
+    Test Post model post.description
+    '''
     def test_create_with_missing_desc(self):
         pass
 
@@ -82,19 +109,40 @@ class PostModelTests(Base):
 
     def test_create_with_blacklist_desc(self):
         pass
-
-    def test_create_with_missing_contenttype(self):
+    
+    '''
+    Test Post model post.content_type
+    '''
+    def test_create_with_content_type_markdown(self):
+        pass
+    
+    def test_create_with_content_type_plaintext(self):
+        pass
+    
+    def test_create_with_content_type_b64(self):
         pass
 
-    def test_create_with_blank_contenttype(self):
+    def test_create_with_content_type_png(self):
         pass
 
-    def test_create_with_long_contenttype(self):
+    def test_create_with_content_type_jpeg(self):
         pass
 
-    def test_create_with_unknown_contenttype(self):
+    def test_create_with_missing_content_type(self):
+        pass
+    
+    def test_create_with_blank_content_type(self):
         pass
 
+    def test_create_with_long_content_type(self):
+        pass
+
+    def test_create_with_unknown_content_type(self):
+        pass
+    
+    '''
+    Test Post model post.content
+    '''
     def test_create_with_missing_content(self):
         pass
 
@@ -105,6 +153,21 @@ class PostModelTests(Base):
         pass
 
     def test_create_with_blacklist_content(self):
+        pass
+
+    def test_create_with_content_not_matching_content_type(self):
+        pass
+
+    def test_create_with_image_content(self):
+        pass
+    
+    '''
+    Test Post model post.author
+    '''
+    def test_create_has_author_info(self):
+        pass
+
+    def test_create_has_only_one_author(self):
         pass
 
     def test_create_with_missing_author(self):
@@ -121,7 +184,10 @@ class PostModelTests(Base):
 
     def test_create_with_non_uuid_author(self):
         pass
-
+    
+    '''
+    Test Post model post.categories
+    '''
     def test_create_with_missing_categories(self):
         pass
 
@@ -139,7 +205,22 @@ class PostModelTests(Base):
 
     def test_create_with_too_many_categories(self):
         pass
+    
+    '''
+    Test Post model post.published
+    '''
+    def test_create_published_is_for_now(self):
+        pass
 
+    def test_create_published_datetime_is_iso_format(self):
+        '''
+        Test published datetime format is ISO-8601 format: 2023-02-23T08:29:43-07:00
+        '''
+        pass
+
+    '''
+    Test Post model post.visibility
+    '''
     def test_create_with_missing_visibility(self):
         pass
 
@@ -155,6 +236,16 @@ class PostModelTests(Base):
     def test_create_with_unknown_visibility(self):
         pass
     
+    '''
+    Test Post model post.unlisted
+    '''
+
+    def test_create_with_true_unlisted(self):
+        pass
+
+    def test_create_with_false_unlisted(self):
+        pass
+
     def test_create_with_missing_unlisted(self):
         pass
 

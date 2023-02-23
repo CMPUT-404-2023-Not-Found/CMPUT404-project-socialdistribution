@@ -37,13 +37,13 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DJANGO_DEBUG")
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS").split(" ") # type: ignore
 # Allow CORS so that frontend react can talk to backend django
 # Either raw-dog and allow all origins or only whitelisted
 CORS_ORIGIN_ALLOW_ALL = True if os.getenv("DJANGO_CORS_ORIGIN_ALLOW_ALL") == 'True' else False
 CORS_ORIGIN_WHITELIST = []
 if not CORS_ORIGIN_ALLOW_ALL:
-    CORS_ORIGIN_WHITELIST = os.getenv("DJANGO_CORS_ORIGIN_WHITELIST").split(" ")
+    CORS_ORIGIN_WHITELIST = os.getenv("DJANGO_CORS_ORIGIN_WHITELIST").split(" ") # type: ignore
 
 
 # Application definition
@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_spectacular',
     'corsheaders',
     'rest_framework',
     'health',
@@ -109,6 +110,7 @@ DATABASES = {
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'utils.pagination.CustomPagination',
     'PAGE_SIZE': 5,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'NON_FIELD_ERRORS_KEY': 'error'
 }
 
@@ -187,4 +189,9 @@ LOGGING = {
             'style': '{',
         }
     }
+}
+
+# Settings for drf-spectactular & Swagger/OpenAPI
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Social Distribution - CMPUT404W23T07 H01'
 }

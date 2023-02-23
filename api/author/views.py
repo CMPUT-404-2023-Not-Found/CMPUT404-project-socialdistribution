@@ -2,6 +2,8 @@
 # author/views.py
 
 from django.db.models.functions import Lower
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.response import Response
@@ -31,7 +33,9 @@ class AuthorView(ListCreateAPIView):
             logger.info('Getting list of author')
         return self.queryset.order_by(Lower('username'))
 
-    # POST /api/authors
+    @extend_schema(
+        operation_id='authors_create'
+    )
     def post(self, request):
         '''
         POST /api/authors
@@ -65,6 +69,9 @@ class AuthorDetailView(RetrieveUpdateAPIView):
         logger.info('Getting profile for author uuid: [%s]', author_uuid)
         return super().get_object()
 
+    @extend_schema(
+        operation_id='authors_update'
+    )
     def post(self, request, *args, **kwargs):
         '''
         POST /api/authors/uuid

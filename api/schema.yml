@@ -4,8 +4,28 @@ info:
   version: 0.0.0
 paths:
   /api/authors/:
+    get:
+      operationId: authors_list
+      description: Author View for retrieving a list of authors or creating a new
+        author
+      tags:
+      - authors
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CreateAuthor'
+          description: ''
     post:
       operationId: authors_create
+      description: POST /api/authors
       tags:
       - authors
       requestBody:
@@ -25,7 +45,7 @@ paths:
       - basicAuth: []
       - {}
       responses:
-        '200':
+        '201':
           content:
             application/json:
               schema:
@@ -339,6 +359,65 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/authors/{id}/:
+    get:
+      operationId: authors_retrieve
+      description: Author view for retrieving or updating a specific author
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - authors
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAuthor'
+          description: ''
+    post:
+      operationId: authors_create_2
+      description: POST /api/authors/uuid
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - authors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAuthor'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateAuthor'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateAuthor'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAuthor'
+          description: ''
   /api/schema/:
     get:
       operationId: schema_retrieve
@@ -501,7 +580,7 @@ components:
       properties:
         id:
           type: string
-          format: uri
+          format: uuid
           readOnly: true
         username:
           type: string

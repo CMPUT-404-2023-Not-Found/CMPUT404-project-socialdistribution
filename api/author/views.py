@@ -3,7 +3,7 @@
 
 from django.db.models.functions import Lower
 from rest_framework import status
-from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.response import Response
 import logging
 
@@ -47,9 +47,9 @@ class AuthorView(ListCreateAPIView):
 
         return Response(user_data, status = status.HTTP_201_CREATED)
 
-class AuthorDetailView(RetrieveAPIView):
+class AuthorDetailView(RetrieveUpdateAPIView):
     '''
-    Author view for retrieving a specific author
+    Author view for retrieving or updating a specific author
     '''
     serializer_class = CreateAuthorSerializer
     queryset = Author.objects.all()
@@ -63,3 +63,8 @@ class AuthorDetailView(RetrieveAPIView):
         author_uuid = self.kwargs.get(self.lookup_field)
         logger.info('Getting profile for author uuid: [%s]', author_uuid)
         return super().get_object()
+
+    def post(self, request, *args, **kwargs):
+        logger.info(rev)
+        logger.info('Updating profile for author uuid: [%s]', kwargs.get(self.lookup_field))
+        return self.update(request, *args, **kwargs)

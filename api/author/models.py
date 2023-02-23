@@ -1,6 +1,7 @@
 # 2023-02-13
 # author/models.py
 
+from django.conf import settings
 from django.db import models
 
 # This code is modifed from a video tutorial from Cryce Truly on 2020-06-16 retrieved on 2023-02-14, to Youtube crycetruly
@@ -43,8 +44,8 @@ class AuthorManager(BaseUserManager):
 
 class Author(AbstractBaseUser, PermissionsMixin):
     # Identification fields
-    id                  = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    host                = models.URLField(max_length=128)
+    id                  = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    host                = models.URLField(default=settings.APP_URL, max_length=128)
     username            = models.CharField(max_length=32, unique=True, db_index=True)
 
     # Modification fields
@@ -67,7 +68,10 @@ class Author(AbstractBaseUser, PermissionsMixin):
     objects = AuthorManager()
 
     def __str__(self):
-        return f'{self.username}'
+        return f'{self.id}'
 
     def tokens(self):
         return ''
+    
+    def get_node_id(self):
+        return f'{self.host}/authors/{self.id}'

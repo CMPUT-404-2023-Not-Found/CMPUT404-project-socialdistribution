@@ -54,6 +54,7 @@ class AuthorDetailView(RetrieveUpdateAPIView):
     serializer_class = CreateAuthorSerializer
     queryset = Author.objects.all()
     lookup_field = 'id'
+    http_method_names = ['get', 'post', 'head', 'options']
 
     def get_object(self):
         '''
@@ -65,6 +66,9 @@ class AuthorDetailView(RetrieveUpdateAPIView):
         return super().get_object()
 
     def post(self, request, *args, **kwargs):
+        '''
+        POST /api/authors/uuid
+        '''
         logger.info(rev)
         logger.info('Updating profile for author uuid: [%s]', kwargs.get(self.lookup_field))
         return self.update(request, *args, **kwargs)

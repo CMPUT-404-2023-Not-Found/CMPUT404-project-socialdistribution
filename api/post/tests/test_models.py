@@ -25,7 +25,7 @@ class PostModelTests(Base):
         Test legit create post
         '''
         test_post_data = self.post_api_data
-        response = self.client.post(self.url, test_post_data)
+        response = self.client.post(self.create_post_url, test_post_data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertDictContainsSubset(test_post_data, response.data) # type: ignore
     

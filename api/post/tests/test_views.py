@@ -22,7 +22,7 @@ class PostViewTests(Base):
         '''
         Test no posts
         '''
-        response = self.client.get(self.url)
+        response = self.client.get(self.create_post_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, []) # type: ignore
     
@@ -32,7 +32,7 @@ class PostViewTests(Base):
         '''
         test_post_data = self.post_model_data
         self.create_post(**test_post_data)
-        response = self.client.get(self.url)
+        response = self.client.get(self.create_post_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertCountEqual(response.data, [1]) # type: ignore
 

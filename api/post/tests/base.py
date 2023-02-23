@@ -46,7 +46,7 @@ class Base(APITestCase):
             host = self.app_host
         )
         self.author_uuid = str(self.author.id) # type: ignore
-        self.url = reverse('createPost', kwargs={'author_id': self.author_uuid})
+        self.create_post_url = reverse('createPost', kwargs={'author_id': self.author_uuid})
 
     def create_author(self, **author_data):
         return Author.objects.create(**author_data)
@@ -57,8 +57,20 @@ class Base(APITestCase):
     def get_author_uuid(self, obj):
         return str(obj.id)
     
-    def get_url(self, obj):
+    def get_create_post_url(self, obj):
+        '''
+        Return string http://sitename/authors/author_uuid/posts
+        '''
         if obj:
-            return reverse('createPost', kwargs={'author_id': str(obj.id)})
+            return reverse('createPost', kwargs={'author': str(obj.id)})
         else:
-            return reverse('createPost', kwargs={'author_id': str(self.author)})
+            return reverse('createPost', kwargs={'author': str(self.author)})
+    
+    def get_detail_post_url(self, obj, post_uuid):
+        '''
+        Return string http://sitename/authors/author_uuid/posts/post_uuid
+        '''
+        if obj:
+            return reverse('detailPost', kwargs={'author': str(obj.id), 'id': str(post_uuid)})
+        else:
+            return reverse('detailPost', kwargs={'author': str(self.author), 'id': str(post_uuid)})

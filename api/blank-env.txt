@@ -1,13 +1,18 @@
 # This is a blank environment variables file
-# 2023-02-09
+# 2023-02-20
 # You must:
 #   1. Fill this out with appropraite values
 #   2. Rename ths file to: .env
 
+# Social Distribution Development
+SD_ENV_NAME = local
+SD_TZ = 'America/Edmonton'
+SD_APP_URL = 'http://localhost:8000'
+
 # DJANGO
-# The value for SECRET_KEY can be found in our 'Discord -> resources' channel
-DJANGO_ALLOWED_HOSTS = 
-DJANGO_CORS_ORIGIN_ALLOW_ALL = 
-DJANGO_CORS_ORIGIN_WHITELIST = 
-DJANGO_DEBUG = 
-DJANGO_SECRET_KEY = ''
+DJANGO_ALLOWED_HOSTS = localhost 127.0.0.1 [::1] testserver
+DJANGO_CORS_ORIGIN_ALLOW_ALL = True
+DJANGO_CORS_ORIGIN_WHITELIST = http://localhost:3000
+DJANGO_DEBUG = True
+DJANGO_LOG_LEVEL = 'INFO'
+DJANGO_SECRET_KEY = 

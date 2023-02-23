@@ -1,0 +1,715 @@
+openapi: 3.0.3
+info:
+  title: Social Distribution - CMPUT404W23T07 H01
+  version: 0.0.0
+paths:
+  /api/authors/:
+    post:
+      operationId: authors_create
+      tags:
+      - authors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAuthor'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateAuthor'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateAuthor'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAuthor'
+          description: ''
+  /api/authors/{author_id}/inbox/:
+    get:
+      operationId: authors_inbox_list
+      parameters:
+      - in: path
+        name: author_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - authors
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Inbox'
+          description: ''
+    post:
+      operationId: authors_inbox_create
+      parameters:
+      - in: path
+        name: author_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - authors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Inbox'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Inbox'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Inbox'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Inbox'
+          description: ''
+    delete:
+      operationId: authors_inbox_destroy
+      parameters:
+      - in: path
+        name: author_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - authors
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/authors/{author_id}/posts/:
+    get:
+      operationId: authors_posts_list
+      parameters:
+      - in: path
+        name: author_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - authors
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+          description: ''
+    post:
+      operationId: authors_posts_create
+      parameters:
+      - in: path
+        name: author_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - authors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Post'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Post'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+          description: ''
+  /api/authors/{author_id}/posts/{id}/:
+    get:
+      operationId: authors_posts_retrieve
+      parameters:
+      - in: path
+        name: author_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - authors
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+          description: ''
+    post:
+      operationId: authors_posts_create_2
+      parameters:
+      - in: path
+        name: author_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - authors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Post'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Post'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+          description: ''
+    put:
+      operationId: authors_posts_update
+      parameters:
+      - in: path
+        name: author_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - authors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Post'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Post'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+          description: ''
+    patch:
+      operationId: authors_posts_partial_update
+      parameters:
+      - in: path
+        name: author_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - authors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPost'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPost'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPost'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+          description: ''
+    delete:
+      operationId: authors_posts_destroy
+      parameters:
+      - in: path
+        name: author_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - authors
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/schema/:
+    get:
+      operationId: schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - af
+          - ar
+          - ar-dz
+          - ast
+          - az
+          - be
+          - bg
+          - bn
+          - br
+          - bs
+          - ca
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - el
+          - en
+          - en-au
+          - en-gb
+          - eo
+          - es
+          - es-ar
+          - es-co
+          - es-mx
+          - es-ni
+          - es-ve
+          - et
+          - eu
+          - fa
+          - fi
+          - fr
+          - fy
+          - ga
+          - gd
+          - gl
+          - he
+          - hi
+          - hr
+          - hsb
+          - hu
+          - hy
+          - ia
+          - id
+          - ig
+          - io
+          - is
+          - it
+          - ja
+          - ka
+          - kab
+          - kk
+          - km
+          - kn
+          - ko
+          - ky
+          - lb
+          - lt
+          - lv
+          - mk
+          - ml
+          - mn
+          - mr
+          - my
+          - nb
+          - ne
+          - nl
+          - nn
+          - os
+          - pa
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sr
+          - sr-latn
+          - sv
+          - sw
+          - ta
+          - te
+          - tg
+          - th
+          - tk
+          - tr
+          - tt
+          - udm
+          - uk
+          - ur
+          - uz
+          - vi
+          - zh-hans
+          - zh-hant
+      tags:
+      - schema
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+components:
+  schemas:
+    ContentTypeEnum:
+      enum:
+      - text/markdown
+      - text/plain
+      - application/base64
+      - image/png;base64
+      - image/jpeg;base64
+      type: string
+    ContextEnum:
+      enum:
+      - https://www.w3.org/ns/activitystreams
+      type: string
+    CreateAuthor:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uri
+          readOnly: true
+        username:
+          type: string
+          maxLength: 32
+          minLength: 8
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 64
+          minLength: 8
+        displayName:
+          type: string
+        github:
+          type: string
+          format: uri
+          maxLength: 128
+        host:
+          type: string
+          format: uri
+          maxLength: 128
+        profileImage:
+          type: string
+      required:
+      - host
+      - id
+      - password
+      - username
+    Inbox:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        author_id:
+          type: string
+          format: uuid
+          readOnly: true
+        receivedAt:
+          type: string
+          format: date-time
+          readOnly: true
+        object:
+          type: string
+          format: uri
+        senderAuthorId:
+          type: string
+          format: uri
+        context:
+          allOf:
+          - $ref: '#/components/schemas/ContextEnum'
+          format: uri
+        summary:
+          type: string
+          maxLength: 32
+        type:
+          $ref: '#/components/schemas/TypeEnum'
+      required:
+      - author_id
+      - id
+      - object
+      - receivedAt
+      - senderAuthorId
+      - summary
+    PatchedPost:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uri
+          readOnly: true
+        author_id:
+          type: string
+          format: uuid
+          readOnly: true
+        host:
+          type: string
+          format: uri
+          readOnly: true
+        published:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        rev:
+          type: integer
+          readOnly: true
+        commentCount:
+          type: integer
+          readOnly: true
+        likeCount:
+          type: integer
+          readOnly: true
+        unlisted:
+          type: boolean
+          description: Does this post appear in authors streams
+        visibility:
+          allOf:
+          - $ref: '#/components/schemas/VisibilityEnum'
+          description: Who can view this post
+        origin:
+          type: string
+          format: uri
+          readOnly: true
+        source:
+          type: string
+          format: uri
+          readOnly: true
+        content:
+          type: string
+        contentType:
+          $ref: '#/components/schemas/ContentTypeEnum'
+        description:
+          type: string
+        title:
+          type: string
+          maxLength: 128
+    Post:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uri
+          readOnly: true
+        author_id:
+          type: string
+          format: uuid
+          readOnly: true
+        host:
+          type: string
+          format: uri
+          readOnly: true
+        published:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        rev:
+          type: integer
+          readOnly: true
+        commentCount:
+          type: integer
+          readOnly: true
+        likeCount:
+          type: integer
+          readOnly: true
+        unlisted:
+          type: boolean
+          description: Does this post appear in authors streams
+        visibility:
+          allOf:
+          - $ref: '#/components/schemas/VisibilityEnum'
+          description: Who can view this post
+        origin:
+          type: string
+          format: uri
+          readOnly: true
+        source:
+          type: string
+          format: uri
+          readOnly: true
+        content:
+          type: string
+        contentType:
+          $ref: '#/components/schemas/ContentTypeEnum'
+        description:
+          type: string
+        title:
+          type: string
+          maxLength: 128
+      required:
+      - author_id
+      - commentCount
+      - content
+      - contentType
+      - host
+      - id
+      - likeCount
+      - origin
+      - published
+      - rev
+      - source
+      - title
+      - updated_at
+      - visibility
+    TypeEnum:
+      enum:
+      - post
+      - like
+      - follow_request
+      - comment
+      type: string
+    VisibilityEnum:
+      enum:
+      - FRIENDS
+      - PUBLIC
+      type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid

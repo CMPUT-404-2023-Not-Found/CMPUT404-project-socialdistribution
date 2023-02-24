@@ -18,8 +18,11 @@ const Navbar = () => {
         <nav>
             <NavLink className='navlink' to='/'>Home</NavLink>
             <span> | </span>
-            { user ? (
-                <NavLink className='navlink' onClick={logoutUser}>Logout</NavLink>
+            { user ? (<>
+                <NavLink className='navlink' to='/posts'>Your Posts</NavLink>
+                <span> | </span>
+                <NavLink className='navlink' onClick={logoutUser} to='/login'>Logout</NavLink>
+                </>
             ) : (
                 <NavLink className='navlink' to='/login'>Login</NavLink>
             )}

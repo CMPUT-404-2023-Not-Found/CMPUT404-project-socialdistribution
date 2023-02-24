@@ -44,7 +44,7 @@ export const AuthProvider = ({children}) => {
             body: JSON.stringify({'username': e.target.username.value, 'password': e.target.password.value})
         });
         let data = await response.json()
-        if (response.status && response.status == 200) {
+        if (response.status && response.status === 200) {
             setAuthTokens(data);
             setUser(jwt_decode(data.access));
             localStorage.setItem('authTokens', JSON.stringify(data));
@@ -62,7 +62,6 @@ export const AuthProvider = ({children}) => {
     }
 
     const updateToken = async () => {
-        console.log('Updating');
         let response = await fetch('http://localhost:8000/api/token/refresh/', {
             method: 'POST',
             headers: {
@@ -71,7 +70,7 @@ export const AuthProvider = ({children}) => {
             body: JSON.stringify({'refresh': authTokens.refresh})
         });
         let data = await response.json();
-        if (response.status && response.status == 200) {
+        if (response.status && response.status === 200) {
             setAuthTokens(data);
             setUser(jwt_decode(data.access));
             localStorage.setItem('authTokens', JSON.stringify(data));

@@ -199,15 +199,17 @@ LOGGING = {
     }
 }
 
-# Settings for authentication
+# Settings for authentication & rest_framework_simplejwt
+# https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=4),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
-    "UPDATE_LAST_LOGIN": False,
+    "UPDATE_LAST_LOGIN": True,
 
     "ALGORITHM": "HS256",
+    "SIGNING_KEY": os.getenv("SJ_SIGNING_KEY", SECRET_KEY),
     "VERIFYING_KEY": "",
     "AUDIENCE": None,
     "ISSUER": None,

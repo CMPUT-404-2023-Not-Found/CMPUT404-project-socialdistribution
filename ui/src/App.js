@@ -25,18 +25,20 @@ import PostDetail from './components/PostDetail';
 import NoMatch from './components/NoMatch';
 
 const App = () => {
- return (
-    <>
-       <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/" element={<Stream />} />
-          <Route path="/createpost" element={<CreatePost />} />
-          <Route path="/post" element={<Post />} />
-          <Route path="/posts/:postid" element={<PostDetail />} />
-          <Route path="*" element={<NoMatch />} />
-       </Routes>
-    </>
- );
+    return (
+    <div className='App'>
+        <Routes>
+            <Route path="/" element={<Stream/>} />
+            <Route path="/login" element={<Login />} />
+
+            <Route path="/createpost" element={<CreatePost />} />
+            <Route path="/post" element={<Post />} />
+            <Route path="/posts/:postid" element={<PostDetail />} />
+
+            <Route path="*" element={<NoMatch />} />
+        </Routes>
+    </div>
+    );
 };
 
 export default App;

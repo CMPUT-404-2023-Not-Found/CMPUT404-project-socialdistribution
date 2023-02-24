@@ -2,11 +2,14 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+    //  variable declarations -------------------------------------
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+    //  event listners --------------------------------------------
     let navigate = useNavigate();
 
+    //  async functions -------------------------------------------
     const login = () => {
         console.log(username);
         console.log(password);

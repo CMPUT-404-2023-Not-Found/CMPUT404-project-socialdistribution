@@ -53,8 +53,8 @@ const Stream = () => {
                 <div>
                     {posts.map(post =>(
                         <div key={post.id}>
-                            <PostSummary authorobject={post.author_id} description={post.description} postid={post.id}></PostSummary>
-                            <br></br>
+                            <PostSummary {...post}></PostSummary>
+                            <hr></hr>
                         </div> 
                     ))}
                 </div>

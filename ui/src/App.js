@@ -25,7 +25,7 @@ import Login from './pages/Login';
 import Stream from './pages/Stream';
 // Post pages
 import CreatePost from './pages/CreatePost';
-import Post from './pages/Post';
+import Posts from './pages/Posts';
 import PostDetail from './components/PostDetail';
 // Error pages
 import NotFound from './components/NotFound';
@@ -39,11 +39,11 @@ const App = () => {
                     <Route element={<PrivateRoutes />}>
                         <Route path="/" element={<Stream/>} exact/>
                         <Route path="/createpost" element={<CreatePost />} />
-                        <Route path="/post" element={<Post />} />
+                        <Route path="/posts" element={<Posts />} />
                         <Route path="/posts/:postid" element={<PostDetail />} />
                     </Route>
+                    <Route path="/login" element={<Login />} />
                     <Route path="*" element={<NotFound />} />
-                <Route path="/login" element={<Login />} />
             </Routes>
         </AuthProvider>
     </div>

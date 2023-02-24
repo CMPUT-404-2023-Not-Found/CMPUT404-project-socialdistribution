@@ -17,6 +17,7 @@ const Login = () => {
         navigate(-1);
     }
 
+    // RENDER APP =================================================
     return (
         <div>
         <h1>Login Page</h1>

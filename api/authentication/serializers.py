@@ -1,3 +1,6 @@
+# 2023-02-23
+# authentication/serializers.py
+
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -5,8 +8,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
 
-        # can figure out a way later to send whole author here using CreateAuthorSerializer if needed
-        # right now, the uuid and username is sent
-        token['author_id'] = user.username 
+        # TODO Send required author information in access token
+        token['username'] = user.username 
         
         return token

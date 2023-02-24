@@ -23,8 +23,11 @@ export const AuthProvider = ({children}) => {
 
     //  event listners --------------------------------------------
     useEffect(() => {
-        // Refresh access token every 1 hour
-        const oneHour = 60 * 60 * 1000;
+        if (loading) {
+            updateToken();
+        }
+        // Refresh access token every 59 minutes
+        const oneHour = 59 * 60 * 1000;
         let interval = setInterval(() => {
             if (authTokens) {
                 updateToken()
@@ -67,7 +70,7 @@ export const AuthProvider = ({children}) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({'refresh': authTokens.refresh})
+            body: JSON.stringify({'refresh': authTokens?.refresh})
         });
         let data = await response.json();
         if (response.status && response.status === 200) {
@@ -76,6 +79,9 @@ export const AuthProvider = ({children}) => {
             localStorage.setItem('authTokens', JSON.stringify(data));
         } else {
             logoutUser();
+        }
+        if (loading) {
+            setLoading(false);
         }
     }
 
@@ -90,7 +96,7 @@ export const AuthProvider = ({children}) => {
     // RENDER APP =================================================
     return (
         <AuthContext.Provider value={contextData}>
-            {children}
+            {loading ? null : children}
         </AuthContext.Provider>
     );
 }

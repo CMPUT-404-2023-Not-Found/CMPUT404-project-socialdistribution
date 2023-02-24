@@ -2,7 +2,7 @@
 2023-02-24
 context/AuthContext.js
 
-This code is modified from a tutorial video about React Router V6 from Dennis Ivy on 2022-06-02, retrieved on 2023-02-19, to youtube.com
+This code is modified from a tutorial video about Authentication & Refreshing Tokens from Dennis Ivy on 2022-06-02, retrieved on 2023-02-19, to youtube.com
 tutorial video here:
 https://www.youtube.com/watch?v=2k8NleFjG7I
 */
@@ -81,9 +81,10 @@ export const AuthProvider = ({children}) => {
 
     //  context ---------------------------------------------------
     let contextData = {
-        user: user,
+        authTokens: authTokens,
         loginUser: loginUser,
-        logoutUser: logoutUser
+        logoutUser: logoutUser,
+        user: user
     };
 
     // RENDER APP =================================================

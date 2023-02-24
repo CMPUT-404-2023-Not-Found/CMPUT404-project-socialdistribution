@@ -7,14 +7,24 @@ tutorial here:
 https://hygraph.com/blog/routing-in-react
 */
 
+import { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 
+import AuthContext from '../context/AuthContext';
+
 const Navbar = () => {
+    let {user} = useContext(AuthContext);
     return ( 
         <nav>
             <div className='navlink'><NavLink to='/'>Home</NavLink></div>
             <span> | </span>
-            <div className='navlink'><NavLink to='/login'>Login</NavLink></div>
+            { user ? (
+                <div className='navlink'><p>Logout</p></div>
+            ) : (
+                <div className='navlink'><NavLink to='/login'>Login</NavLink></div>
+            )}
+
+            { user && <p>Hello {user.username}</p>}
         </nav>
     );
 };

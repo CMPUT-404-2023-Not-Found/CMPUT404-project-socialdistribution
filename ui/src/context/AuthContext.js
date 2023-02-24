@@ -8,7 +8,7 @@ https://www.youtube.com/watch?v=2k8NleFjG7I
 */
 
 import { createContext, useState, useEffect } from "react";
-
+import jwt_decode from 'jwt-decode'
 const AuthContext = createContext();
 export default AuthContext;
 
@@ -30,11 +30,17 @@ export const AuthProvider = ({children}) => {
             body: JSON.stringify({'username': e.target.username.value, 'password': e.target.password.value})
         })
         let data = await response.json()
-        console.log('data ', data)
+        if (response.status && response.status == 200) {
+            setAuthTokens(data)
+            setUser(jwt_decode(data.access))
+        } else {
+            alert('Opps! Login failed.')
+        }
     }
 
     //  context ---------------------------------------------------
     let contextData = {
+        user: user,
         loginUser: loginUser
     }
 

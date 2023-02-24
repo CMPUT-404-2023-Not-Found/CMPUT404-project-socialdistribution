@@ -1,3 +1,7 @@
+/*
+2023-02-21
+pages/Login.js
+*/
 import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
@@ -12,13 +16,6 @@ const Login = () => {
     let navigate = useNavigate();
 
     //  async functions -------------------------------------------
-    const login = () => {
-        console.log(username);
-        console.log(password);
-
-        navigate(-1);
-    }
-
     // RENDER APP =================================================
     return (
         <div>

@@ -18,6 +18,8 @@ import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 // Utils
 import PrivateRoutes from './utils/PrivateRoutes'
+// Contexts
+import { AuthProvider } from './context/AuthContext';
 // General & Login pages
 import Login from './pages/Login';
 import Stream from './pages/Stream';
@@ -31,17 +33,19 @@ import NotFound from './components/NotFound';
 const App = () => {
     return (
     <div className='App'>
-        <Navbar />
-        <Routes>
-            <Route element={<PrivateRoutes />}>
-                <Route path="/" element={<Stream/>} exact/>
-                <Route path="/createpost" element={<CreatePost />} />
-                <Route path="/post" element={<Post />} />
-                <Route path="/posts/:postid" element={<PostDetail />} />
-            </Route>
-            <Route path="/login" element={<Login />} />
-            <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AuthProvider>
+            <Navbar />
+            <Routes>
+                    <Route element={<PrivateRoutes />}>
+                        <Route path="/" element={<Stream/>} exact/>
+                        <Route path="/createpost" element={<CreatePost />} />
+                        <Route path="/post" element={<Post />} />
+                        <Route path="/posts/:postid" element={<PostDetail />} />
+                    </Route>
+                    <Route path="*" element={<NotFound />} />
+                <Route path="/login" element={<Login />} />
+            </Routes>
+        </AuthProvider>
     </div>
     );
 };

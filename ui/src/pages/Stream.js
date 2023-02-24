@@ -20,20 +20,7 @@ const Stream = () => {
 
     // RENDER APP =================================================
     return (
-        <>
-            <button onClick={() => {
-                navigate('/createpost');
-            }}>
-                Make a post
-            </button>
-
-            <br/>
-            <button onClick={() => {
-                navigate('/post')
-            }}> 
-                View a post
-            </button>
-        </>
+        <><h1>Your Stream Goes Here</h1></>
     );
 }
 

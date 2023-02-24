@@ -24,9 +24,7 @@ import { AuthProvider } from './context/AuthContext';
 import Login from './pages/Login';
 import Stream from './pages/Stream';
 // Post pages
-import CreatePost from './pages/CreatePost';
 import Posts from './pages/Posts';
-import PostDetail from './components/PostDetail';
 // Error pages
 import NotFound from './components/NotFound';
 
@@ -38,9 +36,7 @@ const App = () => {
             <Routes>
                     <Route element={<PrivateRoutes />}>
                         <Route path="/" element={<Stream/>} exact/>
-                        <Route path="/createpost" element={<CreatePost />} />
                         <Route path="/posts" element={<Posts />} />
-                        <Route path="/posts/:postid" element={<PostDetail />} />
                     </Route>
                     <Route path="/login" element={<Login />} />
                     <Route path="*" element={<NotFound />} />

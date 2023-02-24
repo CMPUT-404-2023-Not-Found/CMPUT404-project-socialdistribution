@@ -23,9 +23,7 @@ class AuthenticationTests(APITestCase):
         self.refresh_token_url = reverse('token_refresh')
         self.verify_token_url = reverse('token_verify')
     
-    '''
-    Test Authentication view /api/token/
-    '''
+    # Test Authentication view /api/token/
     def test_login(self):
         '''
         Test legit login
@@ -33,8 +31,8 @@ class AuthenticationTests(APITestCase):
         test_login_data = self.active_author
         response = self.client.post(self.login_url, test_login_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue('refresh' in response.data) # type: ignore
-        self.assertTrue('access' in response.data) # type: ignore
+        self.assertTrue('refresh' in response.data)
+        self.assertTrue('access' in response.data)
     
     def test_login_with_missing_password(self):
         '''
@@ -44,8 +42,8 @@ class AuthenticationTests(APITestCase):
         test_login_data.pop('password')
         response = self.client.post(self.login_url, test_login_data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertFalse('refresh' in response.data) # type: ignore
-        self.assertFalse('access' in response.data) # type: ignore
+        self.assertFalse('refresh' in response.data)
+        self.assertFalse('access' in response.data)
 
     def test_login_with_blank_password(self):
         '''
@@ -55,8 +53,8 @@ class AuthenticationTests(APITestCase):
         test_login_data['password'] = ''
         response = self.client.post(self.login_url, test_login_data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertFalse('refresh' in response.data) # type: ignore
-        self.assertFalse('access' in response.data) # type: ignore
+        self.assertFalse('refresh' in response.data)
+        self.assertFalse('access' in response.data)
 
     def test_login_with_missmatched_password(self):
         '''
@@ -66,8 +64,8 @@ class AuthenticationTests(APITestCase):
         test_login_data['password'] = get_random_string(16)
         response = self.client.post(self.login_url, test_login_data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        self.assertFalse('refresh' in response.data) # type: ignore
-        self.assertFalse('access' in response.data) # type: ignore
+        self.assertFalse('refresh' in response.data)
+        self.assertFalse('access' in response.data)
 
     def test_login_with_inactive_author(self):
         '''
@@ -76,17 +74,44 @@ class AuthenticationTests(APITestCase):
         test_login_data = self.inactive_author
         response = self.client.post(self.login_url, test_login_data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        self.assertFalse('refresh' in response.data) # type: ignore
-        self.assertFalse('access' in response.data) # type: ignore
+        self.assertFalse('refresh' in response.data)
+        self.assertFalse('access' in response.data)
 
-    '''
-    Test Authentication view /api/token/refresh/
-    '''
+    # Test Authentication view /api/token/refresh/
     def test_refresh_token(self):
-        pass
+        '''
+        Test legit refresh token
+        '''
+        test_login_data = self.active_author
+        response = self.client.post(self.login_url, test_login_data)
+        old_response_data = response.data
+        test_refresh_data = {'refresh': old_response_data['refresh']}
+        response = self.client.post(self.refresh_token_url, test_refresh_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue('refresh' in response.data)
+        self.assertTrue('access' in response.data)
+        self.assertNotEqual(response.data['refresh'], old_response_data['refresh'])
+        self.assertNotEqual(response.data['access'], old_response_data['access'])
 
-    '''
-    Test Authentication view /api/token/verify/
-    '''
-    def test_verify_token(self):
-        pass
+    # Test Authentication view /api/token/verify/
+    def test_verify_access_token(self):
+        '''
+        Test legit verification of access token
+        '''
+        test_login_data = self.active_author
+        response = self.client.post(self.login_url, test_login_data)
+        test_verify_data = {'token': response.data['access']}
+        response = self.client.post(self.verify_token_url, test_verify_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, {})
+
+    def test_verify_refresh_token(self):
+        '''
+        Test legit verification of refresh token
+        '''
+        test_login_data = self.active_author
+        response = self.client.post(self.login_url, test_login_data)
+        test_verify_data = {'token': response.data['refresh']}
+        response = self.client.post(self.verify_token_url, test_verify_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, {})

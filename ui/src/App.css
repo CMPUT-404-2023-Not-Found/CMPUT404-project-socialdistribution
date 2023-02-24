@@ -1,0 +1,18 @@
+/*
+2023-02-24
+App.css
+
+*/
+
+/* Navbar */
+nav .navlink {
+    color: black;
+    display: inline-block;
+}
+
+nav .navlink a:hover {
+    color: #0040ff;
+}
+nav .navlink a.active {
+    color: #0040ff;
+}

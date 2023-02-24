@@ -14,6 +14,8 @@ https://www.youtube.com/watch?v=2k8NleFjG7I
 import './App.css'
 
 import { Routes, Route } from 'react-router-dom';
+// Componenets
+import Navbar from './components/Navbar';
 // General & Login pages
 import Login from './pages/Login';
 import Stream from './pages/Stream';
@@ -22,20 +24,21 @@ import CreatePost from './pages/CreatePost';
 import Post from './pages/Post';
 import PostDetail from './components/PostDetail';
 // Error pages
-import NoMatch from './components/NoMatch';
+import NotFound from './components/NotFound';
 
 const App = () => {
     return (
     <div className='App'>
+        <Navbar />
         <Routes>
-            <Route path="/" element={<Stream/>} />
+            <Route path="/" element={<Stream/>} exact/>
             <Route path="/login" element={<Login />} />
 
             <Route path="/createpost" element={<CreatePost />} />
             <Route path="/post" element={<Post />} />
             <Route path="/posts/:postid" element={<PostDetail />} />
 
-            <Route path="*" element={<NoMatch />} />
+            <Route path="*" element={<NotFound />} />
         </Routes>
     </div>
     );

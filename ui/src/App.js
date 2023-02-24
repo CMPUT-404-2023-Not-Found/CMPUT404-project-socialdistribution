@@ -5,13 +5,18 @@
 // login redirection
 // https://www.youtube.com/watch?v=2k8NleFjG7I
 
+import './App.css'
+
 import { Routes, Route } from 'react-router-dom';
-import CreatePost from './pages/CreatePost';
-import Stream from './pages/Stream';
-import Post from './pages/Post';
-import NoMatch from './components/NoMatch';
-import PostDetail from './components/PostDetail';
+// General & Login pages
 import Login from './pages/Login';
+import Stream from './pages/Stream';
+// Post pages
+import CreatePost from './pages/CreatePost';
+import Post from './pages/Post';
+import PostDetail from './components/PostDetail';
+// Error pages
+import NoMatch from './components/NoMatch';
 
 const App = () => {
  return (

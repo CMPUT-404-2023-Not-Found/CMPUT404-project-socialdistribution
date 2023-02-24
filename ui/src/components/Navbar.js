@@ -13,15 +13,15 @@ import { NavLink } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 
 const Navbar = () => {
-    let {user} = useContext(AuthContext);
+    let {user, logoutUser} = useContext(AuthContext);
     return ( 
         <nav>
-            <div className='navlink'><NavLink to='/'>Home</NavLink></div>
+            <NavLink className='navlink' to='/'>Home</NavLink>
             <span> | </span>
             { user ? (
-                <div className='navlink'><p>Logout</p></div>
+                <NavLink className='navlink' onClick={logoutUser}>Logout</NavLink>
             ) : (
-                <div className='navlink'><NavLink to='/login'>Login</NavLink></div>
+                <NavLink className='navlink' to='/login'>Login</NavLink>
             )}
 
             { user && <h2>Hello {user.displayName}</h2>}

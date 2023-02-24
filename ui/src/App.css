@@ -5,14 +5,15 @@ App.css
 */
 
 /* Navbar */
-nav .navlink {
+nav a.navlink:any-link {
     color: black;
     display: inline-block;
+    text-decoration: underline;
 }
 
-nav .navlink a:hover {
+nav a.navlink:hover {
     color: #0040ff;
 }
-nav .navlink a.active {
+nav a.navlink.active {
     color: #0040ff;
 }

@@ -8,7 +8,7 @@ https://www.youtube.com/watch?v=2k8NleFjG7I
 */
 
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import PostSummary from '../components/PostSummary';
 import AuthContext from '../context/AuthContext';
@@ -17,13 +17,12 @@ const Stream = () => {
     //  variable declarations -------------------------------------
     const [ posts, setPosts ] = useState([]);
     const navigate = useNavigate();
-    const { user, authTokens } = useContext(AuthContext);
+    const { user, authTokens, logoutUser } = useContext(AuthContext);
     
     //  event listners --------------------------------------------
-    useEffect(
-        () => {
-            getPosts();
-        }, []);
+    useEffect(() => {
+        getPosts();
+    }, []);
 
     //  async functions -------------------------------------------
     const getPosts = async () => {
@@ -36,6 +35,8 @@ const Stream = () => {
         const data = await response.json()
         if (response.status && response.status === 200) {
             setPosts(data);
+        } else if (response.statusText === 'Unauthorized'){
+            logoutUser();
         } else {
             console.log('Failed to get posts');
         }

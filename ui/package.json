@@ -21,6 +21,10 @@
     "test": "CI=true react-scripts test --watch=all",
     "eject": "react-scripts eject"
   },
+  "engines": {
+    "node": "18.14.0",
+    "npm": "9.3.1"
+  },
   "eslintConfig": {
     "extends": [
       "react-app",

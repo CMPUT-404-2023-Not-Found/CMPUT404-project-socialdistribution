@@ -12,9 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 from datetime import datetime
-import dotenv
-import os
-import pytz
+import django_on_heroku, dotenv, os, pytz
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -67,8 +65,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -199,3 +198,6 @@ LOGGING = {
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Social Distribution - CMPUT404W23T07 H01'
 }
+
+# Settings for django-on-heroku
+django_on_heroku.settings(locals())

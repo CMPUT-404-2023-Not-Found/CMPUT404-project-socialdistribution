@@ -101,7 +101,7 @@ WSGI_APPLICATION = 'api.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {}
-if os.getenv("DJANGO_DATABASE_ENGINE_TYPE", 'sqllite') == 'sqllite':
+if os.getenv("DJANGO_DATABASE_ENGINE_TYPE", 'sqlite') == 'sqlite':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',

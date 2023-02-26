@@ -1,0 +1,65 @@
+[
+    {
+        "model": "author.author",
+        "pk": "398113ca-ce82-420a-b1e8-e8de260d3a64",
+        "fields": {
+            "password": "pbkdf2_sha256$260000$LCh5qcm7A9ZOJma71geJhD$lQh7yhogQ9jURz11vFy+sLzZdz0/ZZV5ZL9MLUtkZJE=",
+            "last_login": "2023-02-24T04:10:21.028Z",
+            "is_superuser": false,
+            "host": "http://localhost:8000",
+            "username": "georgerrmartin",
+            "created_at": "2023-02-24T04:09:28.496Z",
+            "updated_at": "2023-02-24T04:10:04.763Z",
+            "rev": 0,
+            "display_name": "George R. R. Martin",
+            "github": "",
+            "profile_image": "",
+            "is_staff": false,
+            "is_active": true,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "author.author",
+        "pk": "664925be-f3ce-42b0-9d34-1659d078f840",
+        "fields": {
+            "password": "pbkdf2_sha256$260000$4X44ZiFGN7aaJ6yqrxDNUt$w18R+gY/F0wOXdC+U6oAX7+nrc5p08UHz13/yGiYZo4=",
+            "last_login": "2023-02-24T04:08:53.072Z",
+            "is_superuser": true,
+            "host": "http://localhost:8000",
+            "username": "stephenking",
+            "created_at": "2023-02-20T02:05:19.665Z",
+            "updated_at": "2023-02-20T02:05:19.665Z",
+            "rev": 0,
+            "display_name": "Stephen King",
+            "github": "",
+            "profile_image": "",
+            "is_staff": true,
+            "is_active": true,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "author.author",
+        "pk": "de52020f-f5df-4361-b771-2829a99f16a2",
+        "fields": {
+            "password": "pbkdf2_sha256$260000$O4i9RtDhIdTLouUQa9pRv6$dobzfo+HGdHjGE2VrlOsou9Bp2TiLx9A5ZX3JJntq5k=",
+            "last_login": "2023-02-24T04:09:57.873Z",
+            "is_superuser": false,
+            "host": "http://localhost:8000",
+            "username": "edgarallanpoe",
+            "created_at": "2023-02-20T02:04:06.320Z",
+            "updated_at": "2023-02-24T04:10:14.784Z",
+            "rev": 0,
+            "display_name": "Edgar Allan Poe",
+            "github": "",
+            "profile_image": "",
+            "is_staff": false,
+            "is_active": false,
+            "groups": [],
+            "user_permissions": []
+        }
+    }
+]

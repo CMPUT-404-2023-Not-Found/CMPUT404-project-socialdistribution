@@ -70,28 +70,3 @@ jobs:
       run: |
         cd $PROJECT_PATH
         python manage.py test
-  # Run Django tests on a sqlite instance
-  database-sqlite:
-    runs-on: ubuntu-20.04
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: [ '3.8' ]
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
-        cache: 'pip'
-    - name: Install dependencies
-      run: |
-        cd $PROJECT_PATH
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-    - name: Run Tests with sqlite
-      env:
-        DATABASE_URL: sqlite://localhost/db.sqlite
-      run: |
-        cd $PROJECT_PATH
-        python manage.py test

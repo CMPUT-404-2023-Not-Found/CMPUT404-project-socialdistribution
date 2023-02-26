@@ -5,6 +5,7 @@ from django.shortcuts import render
 import logging
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .serializers import PostSerializer
@@ -21,6 +22,7 @@ class PostListCreateView(ListCreateAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
     lookup_url_kwarg = 'author_uuid'
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         logger.info(rev)

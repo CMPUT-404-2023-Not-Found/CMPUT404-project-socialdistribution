@@ -24,6 +24,9 @@ on:
     branches: [ "dev", "master" ]
     paths: 'api/**'
 
+# This code is modified from an exisiting YAML workflow from django-cms, last commit by Vinit Kumar on 2022-10-30, retrieved 2023-02-25 at github.com
+# YAML file here:
+# https://github.com/django-cms/django-cms/blob/develop/.github/workflows/test.yml
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: True

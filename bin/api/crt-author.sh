@@ -5,6 +5,14 @@
 
 # set -x
 if [ "#$APP_URL" = "#" ]; then echo "ERR Could could not find $APP_URL in env, is your env setup?"; exit 1; fi
+if [ ! -r .access_token ]
+then
+    echo "ERR Could not find a .access_token file, try using ./get-token.sh [username] [password]"
+    exit 1
+fi
+
+access_token=`cat .access_token`
+auth_hdr="Authorization: Bearer $access_token"
 
 CRT_AUTHOR_URL="${AUTHOR_API}/"
 RAND=`apg -n 1 -m 8 -x 8 -M NC 2`
@@ -25,6 +33,7 @@ EOF`
 rsp=`curl -sX POST \
      -d "$CRT_BODY" \
      -H "Content-Type: application/json" \
+     -H "$auth_hdr" \
      "$CRT_AUTHOR_URL"`
 e=$?; if [ $e -ne 0 ]; then echo -n "ERR Could not POST to $CRT_AUTHOR_URL "; echo "$rsp"; exit $e; fi
 

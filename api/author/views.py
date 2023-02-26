@@ -94,5 +94,9 @@ class AuthorDetailView(RetrieveUpdateAPIView):
         POST request that updates an author's profile
         '''
         logger.info(rev)
-        logger.info('Updating profile for author uuid: [%s]', kwargs.get(self.lookup_field))
+        author_uuid = str(kwargs.get(self.lookup_field))
+        requester_uuid = str(request.user)
+        if not request.user.is_superuser and requester_uuid != author_uuid:
+            logger.warning('Denying profile update by non-admin & non-owner [%s] for profile [%s]', request.user, author_uuid)
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
         return self.partial_update(request, *args, **kwargs)

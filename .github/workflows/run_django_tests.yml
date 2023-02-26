@@ -25,6 +25,7 @@ on:
     paths: 'api/**'
 
 concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: True
 
 jobs:

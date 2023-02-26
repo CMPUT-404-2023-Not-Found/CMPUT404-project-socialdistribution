@@ -1,6 +1,6 @@
 *.log
-.*.uuid
-.access_token
-.password
-.refresh_token
-.username
+*.uuid
+*.access_token
+*.password
+*.refresh_token
+*.username

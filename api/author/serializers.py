@@ -25,9 +25,20 @@ class CreateAuthorSerializer(serializers.ModelSerializer):
     
     def validate(self, attrs):
         username = attrs.get('username', '')
-
-        if not username.isalnum():
-            raise serializers.ValidationError('The username can only contain alphanumeric characters')
+        password = attrs.get('password', '')
+        # Perform validation on create
+        if not self.partial:
+            # Username validation
+            if not username:
+                raise serializers.ValidationError('The username cannot be blank')
+            elif not username.isalnum():
+                raise serializers.ValidationError('The username can only contain alphanumeric characters')
+            # Password validation
+            if not password:
+                raise serializers.ValidationError('The password cannot be blank')
+        # Perform validation on update
+        else:
+            if username or password: raise serializers.ValidationError('Username and password cannot be updated')
         return attrs
     
     def create(self, validated_data):

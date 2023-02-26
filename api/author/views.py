@@ -24,7 +24,7 @@ class AuthorView(ListCreateAPIView):
     '''
     serializer_class = CreateAuthorSerializer
     queryset = Author.objects.all()
-    permission_classes = [IsAdminUser|AuthenticatedCanPost]
+    # permission_classes = [IsAdminUser|AuthenticatedCanPost]
 
     def get(self, request, *args, **kwargs):
         '''
@@ -69,7 +69,7 @@ class AuthorDetailView(RetrieveUpdateAPIView):
     queryset = Author.objects.all()
     lookup_field = 'id'
     http_method_names = ['get', 'post', 'head', 'options']
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         '''
@@ -95,4 +95,4 @@ class AuthorDetailView(RetrieveUpdateAPIView):
         '''
         logger.info(rev)
         logger.info('Updating profile for author uuid: [%s]', kwargs.get(self.lookup_field))
-        return self.update(request, *args, **kwargs)
+        return self.partial_update(request, *args, **kwargs)

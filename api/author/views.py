@@ -13,6 +13,7 @@ import logging
 from .models import Author
 from .serializers import CreateAuthorSerializer
 from utils.permissions import AuthenticatedCanPost
+from utils.pagination import CustomPagination
 
 logger = logging.getLogger('django')
 rev = 'rev: $xGahyt8$x'
@@ -25,9 +26,15 @@ class AuthorView(ListCreateAPIView):
     queryset = Author.objects.all()
     permission_classes = [IsAdminUser|AuthenticatedCanPost]
 
+    def get(self, request, *args, **kwargs):
+        '''
+        GET request that returns list of authors ordered by username
+        '''
+        return self.list(request, *args, **kwargs)
+    
     def get_queryset(self):
         '''
-        GET /api/authors/?page=x&size=y
+        Utilized by self.get
         '''
         logger.info(rev)
         if (self.request.query_params): # type: ignore
@@ -41,7 +48,7 @@ class AuthorView(ListCreateAPIView):
     )
     def post(self, request):
         '''
-        POST /api/authors
+        POST request that creates a new author
         '''
         logger.info(rev)
         logger.info('Creating new author')
@@ -64,9 +71,15 @@ class AuthorDetailView(RetrieveUpdateAPIView):
     http_method_names = ['get', 'post', 'head', 'options']
     permission_classes = [IsAuthenticated]
 
+    def get(self, request, *args, **kwargs):
+        '''
+        GET request that returns a specific user
+        '''
+        return self.retrieve(request, *args, **kwargs)
+    
     def get_object(self):
         '''
-        GET /api/authors/uuid
+        Utilized by self.get
         '''
         logger.info(rev)
         author_uuid = self.kwargs.get(self.lookup_field)
@@ -78,7 +91,7 @@ class AuthorDetailView(RetrieveUpdateAPIView):
     )
     def post(self, request, *args, **kwargs):
         '''
-        POST /api/authors/uuid
+        POST request that updates an author's profile
         '''
         logger.info(rev)
         logger.info('Updating profile for author uuid: [%s]', kwargs.get(self.lookup_field))

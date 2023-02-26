@@ -13,19 +13,19 @@ class AuthorAdmin(UserAdmin):
     add_form = AuthorCreationForm
     form = AuthorChangeForm
     model = Author
-    list_display = ('id', 'username', 'host', 'display_name', 'github', 'profile_image', 'is_staff', 'is_active')
-    list_filter = ('id', 'username', 'host', 'display_name', 'github', 'profile_image', 'is_staff', 'is_active')
+    list_display = ('id', 'username', 'host', 'is_staff', 'is_superuser', 'is_active', 'last_login')
+    list_filter = ('id', 'username', 'host', 'is_staff', 'is_superuser', 'is_active', 'last_login')
     fieldsets = (
-        (None, {'fields': ('username', 'password', 'host')}),
-        ('Permissions', {'fields': ("is_staff", "is_active", "groups", "user_permissions")})
+        (None, {'fields': ('username', 'password', 'host', 'display_name', 'github', 'profile_image')}),
+        ('Permissions', {'fields': ("is_staff", "is_active", "is_superuser", "groups", "user_permissions")})
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
             'fields': (
-                'id', 'username', 'host',
+                'username', 'host',
                 'password1', 'password2', 
-                'is_staff', 'is_active', 'groups', 'user_permissions'
+                'is_staff', 'is_active', 'is_superuser', 'groups', 'user_permissions'
             )}
         ),
     )

@@ -2,6 +2,7 @@
 # post/models.py
 # For ERD refer here: https://github.com/CMPUT-404-2023-Not-Found/CMPUT404-project-socialdistribution/wiki/ERD
 
+from django.conf import settings
 from django.db import models
 
 from author.models import Author
@@ -24,8 +25,8 @@ class Post(Model):
     ]
 
     # Identification fields
-    author_id           = models.ForeignKey(to=Author, on_delete=models.CASCADE, verbose_name="Owner's Author Id")
-    host                = models.URLField(max_length=128, help_text='The node that created the post')
+    author              = models.ForeignKey(to=Author, on_delete=models.CASCADE, verbose_name="Owner's Author Id")
+    host                = models.URLField(default=settings.APP_URL, max_length=128, help_text='The node that created the post')
 
     # Modification fields
     published           = models.DateTimeField(auto_now=False, auto_now_add=True, verbose_name='Published At')
@@ -41,8 +42,8 @@ class Post(Model):
     visibility          = models.CharField(choices=VISIBILITY_OPTIONS, max_length=16, help_text='Who can view this post')
 
     # Origin fields
-    origin              = models.URLField(max_length=128, help_text='The node that created the post')
-    source              = models.URLField(max_length=128, help_text='The node that shared the post')
+    origin              = models.URLField(default=settings.APP_URL, max_length=128, help_text='The node that created the post')
+    source              = models.URLField(default=settings.APP_URL, max_length=128, help_text='The node that shared the post')
 
     # Content fields
     # categories ... this will be tricky because we need to have multiple string values ... thus another model will link to post
@@ -53,4 +54,4 @@ class Post(Model):
     title               = models.CharField(blank=False, null=False, max_length=128)
 
     def __str__(self):
-        return f'{self.author_id} {self.title}'
+        return f'{self.author} {self.title}'

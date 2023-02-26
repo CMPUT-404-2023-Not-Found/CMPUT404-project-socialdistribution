@@ -13,11 +13,8 @@ rand=`apg -n 1 -m 8 -x 8 -M NC 2`
 
 crt_body=`cat <<EOF
 {
-  "host": "$APP_URL",
   "unlisted": false,
   "visibility": "PUBLIC",
-  "origin": "$APP_URL",
-  "source": "$APP_URL",
   "content": "$rand Content",
   "contentType": "text/plain",
   "description": "$rand Desc",

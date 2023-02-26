@@ -1,25 +1,23 @@
 # This is a blank environment variables file
-# 2023-02-09
-# YOU MUST:
+# 2023-02-20
+# You must:
 #   1. Fill this out with appropraite values
 #   2. Rename ths file to: .env
 
 # Social Distribution Development
-# string of one: ['local', 'heroku']
-SD_ENV_NAME = 
-# timezone string like: 'America/Edmonton'
-SD_TZ = 
+SD_ENV_NAME = local
+SD_TZ = 'America/Edmonton'
+SD_APP_URL = 'http://localhost:8000'
 
 # DJANGO
-# space seperated string of hosts
-DJANGO_ALLOWED_HOSTS =
-# boolean
-DJANGO_CORS_ORIGIN_ALLOW_ALL = 
-# space seperated string of urls
-DJANGO_CORS_ORIGIN_WHITELIST = 
-# boolean
-DJANGO_DEBUG = 
-# string of one: ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
-DJANGO_LOG_LEVEL = 
-# string of key -- can be found in discord
+DJANGO_ALLOWED_HOSTS = localhost 127.0.0.1 [::1] testserver
+DJANGO_CORS_ORIGIN_ALLOW_ALL = True
+DJANGO_CORS_ORIGIN_WHITELIST = http://localhost:3000
+DJANGO_DEBUG = True
+DJANGO_LOG_LEVEL = 'INFO'
+# This can be any value you want. But as a great wizard once said, "keep it secret, keep it safe".
 DJANGO_SECRET_KEY = 
+
+# SIMPLE JWT
+# This can be any value you want. But as a great wizard once said, "keep it secret, keep it safe".
+SJ_SIGNING_KEY = ''

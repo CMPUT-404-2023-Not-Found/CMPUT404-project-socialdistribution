@@ -22,5 +22,4 @@ DJANGO_SECRET_KEY =
 
 # SIMPLE JWT
 # This can be any value you want. But as a great wizard once said, "keep it secret, keep it safe".
-SJ_SIGNING_KEY =
-
+SJ_SIGNING_KEY = ''

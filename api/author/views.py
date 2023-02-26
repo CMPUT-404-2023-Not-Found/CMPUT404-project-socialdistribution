@@ -2,8 +2,7 @@
 # author/views.py
 
 from django.db.models.functions import Lower
-from drf_spectacular.types import OpenApiTypes
-from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -13,10 +12,9 @@ import logging
 from .models import Author
 from .serializers import CreateAuthorSerializer
 from utils.permissions import AuthenticatedCanPost
-from utils.pagination import CustomPagination
 
 logger = logging.getLogger('django')
-rev = 'rev: $xGahyt8$x'
+rev = 'rev: $xJekOd1$x'
 
 class AuthorView(ListCreateAPIView):
     '''
@@ -24,7 +22,7 @@ class AuthorView(ListCreateAPIView):
     '''
     serializer_class = CreateAuthorSerializer
     queryset = Author.objects.all()
-    # permission_classes = [IsAdminUser|AuthenticatedCanPost]
+    permission_classes = [IsAdminUser|AuthenticatedCanPost]
 
     def get(self, request, *args, **kwargs):
         '''
@@ -69,7 +67,7 @@ class AuthorDetailView(RetrieveUpdateAPIView):
     queryset = Author.objects.all()
     lookup_field = 'id'
     http_method_names = ['get', 'post', 'head', 'options']
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         '''

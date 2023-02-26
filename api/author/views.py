@@ -6,11 +6,13 @@ from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 import logging
 
 from .models import Author
 from .serializers import CreateAuthorSerializer
+from utils.permissions import AuthenticatedCanPost
 
 logger = logging.getLogger('django')
 rev = 'rev: $xGahyt8$x'
@@ -21,6 +23,7 @@ class AuthorView(ListCreateAPIView):
     '''
     serializer_class = CreateAuthorSerializer
     queryset = Author.objects.all()
+    permission_classes = [IsAdminUser|AuthenticatedCanPost]
 
     def get_queryset(self):
         '''
@@ -59,6 +62,7 @@ class AuthorDetailView(RetrieveUpdateAPIView):
     queryset = Author.objects.all()
     lookup_field = 'id'
     http_method_names = ['get', 'post', 'head', 'options']
+    permission_classes = [IsAuthenticated]
 
     def get_object(self):
         '''

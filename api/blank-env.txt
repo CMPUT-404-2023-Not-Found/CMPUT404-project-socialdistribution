@@ -10,8 +10,7 @@ SD_TZ = 'America/Edmonton'
 SD_APP_URL = 'http://localhost:8000'
 
 # DJANGO Database
-DATABASE_URL = 'sqlite:///db.sqlite3'
-DJANGO_DATABASE_ENGINE_TYPE = 'sqlite'
+DATABASE_URL = 'sqlite://localhost/db.sqlite3'
 # DJANGO Settings
 DJANGO_ALLOWED_HOSTS = localhost 127.0.0.1 [::1] testserver
 DJANGO_CORS_ORIGIN_ALLOW_ALL = True

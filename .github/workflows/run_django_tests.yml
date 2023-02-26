@@ -7,6 +7,7 @@
 name: Django CI Run Tests
 env:
   PROJECT_PATH: api/
+  DATABASE_URL: 'sqlite:///db.sqlite3'
   DJANGO_ALLOWED_HOSTS: testserver
   DJANGO_CORS_ORIGIN_ALLOW_ALL: False
   DJANGO_CORS_ORIGIN_WHITELIST: 'http://localhost:3000'

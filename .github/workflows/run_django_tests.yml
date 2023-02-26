@@ -29,23 +29,22 @@ concurrency:
   cancel-in-progress: True
 
 jobs:
-  build:
+  # Run Django tests on a Postgres instance
+  database-postgres:
     runs-on: ubuntu-20.04
     strategy:
+      fails-fast: false
       max-parallel: 4
       matrix:
-        db: [sqlite, postgres]
-        python-version: [3.8]
-        include:
-          - db: postgres
-            db_port: 5432
+        python-version: [ '3.8' ]
     # Setup PostgreSQL database image
     services:
       postgres:
         image: postgres:10
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: sd7-db-password
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -65,13 +64,34 @@ jobs:
         cd $PROJECT_PATH
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    - name: Run Tests
+    - name: Run Tests with Postgres
       env:
-        DB: ${{ matrix.db }}
-        DB_HOST: 127.0.0.1
-        DB_PORT: ${{ matrix.db_port }}
-        DB_PASSWORD: sd7-db-password
+        DATABASE_URL: postgres://postgres:postgres@127.0.0.1/postgres
       run: |
         cd $PROJECT_PATH
         python manage.py test
-        
+  # Run Django tests on a sqlite instance
+  database-sqlite:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fasts: false
+      matrix:
+        python-version: [ '3.8' ]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix-python-version }}
+        cache: 'pip'
+    - name: Install dependencies
+      run: |
+        cd $PROJECT_PATH
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run Tests with sqlite
+      env:
+        DATABASE_URL: sqlite://localhost/db.sqlite
+      run: |
+        cd $PROJECT_PATH
+        python manage.py test

@@ -15,7 +15,7 @@ import AuthContext from '../context/AuthContext';
 const Profile = () => {
     //  variable declarations -------------------------------------
     const [ profile, setProfile ] = useState([]);
-    const navigate = useNavigate();
+    const [ update, setUpdate ] = useState(false);
     const { user, authTokens, logoutUser } = useContext(AuthContext);
     
     //  event listners --------------------------------------------
@@ -42,7 +42,6 @@ const Profile = () => {
     };
 
     const renderProfile = (profile) => {
-        console.log(profile)
         if (!profile) {
             return(
                 <div>No profile</div>
@@ -54,13 +53,22 @@ const Profile = () => {
                     <div>{profile.id}</div>
                     <div>{profile.github}</div>
                     <div>{profile.profileImage}</div>
+                    <hr/>
+                    <div>Full Payload: {JSON.stringify(profile)}</div>
                 </div>
             );
         }
     };
+
+    const renderUpdateForm = () => {
+        
+    }
     // RENDER APP =================================================
     return (
-        <>{renderProfile(profile)}</>
+        <>
+        {renderProfile(profile)}
+        {update && renderUpdateForm}
+        </>
     );
 }
 

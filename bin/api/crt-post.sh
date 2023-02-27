@@ -8,6 +8,14 @@ if [ "#$APP_URL" = "#" ]; then echo "ERR Could could not find $APP_URL in env, i
 if [ "#$1" = "#" ]; then echo "Usage $0 [author_uuid]"; exit 1; fi
 author_uuid="$1"
 
+if [ ! -r .access_token ]
+then
+    echo "ERR Could not find a .access_token file, try using ./get-token.sh [username] [password]"
+    exit 1
+fi
+access_token=`cat .access_token`
+auth_hdr="Authorization: Bearer $access_token"
+
 crt_post_url=`printf "${POST_API}/" $author_uuid`
 rand=`apg -n 1 -m 8 -x 8 -M NC 2`
 
@@ -28,6 +36,7 @@ e=$?; if [ $e -ne 0 ]; then echo "ERR Invalid POST body"; exit 1; fi
 rsp=`curl -sX POST \
      -d "$crt_body" \
      -H "Content-Type: application/json" \
+     -H "$auth_hdr" \
      "$crt_post_url"`
 e=$?; if [ $e -ne 0 ]; then echo -n "ERR Could not POST to $crt_post_url "; echo "$rsp"; exit $e; fi
 

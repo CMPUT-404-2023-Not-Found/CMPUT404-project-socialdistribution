@@ -6,7 +6,7 @@ from rest_framework import serializers
 from rest_framework.fields import CharField, URLField, UUIDField
 from .models import Author
 
-class CreateAuthorSerializer(serializers.ModelSerializer):
+class NewAuthorSerializer(serializers.ModelSerializer):
     id              = serializers.SerializerMethodField('get_id')
     # http://localhost:8000/authors/<UUID>/posts/<UUID>
     @extend_schema_field(URLField)
@@ -47,3 +47,8 @@ class CreateAuthorSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         return Author.objects.create_author(**validated_data)
+
+class ExistingAuthorSerializer(NewAuthorSerializer):
+    class Meta:
+        model = Author
+        fields = [ 'type', 'id', 'host', 'displayName', 'url', 'github', 'profileImage']

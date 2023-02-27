@@ -22,6 +22,7 @@ import PrivateRoutes from './utils/PrivateRoutes'
 import { AuthProvider } from './context/AuthContext';
 // General & Login pages
 import Login from './pages/Login';
+import Profile from './pages/Profile';
 import Stream from './pages/Stream';
 // Post pages
 import Posts from './pages/Posts';
@@ -37,6 +38,7 @@ const App = () => {
                     <Route element={<PrivateRoutes />}>
                         <Route path="/" element={<Stream/>} exact/>
                         <Route path="/posts" element={<Posts />} />
+                        <Route path="/profile" element={<Profile />} />
                     </Route>
                     <Route path="/login" element={<Login />} />
                     <Route path="*" element={<NotFound />} />

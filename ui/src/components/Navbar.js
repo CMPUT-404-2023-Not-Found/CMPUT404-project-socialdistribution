@@ -21,6 +21,8 @@ const Navbar = () => {
             { user ? (<>
                 <NavLink className='navlink' to='/posts'>Your Posts</NavLink>
                 <span> | </span>
+                <NavLink className='navlink' to='/profile'>Profile</NavLink>
+                <span> | </span>
                 <NavLink className='navlink' onClick={logoutUser} to='/login'>Logout</NavLink>
                 </>
             ) : (

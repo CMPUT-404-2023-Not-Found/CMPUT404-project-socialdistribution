@@ -8,9 +8,9 @@ https://www.youtube.com/watch?v=2k8NleFjG7I
 */
 
 import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import AuthContext from '../context/AuthContext';
+import API from '../utils/API';
 
 const Profile = () => {
     //  variable declarations -------------------------------------
@@ -25,13 +25,7 @@ const Profile = () => {
 
     //  async functions -------------------------------------------
     const getProfile = async () => {
-        const getProfileUrl = `http://localhost:8000/api/authors/${user.user_id}/`;
-        const response = await fetch(getProfileUrl, {
-            headers: {
-                'Authorization': 'Bearer ' + String(authTokens.access)
-            }
-        });
-        const data = await response.json()
+        const [response, data] = await API.get(`/api/authors/${user.user_id}/`, authTokens.access);
         if (response.status && response.status === 200) {
             setProfile(data);
         } else if (response.statusText === 'Unauthorized'){

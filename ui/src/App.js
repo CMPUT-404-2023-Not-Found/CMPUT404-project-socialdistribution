@@ -1,31 +1,49 @@
-// From
-// https://hygraph.com/blog/routing-in-react
-// App.js
+/*
+2023-02-19
+App.js
 
-// login redirection
-// https://www.youtube.com/watch?v=2k8NleFjG7I
+This code is modified from a tutorial about Routing in React from Joel Olawanle on 2022-09-06, retrieved on 2023-02-19, to hygraph.com
+tutorial here:
+https://hygraph.com/blog/routing-in-react
+
+This code is modified from a tutorial video about React Router V6 from Dennis Ivy on 2022-06-02, retrieved on 2023-02-19, to youtube.com
+tutorial video here:
+https://www.youtube.com/watch?v=2k8NleFjG7I
+*/
+
+import './App.css'
 
 import { Routes, Route } from 'react-router-dom';
-import CreatePost from './pages/CreatePost';
-import Stream from './pages/Stream';
-import Post from './pages/Post';
-import NoMatch from './components/NoMatch';
-import PostDetail from './components/PostDetail';
+// Componenets
+import Navbar from './components/Navbar';
+// Utils
+import PrivateRoutes from './utils/PrivateRoutes'
+// Contexts
+import { AuthProvider } from './context/AuthContext';
+// General & Login pages
 import Login from './pages/Login';
+import Stream from './pages/Stream';
+// Post pages
+import Posts from './pages/Posts';
+// Error pages
+import NotFound from './components/NotFound';
 
 const App = () => {
- return (
-    <>
-       <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/" element={<Stream />} />
-          <Route path="/createpost" element={<CreatePost />} />
-          <Route path="/post" element={<Post />} />
-          <Route path="/posts/:postid" element={<PostDetail />} />
-          <Route path="*" element={<NoMatch />} />
-       </Routes>
-    </>
- );
+    return (
+    <div className='App'>
+        <AuthProvider>
+            <Navbar />
+            <Routes>
+                    <Route element={<PrivateRoutes />}>
+                        <Route path="/" element={<Stream/>} exact/>
+                        <Route path="/posts" element={<Posts />} />
+                    </Route>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="*" element={<NotFound />} />
+            </Routes>
+        </AuthProvider>
+    </div>
+    );
 };
 
 export default App;

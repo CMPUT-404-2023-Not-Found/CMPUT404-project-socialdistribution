@@ -1,78 +1,26 @@
-import React, { useEffect, useState } from 'react';
-// useful explanation about hooks, didn't watch fully because didn't feel like needed all
-// all of them
-// https://www.youtube.com/watch?v=TNhaISOUy6Q
+/*
+2023-02-19
+pages/Stream.js
 
-// button to redirect
-// https://stackoverflow.com/questions/50644976/react-button-onclick-redirect-page
+This code is modified from a tutorial video about Authentication & Refreshing Tokens from Dennis Ivy on 2022-06-02, retrieved on 2023-02-19, to youtube.com
+tutorial video here:
+https://www.youtube.com/watch?v=2k8NleFjG7I
+*/
 
-// Dynamic linking and fetching from django
-// https://www.youtube.com/watch?v=9dwyXq9G_MQ&t=5062s
-import { Link, useNavigate } from 'react-router-dom';
-import PostSummary from '../components/PostSummary';
-
-const baseURL = 'http://localhost:8000';
-const authoruuid = 'ed2ca973-7f15-4934-b355-c119fc086d57';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Stream = () => {
-    let navigate = useNavigate();
+    //  variable declarations -------------------------------------
+    const navigate = useNavigate();
+    
+    //  event listners --------------------------------------------
 
-    const [posts, setPosts] = useState([]);
+    //  async functions -------------------------------------------
 
-    const getPosts = async () => {
-        const response = await fetch(`${baseURL}/api/authors/${authoruuid}/posts`)
-
-        const data = await response.json()
-
-        if (response.ok) {
-            console.log(data)
-            setPosts(data)
-        } else {
-            console.log("Failed network Request")
-        }
-    }
-
-    useEffect(
-        () => {
-            getPosts();
-        }, []
-    )
-
+    // RENDER APP =================================================
     return (
-        <>
-            <button onClick={() => {
-                navigate('/createpost');
-            }}>
-                Make a post
-            </button>
-
-            <br/>
-            <button onClick={() => {
-                navigate('/post')
-            }}> 
-                View a post
-            </button>
-
-            <div>
-            { posts.length > 0 ? (
-                posts.map( (post) => {
-                    return (
-                        <div key={post.id}>
-                            <PostSummary 
-                                authorobject={post.author_id}
-                                description={post.description}
-                                postid={post.id}
-                            />
-                            <br/>
-                        </div>
-                    )
-                })
-            ) : (
-                <div>No posts</div>
-            ) }
-            </div>
-
-        </>
+        <><h1>Your Stream Goes Here</h1></>
     );
 }
 

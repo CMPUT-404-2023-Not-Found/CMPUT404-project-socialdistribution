@@ -62,7 +62,7 @@ const Posts = () => {
     };
     // RENDER APP =================================================
     return (
-        <>{renderPosts(posts)}</>
+        <>{renderPosts(posts.items)}</>
     );
 }
 

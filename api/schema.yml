@@ -7,26 +7,34 @@ paths:
   /api/authors/:
     get:
       operationId: authors_list
-      description: Author View for retrieving a list of authors or creating a new
-        author
+      description: GET request that returns list of authors ordered by username
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
       tags:
       - authors
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CreateAuthor'
+                $ref: '#/components/schemas/PaginatedCreateAuthorList'
           description: ''
     post:
       operationId: authors_create
-      description: POST /api/authors
+      description: POST request that creates a new author
       tags:
       - authors
       requestBody:
@@ -42,9 +50,7 @@ paths:
               $ref: '#/components/schemas/CreateAuthor'
         required: true
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '201':
           content:
@@ -52,36 +58,45 @@ paths:
               schema:
                 $ref: '#/components/schemas/CreateAuthor'
           description: ''
-  /api/authors/{author_id}/inbox/:
+  /api/authors/{author_uuid}/inbox/:
     get:
       operationId: authors_inbox_list
       parameters:
       - in: path
-        name: author_id
+        name: author_uuid
         schema:
           type: string
           format: uuid
         required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
       tags:
       - authors
       security:
-      - cookieAuth: []
-      - basicAuth: []
+      - jwtAuth: []
       - {}
       responses:
         '200':
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Inbox'
+                $ref: '#/components/schemas/PaginatedInboxList'
           description: ''
     post:
       operationId: authors_inbox_create
       parameters:
       - in: path
-        name: author_id
+        name: author_uuid
         schema:
           type: string
           format: uuid
@@ -101,8 +116,7 @@ paths:
               $ref: '#/components/schemas/Inbox'
         required: true
       security:
-      - cookieAuth: []
-      - basicAuth: []
+      - jwtAuth: []
       - {}
       responses:
         '201':
@@ -115,7 +129,7 @@ paths:
       operationId: authors_inbox_destroy
       parameters:
       - in: path
-        name: author_id
+        name: author_uuid
         schema:
           type: string
           format: uuid
@@ -123,42 +137,49 @@ paths:
       tags:
       - authors
       security:
-      - cookieAuth: []
-      - basicAuth: []
+      - jwtAuth: []
       - {}
       responses:
         '204':
           description: No response body
-  /api/authors/{author_id}/posts/:
+  /api/authors/{author_uuid}/posts/:
     get:
       operationId: authors_posts_list
       parameters:
       - in: path
-        name: author_id
+        name: author_uuid
         schema:
           type: string
           format: uuid
         required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
       tags:
       - authors
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Post'
+                $ref: '#/components/schemas/PaginatedPostList'
           description: ''
     post:
       operationId: authors_posts_create
       parameters:
       - in: path
-        name: author_id
+        name: author_uuid
         schema:
           type: string
           format: uuid
@@ -178,9 +199,7 @@ paths:
               $ref: '#/components/schemas/Post'
         required: true
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '201':
           content:
@@ -188,12 +207,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Post'
           description: ''
-  /api/authors/{author_id}/posts/{id}/:
+  /api/authors/{author_uuid}/posts/{id}/:
     get:
       operationId: authors_posts_retrieve
       parameters:
       - in: path
-        name: author_id
+        name: author_uuid
         schema:
           type: string
           format: uuid
@@ -207,8 +226,7 @@ paths:
       tags:
       - authors
       security:
-      - cookieAuth: []
-      - basicAuth: []
+      - jwtAuth: []
       - {}
       responses:
         '200':
@@ -221,7 +239,7 @@ paths:
       operationId: authors_posts_create_2
       parameters:
       - in: path
-        name: author_id
+        name: author_uuid
         schema:
           type: string
           format: uuid
@@ -247,8 +265,7 @@ paths:
               $ref: '#/components/schemas/Post'
         required: true
       security:
-      - cookieAuth: []
-      - basicAuth: []
+      - jwtAuth: []
       - {}
       responses:
         '200':
@@ -261,7 +278,7 @@ paths:
       operationId: authors_posts_update
       parameters:
       - in: path
-        name: author_id
+        name: author_uuid
         schema:
           type: string
           format: uuid
@@ -287,8 +304,7 @@ paths:
               $ref: '#/components/schemas/Post'
         required: true
       security:
-      - cookieAuth: []
-      - basicAuth: []
+      - jwtAuth: []
       - {}
       responses:
         '200':
@@ -301,7 +317,7 @@ paths:
       operationId: authors_posts_partial_update
       parameters:
       - in: path
-        name: author_id
+        name: author_uuid
         schema:
           type: string
           format: uuid
@@ -326,8 +342,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedPost'
       security:
-      - cookieAuth: []
-      - basicAuth: []
+      - jwtAuth: []
       - {}
       responses:
         '200':
@@ -340,7 +355,7 @@ paths:
       operationId: authors_posts_destroy
       parameters:
       - in: path
-        name: author_id
+        name: author_uuid
         schema:
           type: string
           format: uuid
@@ -354,8 +369,7 @@ paths:
       tags:
       - authors
       security:
-      - cookieAuth: []
-      - basicAuth: []
+      - jwtAuth: []
       - {}
       responses:
         '204':
@@ -363,7 +377,7 @@ paths:
   /api/authors/{id}/:
     get:
       operationId: authors_retrieve
-      description: Author view for retrieving or updating a specific author
+      description: GET request that returns a specific user
       parameters:
       - in: path
         name: id
@@ -374,9 +388,7 @@ paths:
       tags:
       - authors
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -386,7 +398,7 @@ paths:
           description: ''
     post:
       operationId: authors_update
-      description: POST /api/authors/uuid
+      description: POST request that updates an author's profile
       parameters:
       - in: path
         name: id
@@ -409,9 +421,7 @@ paths:
               $ref: '#/components/schemas/CreateAuthor'
         required: true
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -539,8 +549,7 @@ paths:
       tags:
       - schema
       security:
-      - cookieAuth: []
-      - basicAuth: []
+      - jwtAuth: []
       - {}
       responses:
         '200':
@@ -562,6 +571,87 @@ paths:
                 type: object
                 additionalProperties: {}
           description: ''
+  /api/token/:
+    post:
+      operationId: token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MyTokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MyTokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MyTokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MyTokenObtainPair'
+          description: ''
+  /api/token/refresh/:
+    post:
+      operationId: token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/token/verify/:
+    post:
+      operationId: token_verify_create
+      description: |-
+        Takes a token and indicates if it is valid.  This view provides no
+        information about a token's fitness for a particular use.
+      tags:
+      - token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenVerify'
+          description: ''
 components:
   schemas:
     ContentTypeEnum:
@@ -579,12 +669,33 @@ components:
     CreateAuthor:
       type: object
       properties:
+        type:
+          type: string
+          readOnly: true
         id:
           type: string
-          format: uuid
+          format: uri
           readOnly: true
+        host:
+          type: string
+          format: uri
+          readOnly: true
+          maxLength: 128
+        displayName:
+          type: string
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        github:
+          type: string
+          format: uri
+          maxLength: 128
+        profileImage:
+          type: string
         username:
           type: string
+          writeOnly: true
           maxLength: 32
           minLength: 8
         password:
@@ -592,22 +703,12 @@ components:
           writeOnly: true
           maxLength: 64
           minLength: 8
-        displayName:
-          type: string
-        github:
-          type: string
-          format: uri
-          maxLength: 128
-        host:
-          type: string
-          format: uri
-          maxLength: 128
-        profileImage:
-          type: string
       required:
       - host
       - id
       - password
+      - type
+      - url
       - username
     Inbox:
       type: object
@@ -616,7 +717,7 @@ components:
           type: string
           format: uuid
           readOnly: true
-        author_id:
+        author:
           type: string
           format: uuid
           readOnly: true
@@ -640,37 +741,74 @@ components:
         type:
           $ref: '#/components/schemas/TypeEnum'
       required:
-      - author_id
+      - author
       - id
       - object
       - receivedAt
       - senderAuthorId
       - summary
+    MyTokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - password
+      - username
+    PaginatedCreateAuthorList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateAuthor'
+    PaginatedInboxList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Inbox'
+    PaginatedPostList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Post'
     PatchedPost:
       type: object
       properties:
+        type:
+          type: string
+          readOnly: true
+        title:
+          type: string
+          maxLength: 128
         id:
           type: string
-          format: uri
           readOnly: true
-        author_id:
-          type: string
-          format: uuid
-          readOnly: true
-        host:
+        origin:
           type: string
           format: uri
-          readOnly: true
-        published:
+        source:
           type: string
-          format: date-time
-          readOnly: true
-        updated_at:
+          format: uri
+        description:
           type: string
-          format: date-time
+        contentType:
+          $ref: '#/components/schemas/ContentTypeEnum'
+        content:
+          type: string
+        author:
+          allOf:
+          - $ref: '#/components/schemas/CreateAuthor'
           readOnly: true
-        rev:
-          type: integer
+        categories:
+          type: string
           readOnly: true
         commentCount:
           type: integer
@@ -678,55 +816,57 @@ components:
         likeCount:
           type: integer
           readOnly: true
-        unlisted:
-          type: boolean
-          description: Does this post appear in authors streams
+        comments:
+          type: string
+          readOnly: true
+        published:
+          type: string
+          format: date-time
+          readOnly: true
         visibility:
           allOf:
           - $ref: '#/components/schemas/VisibilityEnum'
           description: Who can view this post
-        origin:
-          type: string
-          format: uri
+        unlisted:
+          type: boolean
+          description: Does this post appear in authors streams
+        rev:
+          type: integer
           readOnly: true
-        source:
+        updated_at:
           type: string
-          format: uri
+          format: date-time
           readOnly: true
-        content:
-          type: string
-        contentType:
-          $ref: '#/components/schemas/ContentTypeEnum'
-        description:
-          type: string
-        title:
-          type: string
-          maxLength: 128
     Post:
       type: object
       properties:
+        type:
+          type: string
+          readOnly: true
+        title:
+          type: string
+          maxLength: 128
         id:
           type: string
-          format: uri
           readOnly: true
-        author_id:
-          type: string
-          format: uuid
-          readOnly: true
-        host:
+        origin:
           type: string
           format: uri
-          readOnly: true
-        published:
+        source:
           type: string
-          format: date-time
-          readOnly: true
-        updated_at:
+          format: uri
+        description:
           type: string
-          format: date-time
+        contentType:
+          $ref: '#/components/schemas/ContentTypeEnum'
+        content:
+          type: string
+        author:
+          allOf:
+          - $ref: '#/components/schemas/CreateAuthor'
           readOnly: true
-        rev:
-          type: integer
+        categories:
+          type: string
           readOnly: true
         commentCount:
           type: integer
@@ -734,45 +874,61 @@ components:
         likeCount:
           type: integer
           readOnly: true
-        unlisted:
-          type: boolean
-          description: Does this post appear in authors streams
+        comments:
+          type: string
+          readOnly: true
+        published:
+          type: string
+          format: date-time
+          readOnly: true
         visibility:
           allOf:
           - $ref: '#/components/schemas/VisibilityEnum'
           description: Who can view this post
-        origin:
-          type: string
-          format: uri
+        unlisted:
+          type: boolean
+          description: Does this post appear in authors streams
+        rev:
+          type: integer
           readOnly: true
-        source:
+        updated_at:
           type: string
-          format: uri
+          format: date-time
           readOnly: true
-        content:
-          type: string
-        contentType:
-          $ref: '#/components/schemas/ContentTypeEnum'
-        description:
-          type: string
-        title:
-          type: string
-          maxLength: 128
       required:
-      - author_id
+      - author
+      - categories
       - commentCount
+      - comments
       - content
       - contentType
-      - host
       - id
       - likeCount
-      - origin
       - published
       - rev
-      - source
       - title
+      - type
       - updated_at
       - visibility
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+    TokenVerify:
+      type: object
+      properties:
+        token:
+          type: string
+          writeOnly: true
+      required:
+      - token
     TypeEnum:
       enum:
       - post
@@ -786,10 +942,7 @@ components:
       - PUBLIC
       type: string
   securitySchemes:
-    basicAuth:
+    jwtAuth:
       type: http
-      scheme: basic
-    cookieAuth:
-      type: apiKey
-      in: cookie
-      name: sessionid
+      scheme: bearer
+      bearerFormat: JWT

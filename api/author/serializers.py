@@ -1,6 +1,7 @@
 # 2023-02-13
 # author/serializers.py
 
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 from rest_framework.fields import CharField, URLField, UUIDField
 from .models import Author
@@ -8,8 +9,10 @@ from .models import Author
 class CreateAuthorSerializer(serializers.ModelSerializer):
     id              = serializers.SerializerMethodField('get_id')
     # http://localhost:8000/authors/<UUID>/posts/<UUID>
+    @extend_schema_field(URLField)
     def get_id(self, obj): return obj.get_node_id()
     url             = serializers.SerializerMethodField('get_url')
+    @extend_schema_field(URLField)
     def get_url(self, obj): return obj.get_node_id()
     username        = CharField(max_length = 32, min_length = 8, write_only = True)
     password        = CharField(max_length = 64, min_length = 8, write_only = True)
@@ -17,6 +20,7 @@ class CreateAuthorSerializer(serializers.ModelSerializer):
     displayName     = CharField(source='display_name', required=False)
     profileImage    = CharField(source='profile_image', required=False)
     type            = serializers.SerializerMethodField('get_type')
+    @extend_schema_field(str)
     def get_type(self, obj): return 'author'
 
     class Meta:

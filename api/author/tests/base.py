@@ -1,11 +1,12 @@
-# 2023-02-18
-# author/base.py
+# 2023-02-26
+# author/tests/base.py
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils.crypto import get_random_string
 from rest_framework.test import APIClient, APITestCase
+from rest_framework_simplejwt.tokens import RefreshToken
 
 Author = get_user_model()
 
@@ -15,23 +16,22 @@ class Base(APITestCase):
     '''
     app_host = settings.APP_URL
     fixtures = ['fixtures/db.json']
-    author_data = {
-        'username': 'testme00',
-        'password': 'P*ssw0rd!',
-        'host': app_host
-    }
 
     def setUp(self):
-        self.client = APIClient()
-        self.author = Author.objects.create(
-            username = 'testme00',
-            password = 'P*ssw0rd!',
-            host = self.app_host
-        )
-        self.author_uuid = str(self.author.id)
+        self.author = Author.objects.get(username='georgerrmartin')
+        self.admin = Author.objects.get(username='stephenking')
+        self.another_author = Author.objects.get(username='edgarallanpoe')
+        self.author_client = self.configure_client(self.author)
+        self.admin_client = self.configure_client(self.admin)
 
-    def get_author_uuid(self, obj):
-        return str(obj.id)
+    def configure_client(self, user):
+        '''
+        Return an APIClient authenticated as user
+        '''
+        client = APIClient()
+        refresh = RefreshToken.for_user(user)
+        client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
+        return client
     
     def get_author_url(self):
         '''

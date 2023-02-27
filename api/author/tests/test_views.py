@@ -30,6 +30,14 @@ class AuthorViewTests(Base):
         '''
         response = self.author_client.get(self.get_author_url())
         self.assertEquals(response.status_code, status.HTTP_403_FORBIDDEN)
+    
+    def test_get_list_of_authors_as_anonymous_user(self):
+        '''
+        Test getting list of authors as anonymous user
+        '''
+        c = APIClient()
+        response = c.get(self.get_author_url())
+        self.assertEquals(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     # Test Author view GET /api/authors/uuid/
     def test_get_author_profile(self):

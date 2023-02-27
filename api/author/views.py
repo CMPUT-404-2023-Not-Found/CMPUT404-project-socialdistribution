@@ -11,7 +11,7 @@ import logging
 
 from .models import Author
 from .serializers import NewAuthorSerializer, ExistingAuthorSerializer
-from utils.permissions import AuthenticatedCanPost
+from utils.permissions import AnonymousCanPost
 
 logger = logging.getLogger('django')
 rev = 'rev: $xJekOd1$x'
@@ -22,7 +22,7 @@ class AuthorView(ListCreateAPIView):
     '''
     serializer_class = NewAuthorSerializer
     queryset = Author.objects.all()
-    permission_classes = [IsAdminUser|AuthenticatedCanPost]
+    permission_classes = [IsAdminUser|AnonymousCanPost]
 
     def get(self, request, *args, **kwargs):
         '''

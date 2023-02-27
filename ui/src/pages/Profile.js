@@ -21,6 +21,7 @@ const Profile = () => {
     //  event listners --------------------------------------------
     useEffect(() => {
         getProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     //  async functions -------------------------------------------
@@ -58,7 +59,7 @@ const Profile = () => {
                         </tr>
                     </table>
                     <br></br>
-                    <div>Full Payload: {JSON.stringify(profile)}</div>
+                    <div>Full Payload: <pre>{JSON.stringify(profile, null, 2)}</pre></div>
                 </div>
             );
         }

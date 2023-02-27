@@ -15,6 +15,14 @@ fi
 access_token=`cat .access_token`
 auth_hdr="Authorization: Bearer $access_token"
 
+if [ ! -r .access_token ]
+then
+    echo "ERR Could not find a .access_token file, try using ./get-token.sh [username] [password]"
+    exit 1
+fi
+access_token=`cat .access_token`
+auth_hdr="Authorization: Bearer $access_token"
+
 crt_post_url=`printf "${POST_API}/" $author_uuid`
 rand=`apg -n 1 -m 8 -x 8 -M NC 2`
 

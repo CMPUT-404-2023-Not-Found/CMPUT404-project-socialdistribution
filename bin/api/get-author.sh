@@ -18,7 +18,7 @@ auth_hdr="Authorization: Bearer $access_token"
 
 get_author_url="${AUTHOR_API}/$author_uuid/"
 
-rsp=`curl -X OPTIONS -s -H "$auth_hdr" "$get_author_url"`
+rsp=`curl -s -H "$auth_hdr" "$get_author_url"`
 e=$?; if [ $e -ne 0 ]; then echo -n "ERR Could not GET to $get_author_url "; echo "$rsp"; exit $e; fi
 
 echo "$rsp" | grep -q "$author_uuid"

@@ -10,8 +10,8 @@ from rest_framework.response import Response
 import logging
 
 from .models import Author
-from .serializers import CreateAuthorSerializer
-from utils.permissions import AuthenticatedCanPost
+from .serializers import NewAuthorSerializer, ExistingAuthorSerializer
+from utils.permissions import AnonymousCanPost
 
 logger = logging.getLogger('django')
 rev = 'rev: $xJekOd1$x'
@@ -20,9 +20,9 @@ class AuthorView(ListCreateAPIView):
     '''
     Author View for retrieving a list of authors or creating a new author
     '''
-    serializer_class = CreateAuthorSerializer
+    serializer_class = NewAuthorSerializer
     queryset = Author.objects.all()
-    permission_classes = [IsAdminUser|AuthenticatedCanPost]
+    permission_classes = [IsAdminUser|AnonymousCanPost]
 
     def get(self, request, *args, **kwargs):
         '''
@@ -63,7 +63,7 @@ class AuthorDetailView(RetrieveUpdateAPIView):
     '''
     Author view for retrieving or updating a specific author
     '''
-    serializer_class = CreateAuthorSerializer
+    serializer_class = ExistingAuthorSerializer
     queryset = Author.objects.all()
     lookup_field = 'id'
     http_method_names = ['get', 'post', 'head', 'options']

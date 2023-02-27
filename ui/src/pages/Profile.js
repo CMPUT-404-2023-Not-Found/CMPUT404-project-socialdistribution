@@ -43,11 +43,21 @@ const Profile = () => {
         } else {
             return(
                 <div className='profile'>
-                    <div>{profile.displayName}</div>
-                    <div>{profile.id}</div>
-                    <div>{profile.github}</div>
-                    <div>{profile.profileImage}</div>
-                    <hr/>
+                    <table>
+                        <tr>
+                            <th>Display Name</th>
+                            <th>Node Id</th>
+                            <th>GitHub</th>
+                            <th>Profile Image</th>
+                        </tr>
+                        <tr>
+                            <td>{profile.displayName}</td>
+                            <td>{profile.id}</td>
+                            <td>{profile.github}</td>
+                            <td>{profile.profileImage}</td>
+                        </tr>
+                    </table>
+                    <br></br>
                     <div>Full Payload: {JSON.stringify(profile)}</div>
                 </div>
             );

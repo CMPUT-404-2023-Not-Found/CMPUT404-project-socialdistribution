@@ -27,6 +27,7 @@ import Stream from './pages/Stream';
 import Posts from './pages/Posts';
 // Error pages
 import NotFound from './components/NotFound';
+import CreatePost from './pages/CreatePost';
 
 const App = () => {
     return (
@@ -37,6 +38,7 @@ const App = () => {
                     <Route element={<PrivateRoutes />}>
                         <Route path="/" element={<Stream/>} exact/>
                         <Route path="/posts" element={<Posts />} />
+                        <Route path="/createpost" element={<CreatePost />} />
                     </Route>
                     <Route path="/login" element={<Login />} />
                     <Route path="*" element={<NotFound />} />

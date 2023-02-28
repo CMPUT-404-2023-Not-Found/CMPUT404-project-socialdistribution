@@ -1,7 +1,7 @@
 # This is a blank environment variables file
-# 2023-02-20
+# 2023-02-17
 # You must:
-#   1. Fill this out with appropraite values
+#   1. Fill this out with appropriate values
 #   2. Rename ths file to: .env
 
 # Social Distribution Development
@@ -9,7 +9,9 @@ SD_ENV_NAME = local
 SD_TZ = 'America/Edmonton'
 SD_APP_URL = 'http://localhost:8000'
 
-# DJANGO
+# DJANGO Database
+DATABASE_URL = 'sqlite://localhost/db.sqlite3'
+# DJANGO Settings
 DJANGO_ALLOWED_HOSTS = localhost 127.0.0.1 [::1] testserver
 DJANGO_CORS_ORIGIN_ALLOW_ALL = True
 DJANGO_CORS_ORIGIN_WHITELIST = http://localhost:3000

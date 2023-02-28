@@ -37,16 +37,9 @@ const Profile = () => {
     };
 
     // event functions -------------------------------------------
-    function onClick_update_account() {
-        setUpdate(true);
-    }
-
-    function onClick_cancel() {
-        setUpdate(false);
-    }
 
     // render functions ------------------------------------------
-    function renderProfile(profile) {
+    const renderProfile = (profile) => {
         if (!profile) {
             return(
                 <div>No profile</div>
@@ -79,18 +72,18 @@ const Profile = () => {
         }
     };
 
-    function renderUpdateForm() {
+    const renderUpdateForm = () => {
         if (!update) {
             return (
                 <div>
-                    <button onClick={onClick_update_account}>Update Account</button>
+                    <button onClick={() => setUpdate(true)}>Update Account</button>
                 </div>
             )
         } else {
             return (
                 <div>
                     <p>You really wanna update?</p>
-                    <button onClick={onClick_cancel}>Cancel</button>
+                    <button onClick={() => setUpdate(false)}>Cancel</button>
                 </div>
             )
         }

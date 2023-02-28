@@ -36,7 +36,17 @@ const Profile = () => {
         }
     };
 
-    const renderProfile = (profile) => {
+    // event functions -------------------------------------------
+    function onClick_update_account() {
+        setUpdate(true);
+    }
+
+    function onClick_cancel() {
+        setUpdate(false);
+    }
+
+    // render functions ------------------------------------------
+    function renderProfile(profile) {
         if (!profile) {
             return(
                 <div>No profile</div>
@@ -45,18 +55,22 @@ const Profile = () => {
             return(
                 <div className='profile'>
                     <table>
-                        <tr>
-                            <th>Display Name</th>
-                            <th>Node Id</th>
-                            <th>GitHub</th>
-                            <th>Profile Image</th>
-                        </tr>
-                        <tr>
-                            <td>{profile.displayName}</td>
-                            <td>{profile.id}</td>
-                            <td>{profile.github}</td>
-                            <td>{profile.profileImage}</td>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <th>Display Name</th>
+                                <th>Node Id</th>
+                                <th>GitHub</th>
+                                <th>Profile Image</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{profile.displayName}</td>
+                                <td>{profile.id}</td>
+                                <td>{profile.github}</td>
+                                <td>{profile.profileImage}</td>
+                            </tr>
+                        </tbody>
                     </table>
                     <br></br>
                     <div>Full Payload: <pre>{JSON.stringify(profile, null, 2)}</pre></div>
@@ -65,14 +79,29 @@ const Profile = () => {
         }
     };
 
-    const renderUpdateForm = () => {
-        
+    function renderUpdateForm() {
+        if (!update) {
+            return (
+                <div>
+                    <button onClick={onClick_update_account}>Update Account</button>
+                </div>
+            )
+        } else {
+            return (
+                <div>
+                    <p>You really wanna update?</p>
+                    <button onClick={onClick_cancel}>Cancel</button>
+                </div>
+            )
+        }
+
+
     }
     // RENDER APP =================================================
     return (
         <>
         {renderProfile(profile)}
-        {update && renderUpdateForm}
+        {renderUpdateForm()}
         </>
     );
 }

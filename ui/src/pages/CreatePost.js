@@ -20,6 +20,8 @@ const CreatePost = () => {
 
     const { user, authTokens, logoutUser } = useContext(AuthContext);
     
+    const [options, setOptions] = useState(null);
+
     // form contents
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -56,6 +58,26 @@ const CreatePost = () => {
         } else {
             console.log('Failed to create post');
         }
+    }
+
+    const getOptions = async() => {
+        const request = new Request(
+            `${baseURL}/api/authors/${user.user_id}/posts/`,
+            {
+                body: JSON.stringify({
+                    title, content, description, contentType, visibility, unlisted
+                }),
+
+                headers: {
+                    'Content-Type':'Application/Json',
+                    'Authorization': 'Bearer ' + String(authTokens.access)
+                },
+
+                method: 'POST'
+            }
+        );
+
+        const response = await fetch(request);
     }
 
     return (

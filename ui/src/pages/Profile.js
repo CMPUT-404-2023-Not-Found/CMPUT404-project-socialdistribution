@@ -10,7 +10,7 @@ https://www.youtube.com/watch?v=2k8NleFjG7I
 import React, { useContext, useEffect, useState } from 'react';
 
 import AuthContext from '../context/AuthContext';
-import API from '../utils/API';
+import Backend from '../utils/Backend';
 
 const Profile = () => {
     //  variable declarations -------------------------------------
@@ -26,7 +26,7 @@ const Profile = () => {
 
     //  async functions -------------------------------------------
     const getProfile = async () => {
-        const [response, data] = await API.get(`/api/authors/${user.user_id}/`, authTokens.access);
+        const [response, data] = await Backend.get(`/api/authors/${user.user_id}/`, authTokens.access);
         if (response.status && response.status === 200) {
             setProfile(data);
         } else if (response.statusText === 'Unauthorized'){

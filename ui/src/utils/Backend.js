@@ -1,10 +1,10 @@
 /*
 2023-02-26
-utils/API.js
+utils/Backend.js
 */
 // Constants
 
-class API {
+class Backend {
     API_URL=process.env.REACT_APP_API_URL;
     async get(path, token) {
         const url = this.API_URL + path;
@@ -18,4 +18,4 @@ class API {
     }
 }
 
-export default new API();
+export default new Backend();

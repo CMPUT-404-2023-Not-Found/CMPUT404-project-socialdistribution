@@ -10,7 +10,7 @@ https://www.youtube.com/watch?v=2k8NleFjG7I
 import React, { useContext, useEffect, useState } from 'react';
 
 import AuthContext from '../context/AuthContext';
-import API from '../utils/API';
+import Backend from '../utils/Backend';
 
 const Profile = () => {
     //  variable declarations -------------------------------------
@@ -35,7 +35,9 @@ const Profile = () => {
             console.log('Failed to get profile');
         }
     };
+    // event functions -------------------------------------------
 
+    // render functions ------------------------------------------
     const renderProfile = (profile) => {
         if (!profile) {
             return(
@@ -45,18 +47,22 @@ const Profile = () => {
             return(
                 <div className='profile'>
                     <table>
-                        <tr>
-                            <th>Display Name</th>
-                            <th>Node Id</th>
-                            <th>GitHub</th>
-                            <th>Profile Image</th>
-                        </tr>
-                        <tr>
-                            <td>{profile.displayName}</td>
-                            <td>{profile.id}</td>
-                            <td>{profile.github}</td>
-                            <td>{profile.profileImage}</td>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <th>Display Name</th>
+                                <th>Node Id</th>
+                                <th>GitHub</th>
+                                <th>Profile Image</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{profile.displayName}</td>
+                                <td>{profile.id}</td>
+                                <td>{profile.github}</td>
+                                <td>{profile.profileImage}</td>
+                            </tr>
+                        </tbody>
                     </table>
                     <br></br>
                     <div>Full Payload: <pre>{JSON.stringify(profile, null, 2)}</pre></div>
@@ -66,13 +72,28 @@ const Profile = () => {
     };
 
     const renderUpdateForm = () => {
-        
+        if (!update) {
+            return (
+                <div>
+                    <button onClick={() => setUpdate(true)}>Update Account</button>
+                </div>
+            )
+        } else {
+            return (
+                <div>
+                    <p>You really wanna update?</p>
+                    <button onClick={() => setUpdate(false)}>Cancel</button>
+                </div>
+            )
+        }
+
+
     }
     // RENDER APP =================================================
     return (
         <>
         {renderProfile(profile)}
-        {update && renderUpdateForm}
+        {renderUpdateForm()}
         </>
     );
 }

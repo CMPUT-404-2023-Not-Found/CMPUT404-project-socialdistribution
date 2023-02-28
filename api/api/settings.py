@@ -12,9 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 from datetime import datetime, timedelta
-import dotenv
-import os
-import pytz
+import django_on_heroku, dj_database_url, dotenv, os, pytz
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -69,8 +67,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -103,12 +102,8 @@ WSGI_APPLICATION = 'api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+DATABASES = {}
+DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 # Django Rest Framework (DRF) Configuration
 REST_FRAMEWORK = {
@@ -161,6 +156,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # This code is modified from a documentation page from Django Software Foundation retrieved on 2023-02-16, to docs.djangoproject.com
 # documentation page here:
 # https://docs.djangoproject.com/en/3.2/topics/logging/
@@ -247,3 +243,9 @@ SIMPLE_JWT = {
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Social Distribution - CMPUT404W23T07 H01'
 }
+
+# ENSURE THESE ARE THE LAST SETTINGS
+# Settings for django-on-heroku
+django_on_heroku.settings(locals())
+options = DATABASES['default'].get('OPTIONS', {})
+options.pop('sslmode', None)

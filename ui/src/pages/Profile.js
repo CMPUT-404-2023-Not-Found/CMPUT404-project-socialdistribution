@@ -14,6 +14,7 @@ import Backend from '../utils/Backend';
 
 const Profile = () => {
     //  variable declarations -------------------------------------
+    const [ displayName, setDisplayName ] = useState('');
     const [ profile, setProfile ] = useState([]);
     const [ update, setUpdate ] = useState(false);
     const { user, authTokens, logoutUser } = useContext(AuthContext);
@@ -26,13 +27,28 @@ const Profile = () => {
 
     //  async functions -------------------------------------------
     const getProfile = async () => {
-        const [response, data] = await API.get(`/api/authors/${user.user_id}/`, authTokens.access);
+        const [response, data] = await Backend.get(`/api/authors/${user.user_id}/`, authTokens.access);
         if (response.status && response.status === 200) {
             setProfile(data);
         } else if (response.statusText === 'Unauthorized'){
             logoutUser();
         } else {
             console.log('Failed to get profile');
+        }
+    };
+
+    const updateProfile = async (e) => {
+        e.preventDefault();
+        const postData = JSON.stringify({
+            displayName: displayName
+        })
+        const [response, responseData] = await Backend.post(`/api/authors/${user.user_id}/`, authTokens.access, postData);
+        if (response.status && response.status === 200) {
+            setProfile(responseData);
+            setDisplayName('');
+            setUpdate(false);
+        } else {
+            console.log('Failed to post profile');
         }
     };
     // event functions -------------------------------------------
@@ -81,8 +97,23 @@ const Profile = () => {
         } else {
             return (
                 <div>
-                    <p>You really wanna update?</p>
-                    <button onClick={() => setUpdate(false)}>Cancel</button>
+                    <form onSubmit={updateProfile}>
+                        <fieldset>
+                            <label htmlFor="username">Display Name </label>
+                            <input 
+                                type="text" 
+                                id="username" 
+                                name="username" 
+                                placeholder="Type your username" 
+                                onChange={(e) => setDisplayName(e.target.value)}
+                                />
+                            <br></br>
+                            <br></br>
+                            <input type="submit" value="Update"/>
+                            <button onClick={() => setUpdate(false)}>Cancel</button>
+                            <br></br>
+                        </fieldset>
+                    </form>
                 </div>
             )
         }

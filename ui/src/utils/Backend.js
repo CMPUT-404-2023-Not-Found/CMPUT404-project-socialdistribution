@@ -16,6 +16,20 @@ class Backend {
         const data = await response.json();
         return [ response, (data ? data : false)]
     }
+
+    async post(path, token, requestData, requestDataType='application/json') {
+        const url = this.API_URL + path;
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': 'Bearer ' + String(token),
+                'Content-Type': requestDataType
+            },
+            method: 'post',
+            body: requestData
+        });
+        const responseData = await response.json();
+        return [ response, (responseData ? responseData : false)]
+    }
 }
 
 export default new Backend();

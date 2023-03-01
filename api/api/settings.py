@@ -63,7 +63,8 @@ INSTALLED_APPS = [
     'health',
     'author',
     'post',
-    'inbox'
+    'inbox',
+    'comment',
 ]
 
 MIDDLEWARE = [

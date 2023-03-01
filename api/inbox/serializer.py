@@ -4,7 +4,6 @@
 from rest_framework import serializers
 from rest_framework.fields import DateTimeField, UUIDField, URLField
 
-from author.serializers import CreateAuthorSerializer
 from .models import Inbox
 
 class InboxSerializer(serializers.ModelSerializer):

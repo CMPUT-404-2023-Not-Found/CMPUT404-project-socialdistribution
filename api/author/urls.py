@@ -3,8 +3,9 @@
 
 from django.urls import path
 
-from .views import AuthorView
+from .views import AuthorView, AuthorDetailView
 
 urlpatterns = [
-    path('', AuthorView.as_view(), name="author")
+    path('', AuthorView.as_view(), name="author"),
+    path('<uuid:id>/', AuthorDetailView.as_view(), name="authorDetail")
 ]

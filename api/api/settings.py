@@ -245,7 +245,9 @@ SIMPLE_JWT = {
 
 # Settings for drf-spectactular & Swagger/OpenAPI
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Social Distribution - CMPUT404W23T07 H01'
+    'DESCRIPTION': "This is the API documentation for Team 7's Social Distribution App",
+    'TITLE': 'Social Distribution - CMPUT404W23T07 H01',
+    'VERSION': '0.0.1'
 }
 
 # ENSURE THESE ARE THE LAST SETTINGS

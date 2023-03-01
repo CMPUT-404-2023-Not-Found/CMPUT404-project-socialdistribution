@@ -6,7 +6,7 @@ const CheckboxInput = ({register, obj}) => {
         marginTop: 15
     }}>
         <label htmlFor={obj.name}>{obj.label}</label>
-        <input type="checkbox" {...register("unlisted")}/>
+        <input type="checkbox" {...register(obj.name)}/>
     </div>
   )
 }

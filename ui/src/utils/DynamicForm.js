@@ -11,23 +11,26 @@ import TextInput from './TextInput';
 
     I also used the documentation from the react-hook-form website for the components: 
     https://react-hook-form.com/get-started/#Integratinganexistingform
+
+    Got the idea for splitting into components from here:
+    https://medium.com/swlh/how-to-generate-dynamic-form-from-json-with-react-5d70386bb38b
 */
 const DynamicForm = ({options, formSubmitFunction}) => {
+    // PROBLEM
+    // properties in the options object must be exactly named as this form expects
+    // If a property isn't there, easy to get errors due to accessing null object
 
     // If we want default values, can add default values 
     // in the options from the backend
     // I think it is relatively easy to pass default values
     // into useForm
 
+    //  variable declarations -------------------------------------
     const { register, handleSubmit } = useForm();
 
     const textInputs = [];
     const selectInputs = [];
     const checkboxInputs = [];
-
-    console.log('what');
-    console.log(options);
-    if (options) console.log(options.actions);
 
     if (!options.actions || !options.actions.POST) {
         return (

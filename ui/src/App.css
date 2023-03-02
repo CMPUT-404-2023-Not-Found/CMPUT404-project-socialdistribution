@@ -17,3 +17,16 @@ nav a.navlink:hover {
 nav a.navlink.active {
     background-color: aqua;
 }
+
+.profile table {
+    border: 1px solid green;
+}
+
+.profile table th {
+    text-align: left;
+    border-bottom: 1px solid black;
+}
+
+.profile table td {
+    text-align: center;
+}

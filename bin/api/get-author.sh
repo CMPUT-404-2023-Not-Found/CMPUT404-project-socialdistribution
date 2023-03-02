@@ -7,7 +7,6 @@
 if [ "#$APP_URL" = "#" ]; then echo "ERR Could could not find $APP_URL in env, is your env setup?"; exit 1; fi
 if [ "#$1" = "#" ]; then echo "Usage $0 [author_uuid]"; exit 1; fi
 author_uuid="$1"
-
 if [ ! -r .access_token ]
 then
     echo "ERR Could not find a .access_token file, try using ./get-token.sh [username] [password]"

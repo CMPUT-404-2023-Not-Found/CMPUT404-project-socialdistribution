@@ -13,3 +13,11 @@ class CustomPagination(pagination.PageNumberPagination):
         return Response(OrderedDict([
             ('items', data)
         ]))
+
+    def get_paginated_response_schema(self, schema):
+        return {
+            'type': 'object',
+            'properties': {
+                  'items': schema,
+              },
+          }

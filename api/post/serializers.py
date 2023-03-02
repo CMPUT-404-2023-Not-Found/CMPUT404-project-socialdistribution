@@ -5,7 +5,7 @@ import logging
 from rest_framework import serializers
 from rest_framework.fields import ChoiceField, DateTimeField, IntegerField, URLField, UUIDField
 
-from author.serializers import CreateAuthorSerializer
+from author.serializers import ExistingAuthorSerializer
 from .models import Post
 
 logger = logging.getLogger('django')
@@ -15,7 +15,7 @@ rev = 'rev: $xani93n$x'
 # video here:
 # https://youtu.be/B3HGwFlBvi8
 class PostSerializer(serializers.ModelSerializer):
-    author          = CreateAuthorSerializer(required=False, read_only=True)
+    author          = ExistingAuthorSerializer(required=False, read_only=True)
     id              = serializers.SerializerMethodField('get_id')
     # http://localhost:8000/authors/<UUID>/posts/<UUID>
     def get_id(self, obj): return obj.author.get_node_id() + '/posts/' + str(obj.id)

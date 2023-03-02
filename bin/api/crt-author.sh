@@ -22,7 +22,7 @@ CRT_BODY=`cat <<EOF
 }
 EOF`
 
-rsp=`curl -sX POST \
+rsp=`curl -s \
      -d "$CRT_BODY" \
      -H "Content-Type: application/json" \
      "$CRT_AUTHOR_URL"`

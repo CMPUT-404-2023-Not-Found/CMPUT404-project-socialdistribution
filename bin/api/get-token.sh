@@ -10,9 +10,15 @@ token_url="$TOKEN_API/"
 if [ "#$1" = "#" -o "#$2" = "#" ]
 then
     echo "Usage $0 [username] [password]"
-    echo "Using defaults in .username .password"
-    username=`cat .username`
-    password=`cat .password`
+    echo "Using defaults in files .username .password"
+    if [ ! -r .username ]
+    then
+	echo "ERR Could not find .username file, try creating one, make a .password one too"
+	exit 1
+    else
+	username=`cat .username`
+	password=`cat .password`
+    fi
 else
     username="$1"
     password="$2"

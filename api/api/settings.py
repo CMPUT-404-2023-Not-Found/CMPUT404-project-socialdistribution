@@ -103,8 +103,12 @@ WSGI_APPLICATION = 'api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# from 
+# https://stackoverflow.com/questions/26080303/improperlyconfigured-settings-databases-is-improperly-configured-please-supply
+# not sure if it is the correct way
+DATABASE_URL = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
 DATABASES = {}
-DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+DATABASES['default'] = dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
 
 # Django Rest Framework (DRF) Configuration
 REST_FRAMEWORK = {
@@ -242,7 +246,9 @@ SIMPLE_JWT = {
 
 # Settings for drf-spectactular & Swagger/OpenAPI
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Social Distribution - CMPUT404W23T07 H01'
+    'DESCRIPTION': "This is the API documentation for Team 7's Social Distribution App",
+    'TITLE': 'Social Distribution - CMPUT404W23T07 H01',
+    'VERSION': '0.0.1'
 }
 
 # ENSURE THESE ARE THE LAST SETTINGS

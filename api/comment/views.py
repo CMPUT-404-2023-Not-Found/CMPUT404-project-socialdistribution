@@ -4,6 +4,12 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from django.shortcuts import render
 from .serializers import CommentSerializer
 
+import logging
+
+from .models import Comment
+
+logger = logging.getLogger('django')
+rev = 'rev: $xujSyn7$x' # not really sure what to set this to
 
 # This code is modifed from a video tutorial from Cryce Truly on 2020-06-19 retrieved on 2023-02-16, to Youtube crycetruly
 # video here:
@@ -11,7 +17,5 @@ from .serializers import CommentSerializer
 
 class CommentListCreateView(ListCreateAPIView):
     serializer_class = CommentSerializer
-
-    def perform_create(self, serializer):
-        return serializer.save()
-            
+    queryset = Comment.objects.all()
+    

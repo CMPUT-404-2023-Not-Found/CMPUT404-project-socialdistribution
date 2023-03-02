@@ -1,5 +1,7 @@
 from rest_framework import serializers
+from rest_framework.fields import ChoiceField, DateTimeField, IntegerField
 
+from author.serializers import CreateAuthorSerializer
 from .models import Comment
 from .models import Post
 
@@ -7,7 +9,18 @@ from .models import Post
 # video here:
 # https://youtu.be/B3HGwFlBvi8
 class CommentSerializer(serializers.ModelSerializer):
-    
+    # how does it know which author to create the thing from
+    id              = serializers.SerializerMethodField('get_id')
+    # http://localhost:8000/authors/<UUID>/posts/<UUID>/comments/<UUID>
+    def get_id(self, obj): return str(obj.author) + 'posts/' + str(obj.post.id) + '/comments/' + str(obj.id) 
+
+    published       = DateTimeField(read_only=True, required=False)
+
+    contentType     = ChoiceField(choices=Comment.CONTENT_TYPE_OPTIONS, source='content_type', required=True)
+
+    type            = serializers.SerializerMethodField('get_type')
+    def get_type(self, obj): return 'comment'
+
     class Meta:
         model = Comment
-        fields=['type','author','comment','contentType','published','id']
+        fields=['type', 'author','comment', 'contentType','published','id']

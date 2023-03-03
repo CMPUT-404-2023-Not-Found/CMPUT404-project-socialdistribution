@@ -22,19 +22,23 @@ class PostViewTests(Base):
         '''
         Test no posts
         '''
-        response = self.client.get(self.create_post_url)
+        list_post_url = self.get_list_post_url(self.author.id)
+        response = self.author_client.get(list_post_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, []) # type: ignore
+        self.assertEqual(response.data['items'], [])
     
     def test_list_single_post(self):
         '''
         Test one post
         '''
-        test_post_data = self.post_model_data
-        self.create_post(**test_post_data)
-        response = self.client.get(self.create_post_url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertCountEqual(response.data, [1]) # type: ignore
+        test_post_data = self.post_data
+        create_post_url = self.get_create_post_url(self.author.id)
+        create_response = self.author_client.post(create_post_url, test_post_data)
+        self.assertEqual(create_response.status_code, status.HTTP_201_CREATED)
+
+        list_response = self.author_client.get(create_post_url)
+        self.assertEqual(list_response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(list_response.data['items']), 1)
 
     def test_list_multiple_posts(self):
         '''

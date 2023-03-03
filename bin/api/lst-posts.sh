@@ -21,9 +21,18 @@ else
     fi
 fi
 
+if [ ! -r .access_token ]
+then
+    echo "ERR Could not find a .access_token file, try using ./get-token.sh [username] [password]"
+    exit 1
+fi
+
+access_token=`cat .access_token`
+auth_hdr="Authorization: Bearer $access_token"
+
 list_post_url=`printf "${POST_API}/${page_query}" $author_uuid`
 
-rsp=`curl -s "$list_post_url"`
+rsp=`curl -s -H "$auth_hdr" "$list_post_url"`
 e=$?; if [ $e -ne 0 ]; then echo -n "ERR Could not GET to $list_post_url"; echo "$rsp"; exit $e; fi
 
 echo "$rsp" | grep -q "$rand"

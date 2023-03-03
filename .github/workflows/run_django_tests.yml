@@ -14,6 +14,7 @@ env:
   DJANGO_LOG_LEVEL: INFO
   DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
   SD_APP_URL: 'http://localhost'
+  SJ_SIGNING_KEY: ${{ secrets.SJ_SIGNING_KEY}}
 
 on:
   push:
@@ -23,27 +24,52 @@ on:
     branches: [ "dev", "master" ]
     paths: 'api/**'
 
-jobs:
-  build:
+# This code is modified from an exisiting YAML workflow from django-cms, last commit by Vinit Kumar on 2022-10-30, retrieved 2023-02-25 at github.com
+# YAML file here:
+# https://github.com/django-cms/django-cms/blob/develop/.github/workflows/test.yml
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: True
 
-    runs-on: ubuntu-latest
+jobs:
+  # Run Django tests on a Postgres instance
+  database-postgres:
+    runs-on: ubuntu-20.04
     strategy:
+      fail-fast: false
       max-parallel: 4
       matrix:
-        python-version: [3.8]
-
+        python-version: [ '3.8' ]
+    # Setup PostgreSQL database image
+    services:
+      postgres:
+        image: postgres:10
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install Python Dependencies
+        cache: 'pip'
+    - name: Install Dependencies
       run: |
         cd $PROJECT_PATH
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    - name: Run All Django Tests
+    - name: Run Tests with Postgres
+      env:
+        DATABASE_URL: postgres://postgres:postgres@127.0.0.1/postgres
       run: |
         cd $PROJECT_PATH
         python manage.py test

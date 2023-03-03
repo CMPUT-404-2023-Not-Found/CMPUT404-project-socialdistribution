@@ -1,2 +1,7 @@
 *.log
-.*.uuid
+*.uuid
+*.access_token
+*.password
+*.refresh_token
+*.username
+.env

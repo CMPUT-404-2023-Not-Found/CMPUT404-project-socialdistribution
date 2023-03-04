@@ -12,7 +12,9 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.2",
+    "react-icons": "^4.8.0",
     "react-router-dom": "^6.8.1",
+    "styled-components": "^5.3.8",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {

@@ -5,26 +5,41 @@ from django.shortcuts import render
 import logging
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, DestroyAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import Author, Inbox
 from .serializer import InboxSerializer
 
 logger = logging.getLogger('django')
-rev = 'rev: $xUfCac2$x'
+rev = 'rev: $xEdLuj9$x'
 
 class InboxListCreateDeleteView(DestroyAPIView, ListCreateAPIView):
     serializer_class = InboxSerializer
     queryset = Inbox.objects.all()
     lookup_url_kwarg = 'author_uuid'
+    permission_classes = [IsAuthenticated]
 
-    # GET Paginated list of recent AUTHOR_UUID's inbox things
-    def get_queryset(self):
+    
+    def get(self, request, *args, **kwargs):
+        '''
+        GET Paginated list of recent author_uuid's inbox things
+        '''
         logger.info(rev)
+        author_uuid = str(self.kwargs.get(self.lookup_url_kwarg, ''))
+        requester_uuid = str(request.user)
+        if not request.user.is_superuser and requester_uuid != author_uuid:
+            logger.warning('Denying inbox retrival by non-admin & non-owner [%s] for author [%s] inbox', request.user, author_uuid)
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        return self.list(request, *args, **kwargs)
+
+    def get_queryset(self):
+        '''
+        Utilized by self.get
+        '''
         author_uuid = self.kwargs.get(self.lookup_url_kwarg)
-        logger.info(author_uuid)
-        logger.info('Getting inbox for author_uuid: [%s]', author_uuid)
-        return self.queryset.filter(author=author_uuid)
+        logger.info('Getting recent items in inbox for author_uuid: [%s]', author_uuid)
+        return self.queryset.filter(author=author_uuid).order_by('received_at')
 
     # POST Add Post, Follow, Like, or Comment to AUTHOR_UUID's inbox
     def perform_create(self, serializer):

@@ -61,5 +61,37 @@
             "groups": [],
             "user_permissions": []
         }
+    },
+    {
+        "model": "comment.comment", 
+        "pk": "1bc05dee-7f18-426d-9f89-989bea9c49c5", 
+        "fields": {
+            "post": "36604174-f735-4292-96af-e978ac48ed90", 
+            "author": "http://localhost:8000/api/authors/398113ca-ce82-420a-b1e8-e8de260d3a64", 
+            "published": "2023-03-03T18:06:07.827Z",
+            "comment": "hello", 
+            "content_type": "text/plain"
+        }
+    },
+    {
+        "model": "post.post", 
+        "pk": "a0dfc41c-4d32-47d1-a567-aed24ae4736e", 
+        "fields": {
+            "author": "398113ca-ce82-420a-b1e8-e8de260d3a64", 
+            "host": "http://localhost:8000", 
+            "published": "2023-03-01T06:34:39.154Z", 
+            "updated_at": "2023-03-01T06:34:39.154Z", 
+            "rev": 0, 
+            "comment_count": 0, 
+            "like_count": 0, 
+            "unlisted": false, 
+            "visibility": "PUBLIC", 
+            "origin": "http://localhost:8000", 
+            "source": "http://localhost:8000", 
+            "content": "ljf", 
+            "content_type": "text/plain", 
+            "description": "dlfjldd", 
+            "title": "with dynamic form"
+        }
     }
 ]

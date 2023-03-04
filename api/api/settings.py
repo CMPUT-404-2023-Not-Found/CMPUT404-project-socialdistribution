@@ -106,7 +106,7 @@ WSGI_APPLICATION = 'api.wsgi.application'
 # from 
 # https://stackoverflow.com/questions/26080303/improperlyconfigured-settings-databases-is-improperly-configured-please-supply
 # not sure if it is the correct way
-DATABASE_URL = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
+DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3'))
 DATABASES = {}
 DATABASES['default'] = dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
 

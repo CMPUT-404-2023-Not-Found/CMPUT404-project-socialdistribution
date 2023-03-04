@@ -90,7 +90,7 @@ const Login = () => {
 
                 <br></br>
                 <div className="forgot">
-                    <a href="#">Forgot your password or username?</a>
+                    <a href="#">Sign up</a>
                 </div>
 
                 <br></br>

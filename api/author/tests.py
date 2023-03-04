@@ -51,5 +51,15 @@ class AuthorTestCase(APITestCase):
         data.pop("password")
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    
+    def test_create_author_without_username_and_password(self):
+        """
+        AuthorView: test when both username and password are not present in data
+        """
+        data = self.data
+        data.pop("username")
+        data.pop("password")
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         
     

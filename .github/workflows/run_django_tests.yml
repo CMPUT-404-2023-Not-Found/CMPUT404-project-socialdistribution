@@ -1,0 +1,75 @@
+# 2023-02-20
+# workflows/run_django_tests.yml
+
+# This code is modified from a tutorial article from GitHub, retrieved 2023-02-21 at docs.github.com
+# Tutorial article here:
+# https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+name: Django CI Run Tests
+env:
+  PROJECT_PATH: api/
+  DJANGO_ALLOWED_HOSTS: testserver
+  DJANGO_CORS_ORIGIN_ALLOW_ALL: False
+  DJANGO_CORS_ORIGIN_WHITELIST: 'http://localhost:3000'
+  DJANGO_DEBUG: True
+  DJANGO_LOG_LEVEL: INFO
+  DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+  SD_APP_URL: 'http://localhost'
+  SJ_SIGNING_KEY: ${{ secrets.SJ_SIGNING_KEY}}
+
+on:
+  push:
+    branches: [ "dev", "master" ]
+    paths: 'api/**'
+  pull_request:
+    branches: [ "dev", "master" ]
+    paths: 'api/**'
+
+# This code is modified from an exisiting YAML workflow from django-cms, last commit by Vinit Kumar on 2022-10-30, retrieved 2023-02-25 at github.com
+# YAML file here:
+# https://github.com/django-cms/django-cms/blob/develop/.github/workflows/test.yml
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: True
+
+jobs:
+  # Run Django tests on a Postgres instance
+  database-postgres:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        python-version: [ '3.8' ]
+    # Setup PostgreSQL database image
+    services:
+      postgres:
+        image: postgres:10
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+    - name: Install Dependencies
+      run: |
+        cd $PROJECT_PATH
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run Tests with Postgres
+      env:
+        DATABASE_URL: postgres://postgres:postgres@127.0.0.1/postgres
+      run: |
+        cd $PROJECT_PATH
+        python manage.py test

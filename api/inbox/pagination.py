@@ -28,9 +28,9 @@ class InboxPagination(CustomPagination):
             item_urlparse = urlsplit(item['object'])
             item_url = item_urlparse.scheme + '://' + item_urlparse.netloc
             if item_url == settings.APP_URL:
-                new_data.append(self.get_internal_object_detail(item))
+                new_data.append(self.get_internal_object_detail(author_uuid, item))
             else:
-                new_data.append(self.get_external_object_detail(item))
+                new_data.append(self.get_external_object_detail(author_uuid, item))
 
         return Response(OrderedDict([
             ('type', 'inbox'),
@@ -55,7 +55,7 @@ class InboxPagination(CustomPagination):
               },
           }
 
-    def get_internal_object_detail(self, object):
+    def get_internal_object_detail(self, author_uuid, object):
         '''
         Call internal database for object information
         '''
@@ -63,12 +63,15 @@ class InboxPagination(CustomPagination):
         if object['type'] == 'post':
             # Get the uuid of the thing for serialization
             object_uuid = object['object'].rstrip('/').split('/')[-1]
-            object_data = Post.objects.get(id=object_uuid)
-            serializer = PostSerializer(object_data)
-            ret = serializer.data
+            try:
+                object_data = Post.objects.get(id=object_uuid)
+                serializer = PostSerializer(object_data)
+                ret = serializer.data
+            except Exception as e:
+                logger.error('Fail internal deatil lookup on author [%s] inbox item [%s]. e: [%s]', author_uuid, object_uuid, e)
         return ret
 
-    def get_external_object_detail(self, object):
+    def get_external_object_detail(self, author_uuid, object):
         '''
         Call external nodes for object information 
         '''

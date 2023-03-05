@@ -2,7 +2,7 @@
 # inbox/serialzer.py
 
 from rest_framework import serializers
-from rest_framework.fields import URLField
+from rest_framework.fields import ChoiceField, URLField
 
 from .models import Inbox
 
@@ -10,9 +10,13 @@ class AddInboxSerializer(serializers.ModelSerializer):
     object          = URLField(source='object_id', required=True)
     author          = URLField(source='sender_author_id', required=True)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['@context'] = ChoiceField(choices=Inbox.W3ContextChoices.choices, source='context', required=True)
+
     class Meta:
         model = Inbox
-        fields = [  'context', 'summary',
+        fields = [  'summary',
                     'type', 'author',
                     'object'
         ]

@@ -20,7 +20,7 @@ add_inbox_url="${AUTHOR_API}/$author_uuid/inbox/"
 
 cnt_body=`cat <<EOF
 {
-  "context": "https://www.w3.org/ns/activitystreams",
+  "@context": "https://www.w3.org/ns/activitystreams",
   "summary": "Shared post",
   "type": "post",
   "author": "http://localhost:8000/api/authors/664925be-f3ce-42b0-9d34-1659d078f840/",

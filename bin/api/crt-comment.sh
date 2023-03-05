@@ -4,7 +4,7 @@
 # Create a comment for a post by an author
 
 source .env
-set -x
+# set -x
 if [ "#$APP_URL" = "#" ]; then echo "ERR Could could not find $APP_URL in env, is your env setup?"; exit 1; fi
 if [ "#$1" = "#" -o "#$2" = "#" ]; then echo "Usage $0 [author_uuid] [post_uuid]"; exit 1; fi
 author_uuid="$1"
@@ -52,5 +52,3 @@ else
     comment_data=`echo "$rsp" | jq -c 2>/dev/null`
     echo "`date -Iseconds` $comment_data" >> .comment.log
 fi
-
-echo "$rsp" > output.txt;

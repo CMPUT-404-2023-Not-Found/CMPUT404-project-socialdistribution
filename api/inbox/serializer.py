@@ -1,8 +1,9 @@
 # 2023-02-18
 # inbox/serialzer.py
 
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
-from rest_framework.fields import ChoiceField, URLField
+from rest_framework.fields import ChoiceField, JSONField, URLField
 
 from .models import Inbox
 
@@ -23,7 +24,8 @@ class AddInboxSerializer(serializers.ModelSerializer):
 
 class RetrieveInboxSerializer(serializers.ModelSerializer):
     id          = serializers.SerializerMethodField('get_object')
-    def get_object(self, obj): return obj.object_id
+    @extend_schema_field(JSONField)
+    def get_object(self, obj): return { 'id': obj.object_id }
 
     class Meta:
         model = Inbox

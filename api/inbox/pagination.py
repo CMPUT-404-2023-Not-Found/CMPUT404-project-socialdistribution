@@ -29,8 +29,15 @@ class InboxPagination(CustomPagination):
         return {
             'type': 'object',
             'properties': {
-                    'type': 'inbox',
-                    'author': 'author_node_id',
+                    'type': {
+                        'type': 'string',
+                        'example': 'inbox'
+                    },
+                    'author': {
+                        'type': 'string',
+                        'format': 'uri',
+                        'example': 'http://api.example.com/api/authors/12345678-90ab-cdef-ghij-klmnopqrstuv'
+                    },
                     'items': schema,
               },
           }

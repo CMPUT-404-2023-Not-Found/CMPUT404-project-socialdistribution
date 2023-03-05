@@ -3,6 +3,7 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from django.shortcuts import render
 from .serializers import CommentSerializer
+from post.serializers import PostSerializer
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -23,12 +24,16 @@ class CommentListCreateView(ListCreateAPIView):
     queryset = Comment.objects.all()
     lookup_url_kwarg = 'post_uuid'
 
+    # I think this is is the method that is ultimately called when a post request is made to this url
+    # because ListCreateAPIView has a post method, which calls a create method, which calls a 
+    # perform_create method. I think we are overriding it here
     def perform_create(self, serializer):
         logger.info(rev)
         post_uuid = self.kwargs.get(self.lookup_url_kwarg)
         post_obj = Post.objects.get(id=post_uuid)
         logger.info('Creating comment for post_uuid: [%s]', post_uuid)
-        return serializer.save(post=post_obj)
+        author_url = PostSerializer(post_obj).data['author']['id']
+        return serializer.save(post=post_obj, author=author_url)
     
     def get_queryset(self):
         logger.info(rev)

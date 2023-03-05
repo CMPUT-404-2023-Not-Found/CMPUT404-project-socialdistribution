@@ -17,6 +17,8 @@ class Comment(Model):
     author          = models.URLField(max_length=128, blank=False, null=False) 
 
     # Modification fields
+    # auto_now: for saving the time every time the field is saved. Useful for last modified
+    # auto_now_add: for saving the time only when the object is created
     published       = models.DateTimeField(auto_now=False, auto_now_add=True, verbose_name='Published At')
 
     # Content fields

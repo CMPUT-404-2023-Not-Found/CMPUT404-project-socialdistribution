@@ -59,16 +59,23 @@ class InboxPagination(CustomPagination):
         '''
         Call internal database for object information
         '''
+        lookup_config = {
+            'post': {
+                'model': Post,
+                'serializer': PostSerializer
+            }
+        }
         ret = object
-        if object['type'] == 'post':
+        object_type = object['type']
+        if object['type'] in lookup_config:
             # Get the uuid of the thing for serialization
             object_uuid = object['object'].rstrip('/').split('/')[-1]
             try:
-                object_data = Post.objects.get(id=object_uuid)
-                serializer = PostSerializer(object_data)
+                object_data = lookup_config[object_type]['model'].objects.get(id=object_uuid)
+                serializer = lookup_config[object_type]['serializer'](object_data)
                 ret = serializer.data
             except Exception as e:
-                logger.error('Fail internal deatil lookup on author [%s] inbox item [%s]. e: [%s]', author_uuid, object_uuid, e)
+                logger.error('Failed internal detail search on author [%s] inbox item [%s]. e: [%s]', author_uuid, object_uuid, e)
         return ret
 
     def get_external_object_detail(self, author_uuid, object):

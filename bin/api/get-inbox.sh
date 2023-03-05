@@ -3,7 +3,7 @@
 # get-inbox.sh
 # Get a specific author's inbox
 
-set -x
+# set -x
 if [ "#$APP_URL" = "#" ]; then echo "ERR Could could not find $APP_URL in env, is your env setup?"; exit 1; fi
 if [ "#$1" = "#" ]; then echo "Usage $0 [author_uuid]"; exit 1; fi
 author_uuid="$1"

@@ -66,7 +66,7 @@
         "model": "comment.comment", 
         "pk": "1bc05dee-7f18-426d-9f89-989bea9c49c5", 
         "fields": {
-            "post": "36604174-f735-4292-96af-e978ac48ed90", 
+            "post": "a0dfc41c-4d32-47d1-a567-aed24ae4736e", 
             "author": "http://localhost:8000/api/authors/398113ca-ce82-420a-b1e8-e8de260d3a64", 
             "published": "2023-03-03T18:06:07.827Z",
             "comment": "hello", 
@@ -88,10 +88,10 @@
             "visibility": "PUBLIC", 
             "origin": "http://localhost:8000", 
             "source": "http://localhost:8000", 
-            "content": "ljf", 
+            "content": "A default post from the fixture", 
             "content_type": "text/plain", 
-            "description": "dlfjldd", 
-            "title": "with dynamic form"
+            "description": "Some description", 
+            "title": "Excited for this post!"
         }
     }
 ]

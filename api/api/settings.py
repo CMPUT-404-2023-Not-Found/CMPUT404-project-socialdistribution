@@ -99,17 +99,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'api.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
-# from 
-# https://stackoverflow.com/questions/26080303/improperlyconfigured-settings-databases-is-improperly-configured-please-supply
-# not sure if it is the correct way
-DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3'))
-DATABASES = {}
-DATABASES['default'] = dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
-
 # Django Rest Framework (DRF) Configuration
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -250,6 +239,13 @@ SPECTACULAR_SETTINGS = {
     'TITLE': 'Social Distribution - CMPUT404W23T07 H01',
     'VERSION': '0.0.1'
 }
+
+# Database
+# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+
+DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3'))
+DATABASES = {}
+DATABASES['default'] = dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
 
 # ENSURE THESE ARE THE LAST SETTINGS
 # Settings for django-on-heroku

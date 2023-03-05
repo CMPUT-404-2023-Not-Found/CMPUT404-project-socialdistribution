@@ -42,7 +42,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
     id              = serializers.SerializerMethodField('get_id')
     # http://localhost:8000/authors/<UUID>/posts/<UUID>/comments/<UUID>
-    def get_id(self, obj): return str(obj.author) + 'posts/' + str(obj.post.id) + '/comments/' + str(obj.id) 
+    def get_id(self, obj): return str(obj.author) + '/posts/' + str(obj.post.id) + '/comments/' + str(obj.id) 
 
     published       = DateTimeField(read_only=True, required=False)
 

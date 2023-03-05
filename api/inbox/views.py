@@ -10,6 +10,7 @@ from rest_framework.response import Response
 
 from .models import Author, Inbox
 from .serializer import AddInboxSerializer, RetrieveInboxSerializer
+from .pagination import InboxPagination
 
 logger = logging.getLogger('django')
 rev = 'rev: $xEdLuj9$x'
@@ -17,6 +18,7 @@ rev = 'rev: $xEdLuj9$x'
 class InboxView(DestroyAPIView, ListCreateAPIView):
     queryset = Inbox.objects.all()
     lookup_url_kwarg = 'author_uuid'
+    pagination_class = InboxPagination
     permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
@@ -40,6 +42,7 @@ class InboxView(DestroyAPIView, ListCreateAPIView):
         '''
         Utilized by self.get
         '''
+        self.request.kwargs = self.kwargs
         author_uuid = self.kwargs.get(self.lookup_url_kwarg)
         logger.info('Getting recent items in inbox for author_uuid: [%s]', author_uuid)
         return self.queryset.filter(author=author_uuid).order_by('received_at')

@@ -7,7 +7,7 @@ from rest_framework.fields import ChoiceField, JSONField, URLField
 
 from .models import Inbox
 
-class AddInboxSerializer(serializers.ModelSerializer):
+class InboxSerializer(serializers.ModelSerializer):
     object          = URLField(source='object_id', required=True)
     author          = URLField(source='sender_author_id', required=True)
 
@@ -21,12 +21,3 @@ class AddInboxSerializer(serializers.ModelSerializer):
                     'type', 'author',
                     'object'
         ]
-
-class RetrieveInboxSerializer(serializers.ModelSerializer):
-    id          = serializers.SerializerMethodField('get_object')
-    @extend_schema_field(JSONField)
-    def get_object(self, obj): return { 'id': obj.object_id }
-
-    class Meta:
-        model = Inbox
-        fields = ['id']

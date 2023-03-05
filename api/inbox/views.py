@@ -9,22 +9,18 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import Author, Inbox
-from .serializer import AddInboxSerializer, RetrieveInboxSerializer
+from .serializer import InboxSerializer
 from .pagination import InboxPagination
 
 logger = logging.getLogger('django')
 rev = 'rev: $xEdLuj9$x'
 
 class InboxView(DestroyAPIView, ListCreateAPIView):
+    serializer_class = InboxSerializer
     queryset = Inbox.objects.all()
     lookup_url_kwarg = 'author_uuid'
     pagination_class = InboxPagination
     permission_classes = [IsAuthenticated]
-
-    def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return AddInboxSerializer
-        return RetrieveInboxSerializer
         
     def get(self, request, *args, **kwargs):
         '''

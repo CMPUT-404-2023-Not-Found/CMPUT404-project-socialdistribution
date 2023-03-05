@@ -9,18 +9,21 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import Author, Inbox
-from .serializer import InboxSerializer
+from .serializer import AddInboxSerializer, RetrieveInboxSerializer
 
 logger = logging.getLogger('django')
 rev = 'rev: $xEdLuj9$x'
 
-class InboxListCreateDeleteView(DestroyAPIView, ListCreateAPIView):
-    serializer_class = InboxSerializer
+class InboxView(DestroyAPIView, ListCreateAPIView):
     queryset = Inbox.objects.all()
     lookup_url_kwarg = 'author_uuid'
     permission_classes = [IsAuthenticated]
 
-    
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return AddInboxSerializer
+        return RetrieveInboxSerializer
+        
     def get(self, request, *args, **kwargs):
         '''
         GET Paginated list of recent author_uuid's inbox things

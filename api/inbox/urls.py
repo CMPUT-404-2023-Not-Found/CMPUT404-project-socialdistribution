@@ -3,8 +3,8 @@
 
 from django.urls import path
 
-from .views import InboxListCreateDeleteView
+from .views import InboxView
 
 urlpatterns = [
-    path('', InboxListCreateDeleteView.as_view(), name='inbox')
+    path('', InboxView.as_view(), name='inbox')
 ]

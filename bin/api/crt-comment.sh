@@ -1,7 +1,7 @@
 #!/bin/sh
-# 2023-02-17
-# get-post.sh
-# Get a specific post for an author
+# 2023-03-04
+# crt-comment.sh
+# Create a comment for a post by an author
 
 source .env
 # set -x

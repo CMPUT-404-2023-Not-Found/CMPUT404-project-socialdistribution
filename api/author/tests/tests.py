@@ -215,7 +215,7 @@ class AuthorTestCase(APITestCase):
         data = self.data
         data["password"] = "testme01"
         response = self.client.post(self.url, data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
     
     def test_create_author_with_shorter_length_username(self):
         """

@@ -3,6 +3,8 @@
 
 from rest_framework.permissions import BasePermission
 
+SAFE_METHODS = ('GET', 'HEAD', 'OPTIONS')
+
 class AnonymousCanPost(BasePermission):
     '''
     The request is anonymous as a user, but only allowed for POST methods.
@@ -14,3 +16,13 @@ class AnonymousCanPost(BasePermission):
             request.user and request.user.is_anonymous): 
             return True
         return False
+
+class NodeReadOnly(BasePermission):
+    '''
+    The request is a node and they are doing a read-only request.
+    '''
+
+    def has_permission(self, request, view):
+        is_httpbasic = True if 'Basic' in request.META.get('HTTP_AUTHORIZATION', '') else False
+        is_readonly = bool(request.method in SAFE_METHODS)
+        return (is_httpbasic and is_readonly)

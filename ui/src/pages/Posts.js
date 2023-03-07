@@ -10,6 +10,7 @@ https://www.youtube.com/watch?v=2k8NleFjG7I
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import Backend from '../utils/Backend';
 import PostSummary from '../components/PostSummary';
 import AuthContext from '../context/AuthContext';
 
@@ -26,13 +27,7 @@ const Posts = () => {
 
     //  async functions -------------------------------------------
     const getPosts = async () => {
-        const getPostsUrl = 'http://localhost:8000/api/authors/' + user.user_id + '/posts/';
-        const response = await fetch(getPostsUrl, {
-            headers: {
-                'Authorization': 'Bearer ' + String(authTokens.access)
-            }
-        });
-        const data = await response.json()
+        const [response, data] = await Backend.get(`/api/authors/${user.user_id}/posts/`, authTokens.access);
         if (response.status && response.status === 200) {
             setPosts(data);
         } else if (response.statusText === 'Unauthorized'){

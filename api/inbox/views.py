@@ -53,7 +53,11 @@ class InboxView(DestroyAPIView, ListCreateAPIView):
 
     # DELETE Delete content of inbox
     def delete(self, request, *args, **kwargs):
-        author_uuid = self.kwargs.get(self.lookup_url_kwarg)
+        author_uuid = str(self.kwargs.get(self.lookup_url_kwarg, ''))
+        requester_uuid = str(request.user)
+        if not request.user.is_superuser and requester_uuid != author_uuid:
+            logger.warning('Denying inbox deletion by non-admin & non-owner [%s] for author [%s] inbox', request.user, author_uuid)
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
         logger.info('Deleting inbox for author_uuid: [%s]', author_uuid)
         inbox = self.queryset.filter(author=author_uuid)
         inbox.delete()

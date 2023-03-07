@@ -14,26 +14,21 @@ import AuthContext from '../context/AuthContext';
 
 const Navbar = () => {
     let {user, logoutUser} = useContext(AuthContext);
-    return ( 
-        <nav>
-            <NavLink className='navlink' to='/'>Home</NavLink>
-            <span> | </span>
-            { user ? (<>
+    if (user) {
+        return ( 
+            <nav>
+                <NavLink className='navlink' to='/'>Home</NavLink>
+                <span> | </span>
                 <NavLink className='navlink' to='/posts'>Your Posts</NavLink>
                 <span> | </span>
-                <NavLink className='navlink' to='/profile'>Profile</NavLink>
+                <NavLink className='navlink' to='/createpost'>Create Post</NavLink>
+                <span> | </span>
+                <NavLink className='navlink' to='/profile'>Profile: {user && user.username}</NavLink>
                 <span> | </span>
                 <NavLink className='navlink' onClick={logoutUser} to='/login'>Logout</NavLink>
-                <span> | </span>
-                <NavLink className='navlink' to='/createpost'>Create Post</NavLink>
-                </>
-            ) : (
-                <NavLink className='navlink' to='/login'>Login</NavLink>
-            )}
-
-            { user && <h2>Hello {user.displayName}</h2>}
-        </nav>
-    );
+            </nav>
+        );
+    }
 };
 
 export default Navbar;

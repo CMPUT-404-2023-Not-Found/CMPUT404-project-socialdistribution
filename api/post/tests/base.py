@@ -28,6 +28,8 @@ class Base(APITestCase):
     def setUp(self):
         self.author = Author.objects.get(username='georgerrmartin')
         self.author_client = self.configure_client(self.author)
+        self.admin = Author.objects.get(username='stephenking')
+        self.admin_client = self.configure_client(self.admin)
     
     def configure_client(self, user):
         '''

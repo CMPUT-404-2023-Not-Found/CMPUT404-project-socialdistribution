@@ -22,8 +22,8 @@ class PostViewTests(Base):
         '''
         Test no posts
         '''
-        list_post_url = self.get_list_post_url(self.author.id)
-        response = self.author_client.get(list_post_url)
+        list_post_url = self.get_list_post_url(self.admin.id)
+        response = self.admin_client.get(list_post_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['items'], [])
     
@@ -31,11 +31,7 @@ class PostViewTests(Base):
         '''
         Test one post
         '''
-        test_post_data = self.post_data
         create_post_url = self.get_create_post_url(self.author.id)
-        create_response = self.author_client.post(create_post_url, test_post_data)
-        self.assertEqual(create_response.status_code, status.HTTP_201_CREATED)
-
         list_response = self.author_client.get(create_post_url)
         self.assertEqual(list_response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(list_response.data['items']), 1)

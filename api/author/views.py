@@ -11,7 +11,7 @@ import logging
 
 from .models import Author
 from .serializers import NewAuthorSerializer, ExistingAuthorSerializer
-from utils.permissions import AnonymousCanPost
+from utils.permissions import AnonymousCanPost, NodeReadOnly
 
 logger = logging.getLogger('django')
 rev = 'rev: $xJekOd1$x'
@@ -67,7 +67,7 @@ class AuthorDetailView(RetrieveUpdateAPIView):
     queryset = Author.objects.all()
     lookup_field = 'id'
     http_method_names = ['get', 'post', 'head', 'options']
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated|NodeReadOnly]
 
     def get(self, request, *args, **kwargs):
         '''

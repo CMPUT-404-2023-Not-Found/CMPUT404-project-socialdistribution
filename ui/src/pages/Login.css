@@ -41,7 +41,8 @@ pages/Login.css
 
 .input-container input { 
     flex: 1;
-    padding: 5px;
+    padding: 5pt;
+    margin-bottom: 5pt;
     border-radius: 5px;
     border: 1px solid #ccc;
 }

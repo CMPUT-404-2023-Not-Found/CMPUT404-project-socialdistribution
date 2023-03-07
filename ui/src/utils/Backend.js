@@ -30,6 +30,18 @@ class Backend {
         const responseData = await response.json();
         return [ response, (responseData ? responseData : false)]
     }
+
+    async options(path, token) {
+        const url = this.API_URL + path;
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': 'Bearer ' + String(token)
+            },
+            method: 'options'
+        });
+        const data = await response.json();
+        return [ response, (data ? data : false)]
+    }
 }
 
 export default new Backend();

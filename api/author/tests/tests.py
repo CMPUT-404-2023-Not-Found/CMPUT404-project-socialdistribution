@@ -8,12 +8,10 @@ from author.models import Author
 # https://www.youtube.com/watch?v=tujhGdn1EMI
 # Module 4: Write unit tests 44:50
 
-# Used ideas from below website resources: 
-# Password validation and strength tests:
-# Tutorialspoint: https://www.tutorialspoint.com/strong-password-checker-in-python 
-# OWASP: https://owasp.org/www-community/password-special-characters
-# Username validation tests:
-# ConstantContact: https://knowledgebase.constantcontact.com/articles/KnowledgeBase/5890-characters-that-are-allowed-for-user-names?lang=en_US
+# Some of the test cases' are covered after reading through the following websites:
+# Arnab Chakraborty (03/07/2023) Strong Password Checker in Python https://www.tutorialspoint.com/strong-password-checker-in-python 
+# Pawel Krawczyk (03/02/2023) Password Special Characters https://owasp.org/www-community/password-special-characters
+# Constant Contact (03/02/2023) Characters allowed in Constant Contact usernames https://knowledgebase.constantcontact.com/articles/KnowledgeBase/5890-characters-that-are-allowed-for-user-names?lang=en_US 
 
 class AuthorTestCase(APITestCase):
     '''

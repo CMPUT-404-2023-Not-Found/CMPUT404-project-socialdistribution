@@ -1,0 +1,55 @@
+/*
+2023-03-04
+pages/Login.css
+*/
+#Login{
+    text-align: center;
+    display:flex;
+    min-height:  100vh;
+    align-items: center;
+    justify-content: center;
+    color: #265156;
+    background-image: url(/src/images/loginbg.png);
+    background-size: cover;
+    background-position: center center;
+    
+}
+.h1{
+    font-Family: "'IM Fell English SC', serif",
+}
+.login-style,.login-form{
+    display:flex;
+    flex-direction: column;
+}
+.login-style{
+    padding: 4.5rem;
+    border: 1px solid #265156;
+    border-radius: 10px;    
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+  }
+  
+.icon-label {
+    display: flex;
+    align-items: center;
+    margin-right: 7px;
+    margin-left: 5px;
+}
+
+.input-field {
+    flex: 1;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.show-password-icon {
+    display: flex;
+    align-items: center;
+    margin-left: -30px;
+    cursor: pointer;
+}
+  

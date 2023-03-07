@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'author',
     'post',
     'inbox',
+    'comment',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
 ]

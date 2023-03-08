@@ -25,7 +25,7 @@ then
 	time_to_exp=$(expr $access_exp - $(date +%s))
     fi
     
-    if [ $time_to_exp -le 0 ]
+    if [ $time_to_token_exp -le 0 ]
     then
 	./get-token.sh "$username" "$password" >/dev/null 2>&1
 	e=$?; if [ $e -ne 0 ]; then echo "ERR Could not call ./get-token $username $password" >&2; exit $e; fi

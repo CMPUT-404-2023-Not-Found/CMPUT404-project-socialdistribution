@@ -1,3 +1,7 @@
+# 2023-03-07
+# node/admin.py
+
 from django.contrib import admin
 
-# Register your models here.
+from .models import Node
+admin.site.register(Node)

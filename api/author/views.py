@@ -81,7 +81,8 @@ class AuthorDetailView(RetrieveUpdateAPIView):
         '''
         logger.info(rev)
         author_uuid = self.kwargs.get(self.lookup_field)
-        logger.info('Getting profile for author uuid: [%s]', author_uuid)
+        requester_uuid = str(self.request.user)
+        logger.info('Requester [%s] is retreiving profile for author [%s]', requester_uuid, author_uuid)
         return super().get_object()
 
     @extend_schema(

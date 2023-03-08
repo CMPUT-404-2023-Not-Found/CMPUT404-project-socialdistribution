@@ -1,6 +1,7 @@
 # 2023-02-26
 # author/tests/base.py
 
+import base64
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.urls import reverse
@@ -16,6 +17,7 @@ class Base(APITestCase):
     '''
     app_host = settings.APP_URL
     fixtures = ['fixtures/db.json']
+    fixture_password = 'P*ssw0rd!' # All fixture author accounts have the same password
 
     def setUp(self):
         self.author = Author.objects.get(username='georgerrmartin')
@@ -24,13 +26,18 @@ class Base(APITestCase):
         self.author_client = self.configure_client(self.author)
         self.admin_client = self.configure_client(self.admin)
 
-    def configure_client(self, user):
+    def configure_client(self, user, password='P*ssw0rd!', auth_type='Bearer'):
         '''
-        Return an APIClient authenticated as user
+        Return an APIClient authenticated as user model
         '''
         client = APIClient()
-        refresh = RefreshToken.for_user(user)
-        client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
+        if auth_type == 'Bearer':
+            refresh = RefreshToken.for_user(user)
+            client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
+        else:
+            login_cred = f'{user.username}:{password}'
+            login_cred_b64 = base64.b64encode(login_cred.encode('ascii')).decode('ascii')
+            client.credentials(HTTP_AUTHORIZATION=f'Basic {login_cred_b64}')
         return client
     
     def get_author_url(self):

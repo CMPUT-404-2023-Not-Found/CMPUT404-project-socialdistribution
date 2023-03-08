@@ -5,6 +5,14 @@ from rest_framework.permissions import BasePermission
 
 SAFE_METHODS = ('GET', 'HEAD', 'OPTIONS')
 
+class IsAuthenticatedWithJWT(BasePermission):
+    '''
+    The request is authenticated with Authorization: Bearer JWT
+    '''
+    def has_permission(self, request, view):
+        is_httpbearer = True if 'Bearer' in request.META.get('HTTP_AUTHORIZATION', '') else False
+        return bool(request.user and request.user.is_authenticated and is_httpbearer)
+
 class AnonymousCanPost(BasePermission):
     '''
     The request is anonymous as a user, but only allowed for POST methods.

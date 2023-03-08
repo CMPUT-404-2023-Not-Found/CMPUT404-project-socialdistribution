@@ -23,6 +23,7 @@ class NodeReadOnly(BasePermission):
     '''
 
     def has_permission(self, request, view):
+        is_in_node_group = request.user.groups.filter(name='node').exists()
         is_httpbasic = True if 'Basic' in request.META.get('HTTP_AUTHORIZATION', '') else False
         is_readonly = bool(request.method in SAFE_METHODS)
-        return (is_httpbasic and is_readonly)
+        return (is_in_node_group and is_httpbasic and is_readonly)

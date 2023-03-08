@@ -1,0 +1,28 @@
+[
+    {
+        "model": "auth.group",
+        "pk": 1,
+        "fields": { "name": "node", "permissions": [] }
+    },
+    {
+        "model": "author.author",
+        "pk": "209a9aa2-233c-4b2e-a2ee-d8d90d997bbd",
+        "fields": {
+          "password": "pbkdf2_sha256$260000$V5UGLzFw5WPHS5mepGO5Qk$ZIdqQoAsy5SC0yGRM1Pe7mbidL80XoDky6SSwZ+mIRU=",
+          "last_login": "2023-03-08T03:46:44.145Z",
+          "is_superuser": false,
+          "host": "http://localhost:8000",
+          "username": "node01",
+          "created_at": "2023-03-08T03:34:30.933Z",
+          "updated_at": "2023-03-08T04:09:43.699Z",
+          "rev": 0,
+          "display_name": "",
+          "github": "",
+          "profile_image": "",
+          "is_staff": false,
+          "is_active": true,
+          "groups": [1],
+          "user_permissions": []
+        }
+    }
+]

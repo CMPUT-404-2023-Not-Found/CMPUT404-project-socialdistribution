@@ -7,6 +7,7 @@ import logging
 import requests
 from urllib.parse import urlsplit
 
+from node.models import Node
 from post.models import Post
 from post.serializers import PostSerializer
 
@@ -22,22 +23,23 @@ class NodeComm():
         }
     }
 
-    def get_obect(self, url, type, credentials):
+    def get_object(self, url, type):
         '''
         Do a lookup of the url and retrieve the object
         '''
         ret = None
-        object_urlparse = urlsplit(url)
-        object_url = object_urlparse.scheme + '://' + object_urlparse.netloc
-        if object_url == self.APP_URL:
-            ret = self.get_internal_object(object_url, type)
+        urlparse = urlsplit(url)
+        host_url = urlparse.scheme + '://' + urlparse.netloc
+        if host_url == self.APP_URL:
+            ret = self.get_internal_object(url, type)
         else:
-            ret = self.get_external_object(object_url, type)
+            ret = self.get_external_object(host_url, url)
         return ret
 
     def get_internal_object(self, url, type):
         ret = None
         object_uuid = self.parse_object_uuid(url)
+        # TODO add try catch around this for unknown ids
         if object_uuid:
             object_data = self.lookup_config[type]['model'].objects.get(id=object_uuid)
             serializer = self.lookup_config[type]['serializer'](object_data)
@@ -47,9 +49,12 @@ class NodeComm():
             return ret
         return ret
 
-    def get_external_object(self, url, type, credentials):
+    def get_external_object(self, host_url, object_url):
         ret = None
-        r = requests.get(url, auth=credentials)
+        node_data = Node.objects.get(host=host_url)
+        r = requests.get(object_url, auth=(node_data.username, node_data.password))
+        logger.info(r)
+        ret = r.content
         return ret
 
     def parse_object_uuid(self, url):

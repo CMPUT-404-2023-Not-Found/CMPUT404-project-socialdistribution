@@ -16,6 +16,7 @@ export default AuthContext;
 
 export const AuthProvider = ({children}) => {
     //  variable declarations -------------------------------------
+    const API_URL = process.env.REACT_APP_API_URL;
     const [ authTokens, setAuthTokens ] = useState(() => localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')) : null);
     const [ user, setUser ] = useState(() => localStorage.getItem('authTokens') ? jwt_decode(localStorage.getItem('authTokens')) : null);
     const [ loading, setLoading ] = useState(true);
@@ -39,7 +40,7 @@ export const AuthProvider = ({children}) => {
     //  async functions -------------------------------------------
     const loginUser = async (e) =>  {
         e.preventDefault();
-        let response = await fetch('http://localhost:8000/api/token/', {
+        let response = await fetch(`${API_URL}/api/token/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -65,7 +66,7 @@ export const AuthProvider = ({children}) => {
     }
 
     const updateToken = async () => {
-        let response = await fetch('http://localhost:8000/api/token/refresh/', {
+        let response = await fetch(`${API_URL}/api/token/refresh/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

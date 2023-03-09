@@ -56,7 +56,6 @@ const Login = () => {
         </div>
         <h1 style={{ marginLeft: '10px' }}>Login In</h1>
             <form className="login-form" onSubmit={loginUser}>
-
                 <div className="input-container">
                 <label htmlFor="username" className="icon-label"><FaUser/> </label>
                 <input 
@@ -64,6 +63,7 @@ const Login = () => {
                     id="username" 
                     name="username" 
                     placeholder=" Username" 
+                    data-testid="username-input"
                     required
                     style={{height:25,width:170,borderRadius: '10px'}}
                     // onChange={(e) => setUsername(e.target.value)} 

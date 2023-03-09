@@ -37,7 +37,8 @@ class PostSerializer(serializers.ModelSerializer):
     def get_type(self, obj): return 'post'
 
     comments        = serializers.SerializerMethodField('get_comments')
-    def get_comments(self, obj): return 'http://this.is.a/hack/'
+    def get_comments(self, obj): 
+        return obj.author.get_node_id() + '/posts/' + str(obj.id) + '/comments'
 
     class Meta:
         model = Post

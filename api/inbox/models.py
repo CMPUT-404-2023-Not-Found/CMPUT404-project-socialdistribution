@@ -37,4 +37,7 @@ class Inbox(Model):
     type                = models.CharField(choices=TypeChoices.choices, default=TypeChoices.POST, max_length=32)
 
     def __str__(self):
-        return f'{self.id} {self.author}'
+        if self.author.display_name:
+            return f'{self.author.display_name} - {self.summary}'
+        else:
+            return f'{self.author.username} - {self.summary}'

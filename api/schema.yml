@@ -30,7 +30,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedCreateAuthorList'
+                $ref: '#/components/schemas/PaginatedNewAuthorList'
           description: ''
     post:
       operationId: authors_create
@@ -41,13 +41,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateAuthor'
+              $ref: '#/components/schemas/NewAuthor'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/CreateAuthor'
+              $ref: '#/components/schemas/NewAuthor'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/CreateAuthor'
+              $ref: '#/components/schemas/NewAuthor'
         required: true
       security:
       - jwtAuth: []
@@ -56,11 +56,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateAuthor'
+                $ref: '#/components/schemas/NewAuthor'
           description: ''
   /api/authors/{author_uuid}/inbox/:
     get:
       operationId: authors_inbox_list
+      description: GET Paginated list of recent author_uuid's inbox things
       parameters:
       - in: path
         name: author_uuid
@@ -84,13 +85,12 @@ paths:
       - authors
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedInboxList'
+                $ref: '#/components/schemas/PaginatedRetrieveInboxList'
           description: ''
     post:
       operationId: authors_inbox_create
@@ -107,23 +107,22 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Inbox'
+              $ref: '#/components/schemas/AddInbox'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Inbox'
+              $ref: '#/components/schemas/AddInbox'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Inbox'
+              $ref: '#/components/schemas/AddInbox'
         required: true
       security:
       - jwtAuth: []
-      - {}
       responses:
         '201':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Inbox'
+                $ref: '#/components/schemas/AddInbox'
           description: ''
     delete:
       operationId: authors_inbox_destroy
@@ -138,7 +137,6 @@ paths:
       - authors
       security:
       - jwtAuth: []
-      - {}
       responses:
         '204':
           description: No response body
@@ -394,7 +392,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateAuthor'
+                $ref: '#/components/schemas/ExistingAuthor'
           description: ''
     post:
       operationId: authors_update
@@ -412,14 +410,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateAuthor'
+              $ref: '#/components/schemas/ExistingAuthor'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/CreateAuthor'
+              $ref: '#/components/schemas/ExistingAuthor'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/CreateAuthor'
-        required: true
+              $ref: '#/components/schemas/ExistingAuthor'
       security:
       - jwtAuth: []
       responses:
@@ -427,7 +424,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateAuthor'
+                $ref: '#/components/schemas/ExistingAuthor'
           description: ''
   /api/schema/:
     get:
@@ -654,6 +651,31 @@ paths:
           description: ''
 components:
   schemas:
+    '@contextEnum':
+      enum:
+      - https://www.w3.org/ns/activitystreams
+      type: string
+    AddInbox:
+      type: object
+      properties:
+        summary:
+          type: string
+          maxLength: 32
+        type:
+          $ref: '#/components/schemas/TypeEnum'
+        author:
+          type: string
+          format: uri
+        object:
+          type: string
+          format: uri
+        '@context':
+          $ref: '#/components/schemas/@contextEnum'
+      required:
+      - '@context'
+      - author
+      - object
+      - summary
     ContentTypeEnum:
       enum:
       - text/markdown
@@ -662,11 +684,50 @@ components:
       - image/png;base64
       - image/jpeg;base64
       type: string
-    ContextEnum:
-      enum:
-      - https://www.w3.org/ns/activitystreams
-      type: string
-    CreateAuthor:
+    ExistingAuthor:
+      type: object
+      properties:
+        type:
+          type: string
+          readOnly: true
+        id:
+          type: string
+          format: uri
+          readOnly: true
+        host:
+          type: string
+          format: uri
+          readOnly: true
+          maxLength: 128
+        displayName:
+          type: string
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        github:
+          type: string
+          format: uri
+          maxLength: 128
+        profileImage:
+          type: string
+      required:
+      - host
+      - id
+      - type
+      - url
+    MyTokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - password
+      - username
+    NewAuthor:
       type: object
       properties:
         type:
@@ -710,68 +771,13 @@ components:
       - type
       - url
       - username
-    Inbox:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          readOnly: true
-        author:
-          type: string
-          format: uuid
-          readOnly: true
-        receivedAt:
-          type: string
-          format: date-time
-          readOnly: true
-        object:
-          type: string
-          format: uri
-        senderAuthorId:
-          type: string
-          format: uri
-        context:
-          allOf:
-          - $ref: '#/components/schemas/ContextEnum'
-          format: uri
-        summary:
-          type: string
-          maxLength: 32
-        type:
-          $ref: '#/components/schemas/TypeEnum'
-      required:
-      - author
-      - id
-      - object
-      - receivedAt
-      - senderAuthorId
-      - summary
-    MyTokenObtainPair:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-          writeOnly: true
-      required:
-      - password
-      - username
-    PaginatedCreateAuthorList:
+    PaginatedNewAuthorList:
       type: object
       properties:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/CreateAuthor'
-    PaginatedInboxList:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Inbox'
+            $ref: '#/components/schemas/NewAuthor'
     PaginatedPostList:
       type: object
       properties:
@@ -779,6 +785,20 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Post'
+    PaginatedRetrieveInboxList:
+      type: object
+      properties:
+        type:
+          type: string
+          example: inbox
+        author:
+          type: string
+          format: uri
+          example: http://api.example.com/api/authors/12345678-90ab-cdef-ghij-klmnopqrstuv
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/RetrieveInbox'
     PatchedPost:
       type: object
       properties:
@@ -805,7 +825,7 @@ components:
           type: string
         author:
           allOf:
-          - $ref: '#/components/schemas/CreateAuthor'
+          - $ref: '#/components/schemas/ExistingAuthor'
           readOnly: true
         categories:
           type: string
@@ -863,7 +883,7 @@ components:
           type: string
         author:
           allOf:
-          - $ref: '#/components/schemas/CreateAuthor'
+          - $ref: '#/components/schemas/ExistingAuthor'
           readOnly: true
         categories:
           type: string
@@ -910,6 +930,15 @@ components:
       - type
       - updated_at
       - visibility
+    RetrieveInbox:
+      type: object
+      properties:
+        object:
+          type: object
+          additionalProperties: {}
+          readOnly: true
+      required:
+      - object
     TokenRefresh:
       type: object
       properties:

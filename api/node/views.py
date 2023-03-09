@@ -10,7 +10,10 @@ import logging
 
 from .models import Node
 from .serializers import NodeSerializer
+from utils.node_comm import NodeComm
 from utils.permissions import IsAuthenticatedWithJWT
+
+NodeComm = NodeComm()
 
 logger = logging.getLogger('django')
 rev = 'rev: $xCuIts1$x'
@@ -31,9 +34,9 @@ class NodeView(GenericAPIView):
             return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
         request_data = serializer.validated_data
         # Get url from request
-        # Figure out credentials from url
-        # if cant determine credentials try call anyways but with no creds
-        # send http request to url with credentials
+        object_url = request_data.get('url')
+        object_type = request_data.get('type')
+        logger.info(request_data)
+        object_data = NodeComm.get_object(url=object_url, type=object_type)
         # if response is json return json_parse(response) else return response
-        # json = JSONRenderer().render(serializer.data)
-        return Response(status=status.HTTP_200_OK, data=request_data)
+        return Response(status=status.HTTP_200_OK, data=object_data)

@@ -54,6 +54,7 @@ class NodeComm():
         node_data = Node.objects.get(host=host_url)
         r = requests.get(object_url, auth=(node_data.username, node_data.password))
         logger.info(r)
+        # TODO maybe parse this to JSON?
         ret = r.content.decode('utf-8')
         return ret
 

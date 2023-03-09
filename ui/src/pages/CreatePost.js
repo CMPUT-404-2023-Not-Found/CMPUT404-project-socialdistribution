@@ -3,9 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useContext, useState, useEffect } from 'react';
 import AuthContext from '../context/AuthContext';
 import DynamicForm from '../utils/DynamicForm';
+import Backend from '../utils/Backend';
 import {useForm} from 'react-hook-form';
-
-const baseURL = 'http://localhost:8000';
 
 /*
     This code was adapted from a video by Ssali Jonathan, 2022-02-10, retrieved on 2023-02-27, 
@@ -27,20 +26,8 @@ const CreatePost = () => {
 
     //  event listeners --------------------------------------------
     useEffect(() => {
-        const getOptions = async () => { 
-            const request = new Request(
-                `${baseURL}/api/authors/${user.user_id}/posts/`,
-                {
-                    headers: {
-                        'Authorization': 'Bearer ' + String(authTokens.access)
-                    },
-
-                    method: 'OPTIONS'
-                }
-            );
-
-            const response = await fetch(request);
-            const data = await response.json();
+        const getOptions = async () => {
+            const [response, data] = await Backend.options(`/api/authors/${user.user_id}/posts/`, authTokens.access);
             setOptions(data);
             console.log(data);
         }
@@ -50,25 +37,9 @@ const CreatePost = () => {
 
     //  async functions -------------------------------------------
     const createPost = async (formData) => {
-        const request = new Request(
-            `${baseURL}/api/authors/${user.user_id}/posts/`,
-            {
-                body: JSON.stringify(formData),
-
-                headers: {
-                    'Content-Type':'Application/Json',
-                    'Authorization': 'Bearer ' + String(authTokens.access)
-                },
-
-                method: 'POST'
-            }
-        );
-
-        const response = await fetch(request);
-        
-        console.log(response);
+        const [response, data] = await Backend.post(`/api/authors/${user.user_id}/posts/`, authTokens.access, JSON.stringify(formData));
         if (response.status && response.status === 201) {
-            navigate(-1);
+            navigate('/posts');
         } else if (response.statusText === 'Unauthorized'){
             logoutUser();
         } else {

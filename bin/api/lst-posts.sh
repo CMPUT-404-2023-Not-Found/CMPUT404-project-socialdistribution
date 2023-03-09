@@ -43,6 +43,6 @@ then
     echo "$rsp"
 else
     echo "$rsp" | jq 2>/dev/null
-    e=$?; if [ $e -ne 0 ]; then echo "ERR response is not json"; echo "$rsp"; exit $e; fi
+    e=$?; if [ $e -ne 0 ]; then echo "$rsp"; exit $e; fi
 fi
 

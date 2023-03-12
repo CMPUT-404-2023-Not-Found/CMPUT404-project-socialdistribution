@@ -19,14 +19,10 @@ env:
 on:
   push:
     branches: [ "dev", "master" ]
-    paths: 
-      - 'api/**'
-      - '!api/health/ver.txt'
+    paths: 'api/**'
   pull_request:
     branches: [ "dev", "master" ]
-    paths: 
-      - 'api/**'
-      - '!api/health/ver.txt'
+    paths: 'api/**'
 
 # This code is modified from an exisiting YAML workflow from django-cms, last commit by Vinit Kumar on 2022-10-30, retrieved 2023-02-25 at github.com
 # YAML file here:

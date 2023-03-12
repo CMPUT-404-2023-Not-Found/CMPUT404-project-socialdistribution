@@ -60,7 +60,7 @@ class AuthorViewTests(Base):
         '''
         Test getting another author's profile with http basic
         '''
-        c = self.configure_client(user=self.author, auth_type='Basic')
+        c = self.configure_client(user=self.basic_auth_author, auth_type='Basic')
         response = c.get(self.get_author_detail_url(str(self.another_author.id)))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['id'], self.another_author.get_node_id())

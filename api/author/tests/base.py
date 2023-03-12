@@ -16,13 +16,13 @@ class Base(APITestCase):
     Base class for Author test suite
     '''
     app_host = settings.APP_URL
-    fixtures = ['fixtures/db.json']
-    fixture_password = 'P*ssw0rd!' # All fixture author accounts have the same password
+    fixtures = ['fixtures/db.json', 'fixtures/node-group.json']
 
     def setUp(self):
         self.author = Author.objects.get(username='georgerrmartin')
         self.admin = Author.objects.get(username='stephenking')
         self.another_author = Author.objects.get(username='edgarallanpoe')
+        self.basic_auth_author = Author.objects.get(username='node01')
         self.author_client = self.configure_client(self.author)
         self.admin_client = self.configure_client(self.admin)
 

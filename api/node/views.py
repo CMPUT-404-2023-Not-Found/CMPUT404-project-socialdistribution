@@ -36,7 +36,7 @@ class NodeView(GenericAPIView):
 
         object_url = request_data.get('url')
         object_type = request_data.get('type')
-        logger.info(request_data)
+        logger.info('Doing lookup of object_type [%s] object_url [%s]', object_type, object_url)
         object_data = NodeComm.get_object(url=object_url, type=object_type)
         if object_data:
             return Response(status=status.HTTP_200_OK, data=object_data)

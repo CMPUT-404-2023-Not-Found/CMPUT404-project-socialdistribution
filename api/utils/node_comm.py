@@ -7,6 +7,8 @@ import logging
 import requests
 from urllib.parse import urlsplit
 
+from author.models import Author
+from author.serializers import ExistingAuthorSerializer
 from node.models import Node
 from post.models import Post
 from post.serializers import PostSerializer
@@ -20,10 +22,14 @@ class NodeComm():
         'post': {
             'model': Post,
             'serializer': PostSerializer
+        },
+        'author': {
+            'model': Author,
+            'serializer': ExistingAuthorSerializer
         }
     }
 
-    def get_object(self, url, type):
+    def get_object(self, type, url):
         '''
         Do a lookup of the url and retrieve the object
         '''
@@ -31,12 +37,12 @@ class NodeComm():
         urlparse = urlsplit(url)
         host_url = urlparse.scheme + '://' + urlparse.netloc
         if host_url == self.APP_URL:
-            ret = self.get_internal_object(url, type)
+            ret = self.get_internal_object(type, url)
         else:
             ret = self.get_external_object(host_url, url)
         return ret
 
-    def get_internal_object(self, url, type):
+    def get_internal_object(self, type, url):
         '''
         URL matches own self thus query database for data
         '''

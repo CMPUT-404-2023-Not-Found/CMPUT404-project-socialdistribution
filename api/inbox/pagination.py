@@ -9,7 +9,10 @@ from urllib.parse import urlsplit
 from author.models import Author
 from post.models import Post
 from post.serializers import PostSerializer
+from utils.node_comm import NodeComm
 from utils.pagination import CustomPagination
+
+NodeComm = NodeComm()
 
 import logging
 logger = logging.getLogger('django')
@@ -25,12 +28,12 @@ class InboxPagination(CustomPagination):
 
         new_data = []
         for item in data:
-            item_urlparse = urlsplit(item['object'])
-            item_url = item_urlparse.scheme + '://' + item_urlparse.netloc
-            if item_url == settings.APP_URL:
-                new_data.append(self.get_internal_object_detail(author_uuid, item))
+            item_data = NodeComm.get_object(item['type'], item['object'])
+            if item_data:
+                new_data.append(item_data)
             else:
-                new_data.append(self.get_external_object_detail(author_uuid, item))
+                logger.warning('Failed lookup on item type [%s] url [%s] ... returning activitystreams of item', item['type'], item['object'])
+                new_data.append(item)
 
         return Response(OrderedDict([
             ('type', 'inbox'),
@@ -54,32 +57,3 @@ class InboxPagination(CustomPagination):
                     'items': schema,
               },
           }
-
-    def get_internal_object_detail(self, author_uuid, object):
-        '''
-        Call internal database for object information
-        '''
-        lookup_config = {
-            'post': {
-                'model': Post,
-                'serializer': PostSerializer
-            }
-        }
-        ret = object
-        object_type = object['type']
-        if object['type'] in lookup_config:
-            # Get the uuid of the thing for serialization
-            object_uuid = object['object'].rstrip('/').split('/')[-1]
-            try:
-                object_data = lookup_config[object_type]['model'].objects.get(id=object_uuid)
-                serializer = lookup_config[object_type]['serializer'](object_data)
-                ret = serializer.data
-            except Exception as e:
-                logger.error('Failed internal detail search on author [%s] inbox item [%s]. e: [%s]', author_uuid, object_uuid, e)
-        return ret
-
-    def get_external_object_detail(self, author_uuid, object):
-        '''
-        Call external nodes for object information 
-        '''
-        return object

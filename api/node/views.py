@@ -33,7 +33,7 @@ class NodeView(GenericAPIView):
             logger.error('Request data is bad [%s]', serializer.error_messages)
             return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
         request_data = serializer.validated_data
-        # Get url from request
+
         object_url = request_data.get('url')
         object_type = request_data.get('type')
         logger.info(request_data)

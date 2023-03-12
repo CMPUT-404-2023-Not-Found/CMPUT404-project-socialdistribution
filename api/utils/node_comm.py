@@ -37,9 +37,11 @@ class NodeComm():
         return ret
 
     def get_internal_object(self, url, type):
+        '''
+        URL matches own self thus query database for data
+        '''
         ret = None
         object_uuid = self.parse_object_uuid(url)
-        # TODO add try catch around this for unknown ids
         if object_uuid:
             try:
                 object_data = self.lookup_config[type]['model'].objects.get(id=object_uuid)
@@ -53,6 +55,9 @@ class NodeComm():
         return ret
 
     def get_external_object(self, host_url, object_url):
+        '''
+        URL matches a known node object, thus query that node for data
+        '''
         ret = None
         node_data = Node.objects.get(host=host_url)
         r = requests.get(object_url, auth=(node_data.username, node_data.password))
@@ -63,5 +68,11 @@ class NodeComm():
         return ret
 
     def parse_object_uuid(self, url):
+        '''
+        Return an objects UUID
+        Assumption of URL look:
+            http://sitename.com/api/authors/d3bb924f-f37b-4d14-8d8e-f38b09703bab/
+            object_uuid = d3bb924f-f37b-4d14-8d8e-f38b09703bab
+        '''
         object_uuid = url.rstrip('/').split('/')[-1]
         return object_uuid if object_uuid else None

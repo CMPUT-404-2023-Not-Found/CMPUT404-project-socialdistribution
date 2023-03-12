@@ -58,7 +58,7 @@ class AuthorViewTests(Base):
 
     def test_get_author_with_auth_basic(self):
         '''
-        Test getting another author's profile with http basic
+        Test getting another author's profile with http basic 
         '''
         c = self.configure_client(user=self.basic_auth_author, auth_type='Basic')
         response = c.get(self.get_author_detail_url(str(self.another_author.id)))

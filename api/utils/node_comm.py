@@ -41,9 +41,12 @@ class NodeComm():
         object_uuid = self.parse_object_uuid(url)
         # TODO add try catch around this for unknown ids
         if object_uuid:
-            object_data = self.lookup_config[type]['model'].objects.get(id=object_uuid)
-            serializer = self.lookup_config[type]['serializer'](object_data)
-            ret = serializer.data
+            try:
+                object_data = self.lookup_config[type]['model'].objects.get(id=object_uuid)
+                serializer = self.lookup_config[type]['serializer'](object_data)
+                ret = serializer.data
+            except Exception as e:
+                logger.error('Failed internal lookup on type [%s] url [%s]. e [%s]', type, url, e)
         else:
             logger.error('Could not determine object uuid from url [%s]', url)
             return ret
@@ -53,9 +56,10 @@ class NodeComm():
         ret = None
         node_data = Node.objects.get(host=host_url)
         r = requests.get(object_url, auth=(node_data.username, node_data.password))
-        logger.info(r)
-        # TODO maybe parse this to JSON?
-        ret = r.content.decode('utf-8')
+        try:
+            ret = json.loads(r.content.decode('utf-8'))
+        except Exception as e:
+            logger.error('Not JSON-parsable in response from [%s]. e [%s]', object_url, e)
         return ret
 
     def parse_object_uuid(self, url):

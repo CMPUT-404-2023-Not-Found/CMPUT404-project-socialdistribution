@@ -38,5 +38,7 @@ class NodeView(GenericAPIView):
         object_type = request_data.get('type')
         logger.info(request_data)
         object_data = NodeComm.get_object(url=object_url, type=object_type)
-        # if response is json return json_parse(response) else return response
-        return Response(status=status.HTTP_200_OK, data=object_data)
+        if object_data:
+            return Response(status=status.HTTP_200_OK, data=object_data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)

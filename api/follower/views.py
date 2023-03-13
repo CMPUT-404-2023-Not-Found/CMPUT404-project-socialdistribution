@@ -10,14 +10,20 @@ def index(request):
     # current_viewed_author: the author who is being viewed by the current user
     current_viewed_author = request.GET.get('author')
     # current_author: the author who is currently logged in
-    current_author = request.user.username
+    current_logged_author = request.user.username
     # current_viewed_author_follwers: the list of authors that are following the currently being viewed author
     current_viewed_author_follwers = FollowerCount.objects.filter(followee=current_viewed_author)
     # current_viewed_author_follwers_count: the number of followers of the currently being viewed author
     current_viewed_author_follwers_count = len(current_viewed_author_follwers)
-    # current_author_followers: the list of authors that the currently logged author is following
-    current_author_follwers = FollowerCount.objects.filter(follwer=current_author)
-    return render(request, 'follower/index.html', {'current_viewed_author': current_viewed_author, 'current_author': current_author})
+    # current_logged_author_followers: the list of authors that the currently logged author is following
+    current_logged_author_follwings = FollowerCount.objects.filter(follwer=current_logged_author)
+    # current_logged_author_follwing_count: the number of authors that the currently logged author is following 
+    current_logged_author_follwing_count = len(current_logged_author_follwings)
+    return render(request, 'follower/index.html', 
+                  {'current_viewed_author': current_viewed_author, 
+                   'current_viewed_author_follwers': current_viewed_author_follwers_count,
+                   'current_author_follwing_count': current_logged_author_follwing_count
+                   })
     
 def follwers_count(request):
     if request.method == "POST":

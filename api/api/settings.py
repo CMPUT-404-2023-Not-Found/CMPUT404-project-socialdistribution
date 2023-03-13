@@ -151,6 +151,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 # This code is modified from a documentation page from Django Software Foundation retrieved on 2023-02-16, to docs.djangoproject.com
 # documentation page here:
 # https://docs.djangoproject.com/en/3.2/topics/logging/

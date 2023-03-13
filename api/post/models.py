@@ -8,6 +8,9 @@ from django.db import models
 from author.models import Author
 from utils.model_abstracts import Model
 
+def upload_path(instance, filename):
+    return '/'.join(['postimages', str(instance.id), filename])
+
 class Post(Model):
     MD = 'text/markdown';       PT = 'text/plain'
     B64 = 'application/base64'; PNG = 'image/png;base64'; JPEG = 'image/jpeg;base64'
@@ -52,6 +55,7 @@ class Post(Model):
     content_type        = models.CharField(choices=CONTENT_TYPE_OPTIONS, max_length=32, verbose_name='Content Type')
     description         = models.TextField(blank=True, default='')
     title               = models.CharField(blank=False, null=False, max_length=128)
+    image               = models.ImageField(blank=True, null=True, upload_to=upload_path)
 
     def __str__(self):
         return f'{self.author} {self.title}'

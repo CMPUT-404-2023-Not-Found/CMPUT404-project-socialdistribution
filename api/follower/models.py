@@ -4,6 +4,8 @@ from author.models import Author
 # Create your models here.
 class Follower(models.Model):
     # Identification fields
+    # follower: the author who is following the followee
+    # followee: the author who is being followed by the follower
     follower              = models.ForeignKey(to='author.Author', on_delete=models.CASCADE, related_name='follower')
     followee              = models.ForeignKey(to='author.Author', on_delete=models.CASCADE, related_name='followee')
 

@@ -7,8 +7,8 @@ export APP_HOST='localhost:8000'
 export APP_URL="http://${APP_HOST}"
 export AUTHOR_API="${APP_URL}/api/authors"
 export POST_API="${AUTHOR_API}/%s/posts"
-export TOKEN_API="${APP_URL}/api/token"
+export TOKEN_API="$APP_URL/api/token"
+export NODE_API="$APP_URL/api/node"
 
 # Personalization
-export MONIKER='ava'
-export AUTHOR_NODE_ID="${AUTHOR_API}/${AUTHOR_UUID}"
+export MONIKER=''

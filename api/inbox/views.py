@@ -41,7 +41,7 @@ class InboxView(DestroyAPIView, ListCreateAPIView):
         self.request.kwargs = self.kwargs
         author_uuid = self.kwargs.get(self.lookup_url_kwarg)
         logger.info('Getting recent items in inbox for author_uuid: [%s]', author_uuid)
-        return self.queryset.filter(author=author_uuid).order_by('received_at')
+        return self.queryset.filter(author=author_uuid).order_by('-received_at')
 
     # POST Add Post, Follow, Like, or Comment to AUTHOR_UUID's inbox
     def perform_create(self, serializer):

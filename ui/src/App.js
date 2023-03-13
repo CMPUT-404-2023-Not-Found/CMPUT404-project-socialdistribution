@@ -15,7 +15,7 @@ import './App.css'
 
 import { Routes, Route } from 'react-router-dom';
 // Componenets
-import Navbar from './components/Navbar';
+import Navbar from './components/Navbar/Navbar';
 // Utils
 import PrivateRoutes from './utils/PrivateRoutes'
 // Contexts

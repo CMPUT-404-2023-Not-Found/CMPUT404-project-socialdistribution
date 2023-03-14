@@ -5,7 +5,7 @@ from author.models import Author
 # Create your models here.
 class Follower(models.Model):
     # Identification fields
-    follower              = models.URLField(blank=False, null=False, max_length=128, verbose_name='author who is following the followee')
+    follower              = models.URLField(primary_key= True, blank=False, null=False, max_length=128, verbose_name='author who is following the followee')
     # QUESTION: What does related_name mean?
     followee              = models.ForeignKey(to=Author, on_delete=models.CASCADE, related_name='followee')
 

@@ -5,22 +5,26 @@ from django.http import HttpResponse
 from .serializers import FollowerSerializer
 from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
 
+import logging
 from .models import Follower
+
+logger = logging.getLogger('django')
+rev = 'rev: $jsadasd'
 # Create your views here.
 
 class FollowerListView(ListAPIView):
     serializer_class = FollowerSerializer
     queryset = Follower.objects.all()
 
-# TODO OpenAPI dies on PUT
-# TODO change models.py to put primary key as follower
-# Expected view FollowerDetailView to be called with a URL keyword argument named "pk". Fix your URL conf, or set the `.lookup_field` attribute on the view correctly.
-# 
 class FollowerDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = FollowerSerializer
     queryset = Follower.objects.all()
-
-
+    lookup_field = 'follower'
+    
+    def put(self, request, *args, **kwargs):
+        logger.info(rev)
+        return super().put(request, *args, **kwargs)
+    
 
 def index(request):
     # current_viewed_author: the author who is being viewed by the current user

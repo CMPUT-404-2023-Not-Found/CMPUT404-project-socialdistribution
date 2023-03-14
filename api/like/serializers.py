@@ -64,7 +64,8 @@ class LikeSerializer(serializers.ModelSerializer):
         else:
             return str(obj.author) + '/posts/' + str(obj.post.id) + '/comments/' + str(obj.comment.id)
 
-    def get_type(self, obj): return 'post' if obj.comment else 'comment'
+    # def get_type(self, obj): return 'post' if obj.comment else 'comment'
+    def get_type(self, obj): return 'Like' 
 
     class Meta:
         # context, summary, type, author,  ID of the like (UUID)

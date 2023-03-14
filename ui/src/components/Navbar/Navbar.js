@@ -29,7 +29,7 @@ const Navbar = () => {
 
     if (user) {
         return (
-            <Grid item xs={4}>
+            <Grid item xs={2}>
             <Drawer
             sx={navbarStyles.drawer}
             variant="permanent"

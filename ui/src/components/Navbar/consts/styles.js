@@ -8,10 +8,8 @@ https://youtu.be/uLSE7WtcrP0
 */
 export const navbarStyles = {
     drawer: {
-        width: 320,
         flexShrink: 0,
         '& .MuiDrawer-paper': {
-            width: 320,
             boxSizing: 'border-box',
             color: 'primary.main'
         },

@@ -45,14 +45,23 @@ class FollowerDetailView(RetrieveUpdateDestroyAPIView):
         followee = Author.objects.get(id=kwargs['author_uuid'])
         # get follower url
         follower_url = kwargs['follower']
+        # TODO check that author doesnt already follow the followee
+        exists = Follower.objects.filter(followee=followee, follower=follower_url)
         # save entry to database
-        created = Follower.objects.create(followee=followee, follower=follower_url)  # type: ignore
+        if exists:
+            return Response('follower already exists',status=status.HTTP_400_BAD_REQUEST)
+        else:
+            created = Follower.objects.create(followee=followee, follower=follower_url)  # type: ignore
         # return Response for succesful follow request
         # TODO better way to check if the entry was created?
-        if created:
-            return Response('success', status=status.HTTP_201_CREATED)
-        else:
-            return Response('error',status=status.HTTP_404_NOT_FOUND)
+            if created:
+                return Response('success', status=status.HTTP_201_CREATED)
+            else:
+                return Response('error',status=status.HTTP_404_NOT_FOUND)
+        
+    #TODO Implement delete
+    def delete():
+        pass
     
 def index(request):
     # current_viewed_author: the author who is being viewed by the current user

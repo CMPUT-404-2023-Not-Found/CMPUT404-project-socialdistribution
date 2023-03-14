@@ -12,6 +12,10 @@ class FollowerListView(ListAPIView):
     serializer_class = FollowerSerializer
     queryset = Follower.objects.all()
 
+# TODO OpenAPI dies on PUT
+# TODO change models.py to put primary key as follower
+# Expected view FollowerDetailView to be called with a URL keyword argument named "pk". Fix your URL conf, or set the `.lookup_field` attribute on the view correctly.
+# 
 class FollowerDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = FollowerSerializer
     queryset = Follower.objects.all()

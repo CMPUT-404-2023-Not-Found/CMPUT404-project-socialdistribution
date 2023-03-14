@@ -15,6 +15,7 @@ rev = 'rev: $xani93n$x' # TODO ??
 # video here:
 # https://youtu.be/B3HGwFlBvi8
 class FollowerSerializer(serializers.ModelSerializer):
+    follower = URLField(required = False)
     class Meta:
         model = Follower
-        fields = [ 'follower']
+        fields = ['follower']

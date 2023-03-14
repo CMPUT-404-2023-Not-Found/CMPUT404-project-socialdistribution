@@ -12,6 +12,8 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 
 import AuthContext from '../../context/AuthContext';
+import { mainNavbarItems, secondaryNavbarItems } from './consts/navbarItems';
+import { navbarStyles } from './consts/styles';
 
 const Navbar = () => {
     const drawerWidth = 220;
@@ -19,40 +21,33 @@ const Navbar = () => {
     if (user) {
         return (
             <Drawer
-            sx={{
-                width: drawerWidth,
-                flexShrink: 0,
-                '& .MuiDrawer-paper': {
-                width: drawerWidth,
-                boxSizing: 'border-box',
-                },
-            }}
+            sx={navbarStyles.drawer}
             variant="permanent"
             anchor="left"
             >
             <Toolbar />
             <Divider />
             <List>
-                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                <ListItem key={text} disablePadding>
+                {mainNavbarItems.map((text, index) => (
+                <ListItem key={text.id} disablePadding>
                     <ListItemButton>
-                    <ListItemIcon>
-                        {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                    <ListItemIcon sx={navbarStyles.icons}>
+                        {text.icon}
                     </ListItemIcon>
-                    <ListItemText primary={text} />
+                    <ListItemText primary={text.label} sx={navbarStyles.text} />
                     </ListItemButton>
                 </ListItem>
                 ))}
             </List>
             <Divider />
             <List>
-                {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                <ListItem key={text} disablePadding>
+                {secondaryNavbarItems.map((text, index) => (
+                <ListItem key={text.id} disablePadding>
                     <ListItemButton>
-                    <ListItemIcon>
-                        {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                    <ListItemIcon sx={navbarStyles.icons}>
+                        {text.icon}
                     </ListItemIcon>
-                    <ListItemText primary={text} />
+                    <ListItemText primary={text.label} sx={navbarStyles.text} />
                     </ListItemButton>
                 </ListItem>
                 ))}

@@ -17,7 +17,7 @@ import '@fontsource/roboto/700.css';
 import App from './App';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoutes from './utils/PrivateRoutes'
-import Login from './pages/Login';
+import Login from './pages/Login/Login';
 import Profile from './pages/Profile';
 import Stream from './pages/Stream/Stream';
 import Posts from './pages/Posts';

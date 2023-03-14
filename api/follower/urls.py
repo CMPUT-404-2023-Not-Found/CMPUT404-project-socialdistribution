@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include
-from . import views
+from .views import FollowerListView, FollowerDetailView
 
 urlpatterns = [
-    path("follwers_count", views.follwers_count, name="follwers_count"),
+    path('', FollowerListView.as_view(), name='listFollower'),
+    path('<uuid:id>/', FollowerDetailView.as_view(), name='detailFollower')
 ]

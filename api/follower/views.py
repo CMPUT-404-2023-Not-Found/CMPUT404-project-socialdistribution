@@ -2,9 +2,21 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from django.http import HttpResponse
-import requests
-from .models import Follower, FollowerCount
+from .serializers import FollowerSerializer
+from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
+
+from .models import Follower
 # Create your views here.
+
+class FollowerListView(ListAPIView):
+    serializer_class = FollowerSerializer
+    queryset = Follower.objects.all()
+
+class FollowerDetailView(RetrieveUpdateDestroyAPIView):
+    serializer_class = FollowerSerializer
+    queryset = Follower.objects.all()
+
+
 
 def index(request):
     # current_viewed_author: the author who is being viewed by the current user
@@ -33,5 +45,4 @@ def follwers_count(request):
         if value == "follow": # if the follwer is following the followee
             follwers_count = FollowerCount.objects.create(follwer=follwer, author=author)
             follwers_count.save()
-        return redirect("/" + author.__str__)
-    
+        return redirect("/" + author.__str__)  

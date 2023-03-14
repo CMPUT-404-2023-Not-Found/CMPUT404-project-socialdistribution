@@ -1,11 +1,8 @@
 /*
 2023-02-19
 index.js
-
-This code is modified from a tutorial about Routing in React from Joel Olawanle on 2022-09-06, retrieved on 2023-02-19, to hygraph.com
-tutorial here:
-https://hygraph.com/blog/routing-in-react
 */
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';

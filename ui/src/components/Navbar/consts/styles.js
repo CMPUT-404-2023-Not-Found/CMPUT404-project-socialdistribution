@@ -1,3 +1,11 @@
+/*
+2023-03-13
+ui/src/componenets/Navbar/consts/styles.js
+
+This code is modified from a video tutorial on Material UI from theatypicaldeveloper on 2021-11-29, retrieved 2023-03-13 from youtube.com
+video here:
+https://youtu.be/uLSE7WtcrP0
+*/
 export const navbarStyles = {
     drawer: {
         width: 320,

@@ -1,3 +1,11 @@
+/*
+2023-03-13
+ui/src/components/Navbar/Navbar.js
+
+This code is modified from a documentation guide on Material UI Drawer components from Material UI SAS 2023, retrieved 2023-03-13 from mui.com
+guide here
+https://mui.com/material-ui/react-drawer/#full-height-navigation
+*/
 import * as React from 'react';
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';

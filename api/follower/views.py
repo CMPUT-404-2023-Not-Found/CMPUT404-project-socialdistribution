@@ -9,7 +9,7 @@ from rest_framework import status
 from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
 
 import logging
-from .models import Follower
+from .models import Follower, Author
 
 logger = logging.getLogger('django')
 rev = 'rev: $jsadasd'
@@ -42,12 +42,13 @@ class FollowerDetailView(RetrieveUpdateDestroyAPIView):
     
     def put(self, request, *args, **kwargs):
         # get author(followee) uuid
-        followee = kwargs['author_uuid']
+        followee = Author.objects.get(id=kwargs['author_uuid'])
         # get follower url
         follower_url = kwargs['follower']
         # save entry to database
-        obj, created = Follower.objects.create(followee=followee, follower=follower_url)  # type: ignore
+        created = Follower.objects.create(followee=followee, follower=follower_url)  # type: ignore
         # return Response for succesful follow request
+        # TODO better way to check if the entry was created?
         if created:
             return Response('success', status=status.HTTP_201_CREATED)
         else:

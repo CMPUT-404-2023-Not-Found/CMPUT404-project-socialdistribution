@@ -13,14 +13,14 @@ export const navbarStyles = {
         '& .MuiDrawer-paper': {
             width: 320,
             boxSizing: 'border-box',
-            color: '#265156',
+            color: 'primary.main'
         },
         '& .Mui-selected': {
             color: 'red',
         },
     },
     icons: {
-        color: '#265156!important',
+        color: 'primary.main',
         marginLeft: '20px',
     },
     text: {

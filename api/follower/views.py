@@ -2,7 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from django.http import HttpResponse
+
 from .serializers import FollowerSerializer
+from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
 
 import logging
@@ -17,15 +20,39 @@ class FollowerListView(ListAPIView):
     queryset = Follower.objects.all()
 
 class FollowerDetailView(RetrieveUpdateDestroyAPIView):
-    serializer_class = FollowerSerializer
+    #serializer_class = FollowerSerializer
     queryset = Follower.objects.all()
     lookup_field = 'follower'
     
+    '''
     def put(self, request, *args, **kwargs):
         logger.info(rev)
-        return super().put(request, *args, **kwargs)
-    
+        follower_data = {
+            'follower': kwargs.get('follower','')
+        }
+        logger.info(follower_data)
+        serializer = FollowerSerializer(data=request.data)
+        if serializer.is_valid():
+            logger.info('its valid')
 
+        else:
+            logger.info('not valid :()')
+        return super().put(request, *args, **kwargs)
+        '''
+    
+    def put(self, request, *args, **kwargs):
+        # get author(followee) uuid
+        followee = kwargs['author_uuid']
+        # get follower url
+        follower_url = kwargs['follower']
+        # save entry to database
+        obj, created = Follower.objects.create(followee=followee, follower=follower_url)  # type: ignore
+        # return Response for succesful follow request
+        if created:
+            return Response('success', status=status.HTTP_201_CREATED)
+        else:
+            return Response('error',status=status.HTTP_404_NOT_FOUND)
+    
 def index(request):
     # current_viewed_author: the author who is being viewed by the current user
     current_viewed_author = request.GET.get('author')

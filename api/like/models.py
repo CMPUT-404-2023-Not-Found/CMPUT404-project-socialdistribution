@@ -26,6 +26,12 @@ class Like(models.Model):
 
     (author1, post1, null) like1
     (author1, post1, null) like2 # error => (author1, null, comment1) like2 
+    
     '''
+    /**
+    * This code was adapted from a post from Jens on 2010-2-4, retrieved on 2023-3-13, 
+    * forum here:
+    * https://stackoverflow.com/a/2201687
+    */
     class Meta:
         unique_together = ('author', 'post', 'comment')

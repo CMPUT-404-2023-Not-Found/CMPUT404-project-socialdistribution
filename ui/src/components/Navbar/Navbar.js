@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useContext } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import Drawer from '@mui/material/Drawer';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
@@ -18,6 +19,8 @@ import { navbarStyles } from './consts/styles';
 const Navbar = () => {
     const drawerWidth = 220;
     let {user, logoutUser} = useContext(AuthContext);
+    const navigate = useNavigate();
+
     if (user) {
         return (
             <Drawer
@@ -28,26 +31,26 @@ const Navbar = () => {
             <Toolbar />
             <Divider />
             <List>
-                {mainNavbarItems.map((text, index) => (
-                <ListItem key={text.id} disablePadding>
+                {mainNavbarItems.map((item, index) => (
+                <ListItem key={item.id} onClick={() => navigate(item.route)} disablePadding>
                     <ListItemButton>
                     <ListItemIcon sx={navbarStyles.icons}>
-                        {text.icon}
+                        {item.icon}
                     </ListItemIcon>
-                    <ListItemText primary={text.label} sx={navbarStyles.text} />
+                    <ListItemText primary={item.label} sx={navbarStyles.text} />
                     </ListItemButton>
                 </ListItem>
                 ))}
             </List>
             <Divider />
             <List>
-                {secondaryNavbarItems.map((text, index) => (
-                <ListItem key={text.id} disablePadding>
+                {secondaryNavbarItems.map((item, index) => (
+                <ListItem key={item.id} onClick={() => navigate(item.route)} disablePadding>
                     <ListItemButton>
                     <ListItemIcon sx={navbarStyles.icons}>
-                        {text.icon}
+                        {item.icon}
                     </ListItemIcon>
-                    <ListItemText primary={text.label} sx={navbarStyles.text} />
+                    <ListItemText primary={item.label} sx={navbarStyles.text} />
                     </ListItemButton>
                 </ListItem>
                 ))}

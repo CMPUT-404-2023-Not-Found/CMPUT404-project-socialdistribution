@@ -2,68 +2,54 @@ from django.shortcuts import render
 
 # Create your views here.
 # this is like feature for post and comment
-from api.like.models import Like
-from api.like.serializers import LikeSerializer
-from api.post.models import Post
-from api.comment.models import Comment
+from rest_framework.generics import CreateAPIView, DestroyAPIView
+from rest_framework.permissions import IsAuthenticated
 
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.generics import ListCreateAPIView
-from .serializers import LikeSerializer
-from .models import Like, Post, Comment
-
-from .serializers import CommentSerializer
-from post.serializers import PostSerializer
+from like.models import Like
+from like.serializers import LikeSerializer
 
 
-class LikeView(ListCreateAPIView):
+
+class PostLikeView(CreateAPIView, DestroyAPIView):
+    """
+    A view for liking/unliking a post
+
+    If there is no existing like for the post, a new like object is created, and 
+    if there is an existing like for the post, it is deleted. 
+    """
     serializer_class = LikeSerializer
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        # not sure about if need post_uuid and comment_uuid
-
         author_uuid = self.kwargs.get('author_uuid')
-        post_uuid = self.kwargs.get('post_uuid')
-        comment_uuid = self.kwargs.get('comment_uuid')
-        post_obj = Post.objects.get(id=post_uuid)
-        comment_obj = Comment.objects.get(id=comment_uuid)
-        author_url = PostSerializer(post_obj).data['author']['id']
-
-        # about the number of likes for post 
-        current_likes = Post.like_count
+        post_uuid = self.kwargs.get('post_uuid')     # if get('post_uuid') can get the post_uuid? !!
         liked = Like.objects.filter(author=author_uuid, post=post_uuid).count()
+        # author_url = PostSerializer(post_obj).data['author']['id']  # this is the author of that post 
 
-        # if there is no like, create a new like
         if not liked:
-            # check if this like belongs to a post or a comment
-            if post_uuid:
-                liked = Like.objects.create(author=author_uuid, post=post_uuid)
-                current_likes += 1
-            liked = Like.objects.create(author=author_uuid, comment=comment_uuid)
-        # if there is a like, delete it (unlike)
+            Like.objects.create(author=author_uuid, post=post_uuid)
         else:
-            if post_uuid:
-                liked = Like.objects.filter(author=author_uuid, post=post_uuid).delete()
-                current_likes -= 1
-            liked = Like.objects.filter(author=author_uuid, comment=comment_uuid).delete()
+            Like.objects.filter(author=author_uuid, post=post_uuid).delete()
+        Like.save()
+        return serializer.save()
+        
 
-        Post.like_count = current_likes
-        Post.save()
-        return serializer.save(author=author_url, post=post_obj, comment=comment_obj)
+class CommentLikeView(CreateAPIView, DestroyAPIView):
+    """
+    A view for liking/unliking a comment
+    """
+    serializer_class = LikeSerializer
+    permission_classes = [IsAuthenticated]
 
-            
+    def perform_create(self, serializer):
+        author_uuid = self.kwargs.get('author_uuid')
+        comment_uuid = self.kwargs.get('comment_uuid')
+        liked = Like.objects.filter(author=author_uuid, comment=comment_uuid).count()
 
-    def perform_destroy(self, instance):
-        # delete the instance
-        instance.delete()
-
-        # update the number of likes for the corresponding post or comment
-        if instance.post:
-            post_obj = instance.post
-            post_obj.like_count -= 1
-            post_obj.save()
-
-
-
+        if not liked:
+            Like.objects.create(author=author_uuid, comment=comment_uuid)
+        else:
+            Like.objects.filter(author=author_uuid, comment=comment_uuid).delete()
+        Like.save() #save the changes in like db
+        return serializer.save()
     

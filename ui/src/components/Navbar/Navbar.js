@@ -21,6 +21,7 @@ import ListItemText from '@mui/material/ListItemText';
 import AuthContext from '../../context/AuthContext';
 import { mainNavbarItems, secondaryNavbarItems } from './consts/navbarItems';
 import { navbarStyles } from './consts/styles';
+import { Grid } from '@mui/material';
 
 const Navbar = () => {
     let {user, logoutUser} = useContext(AuthContext);
@@ -28,6 +29,7 @@ const Navbar = () => {
 
     if (user) {
         return (
+            <Grid item xs={4}>
             <Drawer
             sx={navbarStyles.drawer}
             variant="permanent"
@@ -64,6 +66,7 @@ const Navbar = () => {
                 ))}
             </List>
             </Drawer>
+            </Grid>
         );
     }
 }

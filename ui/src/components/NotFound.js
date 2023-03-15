@@ -6,7 +6,7 @@ ui/src/components/NotFound.js
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, CardContent, CardHeader, Typography } from '@mui/material';
+import { Button, CardContent, CardHeader } from '@mui/material';
 
 import BasicCard from '../components/common/BasicCard/BasicCard';
 import GridWrapper from './common/GridWrapper/GridWrapper';

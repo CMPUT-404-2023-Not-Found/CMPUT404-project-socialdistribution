@@ -17,7 +17,7 @@ import { appTheme } from './appTheme';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoutes from './utils/PrivateRoutes'
 import Login from './pages/Login/Login';
-import Profile from './pages/Profile';
+import Profile from './pages/Profile/Profile';
 import Stream from './pages/Stream/Stream';
 import YourPosts from './pages/YourPosts/YourPosts';
 import PostDetail from './components/PostDetail';

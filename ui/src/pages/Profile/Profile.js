@@ -8,10 +8,10 @@ https://www.youtube.com/watch?v=2k8NleFjG7I
 */
 
 import React, { useContext, useEffect, useState } from 'react';
-import GridWrapper from '../components/common/GridWrapper/GridWrapper';
+import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
 
-import AuthContext from '../context/AuthContext';
-import Backend from '../utils/Backend';
+import AuthContext from '../../context/AuthContext';
+import Backend from '../../utils/Backend';
 
 const Profile = () => {
     //  variable declarations -------------------------------------
@@ -51,7 +51,6 @@ const Profile = () => {
             console.log('Failed to post profile');
         }
     };
-    // event functions -------------------------------------------
 
     // render functions ------------------------------------------
     const renderProfile = (profile) => {

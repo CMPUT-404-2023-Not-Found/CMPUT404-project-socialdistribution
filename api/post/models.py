@@ -52,6 +52,5 @@ class Post(Model):
     content_type        = models.CharField(choices=CONTENT_TYPE_OPTIONS, max_length=32, verbose_name='Content Type')
     description         = models.TextField(blank=True, default='')
     title               = models.CharField(blank=False, null=False, max_length=128)
-
     def __str__(self):
         return f'{self.author} {self.title}'

@@ -28,6 +28,15 @@ const CreatePost = () => {
     useEffect(() => {
         const getOptions = async () => {
             const [response, data] = await Backend.options(`/api/authors/${user.user_id}/posts/`, authTokens.access);
+            data.actions.POST = {
+                ...data.actions.POST,
+                'file': {
+                    'type' : 'file',
+                    'label': 'File',
+                    'required': false,
+                    'read_only': false,
+                }
+            }
             setOptions(data);
             console.log(data);
         }
@@ -37,13 +46,21 @@ const CreatePost = () => {
 
     //  async functions -------------------------------------------
     const createPost = async (formData) => {
-        const [response, data] = await Backend.post(`/api/authors/${user.user_id}/posts/`, authTokens.access, JSON.stringify(formData));
-        if (response.status && response.status === 201) {
-            navigate('/posts');
-        } else if (response.statusText === 'Unauthorized'){
-            logoutUser();
-        } else {
-            console.log('Failed to create post');
+        // const [response, data] = await Backend.post(`/api/authors/${user.user_id}/posts/`, authTokens.access, JSON.stringify(formData));
+        // if (response.status && response.status === 201) {
+        //     navigate('/posts');
+        // } else if (response.statusText === 'Unauthorized'){
+        //     logoutUser();
+        // } else {
+        //     console.log('Failed to create post');
+        // }
+        // console.log(formData);
+        let fileList = formData.file;
+        console.log(fileList);
+        let fileReader = new FileReader();
+        fileReader.readAsDataURL(fileList[0]);
+        fileReader.onload = () => {
+            console.log(fileReader.result);
         }
     }
 

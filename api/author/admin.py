@@ -13,8 +13,19 @@ class AuthorAdmin(UserAdmin):
     add_form = AuthorCreationForm
     form = AuthorChangeForm
     model = Author
-    list_display = ('id', 'username', 'host', 'is_staff', 'is_superuser', 'is_active', 'last_login')
-    list_filter = ('id', 'username', 'host', 'is_staff', 'is_superuser', 'is_active', 'last_login')
+
+    # This code is from a question forum answer from Alexis N-o on 2015-07-02, retrieved on 2023-03-07, to stackoverflow.com
+    # question forum answer here:
+    # https://stackoverflow.com/questions/31194964/display-user-group-in-admin-interface
+    def group(self, user):
+        groups = []
+        for group in user.groups.all():
+            groups.append(group.name)
+        return ' '.join(groups)
+    group.short_description = 'Groups'
+
+    list_display = ('id', 'username', 'host', 'is_superuser', 'is_active', 'group', 'last_login')
+    list_filter = ('id', 'username', 'host', 'is_superuser', 'is_active', 'last_login')
     fieldsets = (
         (None, {'fields': ('username', 'password', 'host', 'display_name', 'github', 'profile_image')}),
         ('Permissions', {'fields': ("is_staff", "is_active", "is_superuser", "groups", "user_permissions")})

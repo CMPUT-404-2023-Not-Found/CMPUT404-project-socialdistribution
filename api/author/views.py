@@ -5,13 +5,13 @@ from django.db.models.functions import Lower
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 import logging
 
 from .models import Author
 from .serializers import NewAuthorSerializer, ExistingAuthorSerializer
-from utils.permissions import AnonymousCanPost
+from utils.permissions import AnonymousCanPost, IsAuthenticatedWithJWT, NodeReadOnly
 
 logger = logging.getLogger('django')
 rev = 'rev: $xJekOd1$x'
@@ -67,7 +67,7 @@ class AuthorDetailView(RetrieveUpdateAPIView):
     queryset = Author.objects.all()
     lookup_field = 'id'
     http_method_names = ['get', 'post', 'head', 'options']
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedWithJWT|NodeReadOnly]
 
     def get(self, request, *args, **kwargs):
         '''
@@ -81,7 +81,8 @@ class AuthorDetailView(RetrieveUpdateAPIView):
         '''
         logger.info(rev)
         author_uuid = self.kwargs.get(self.lookup_field)
-        logger.info('Getting profile for author uuid: [%s]', author_uuid)
+        requester_uuid = str(self.request.user)
+        logger.info('Requester [%s] is retreiving profile for author [%s]', requester_uuid, author_uuid)
         return super().get_object()
 
     @extend_schema(

@@ -1,23 +1,23 @@
 # 2023-02-18
 # inbox/serialzer.py
 
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
-from rest_framework.fields import DateTimeField, UUIDField, URLField
+from rest_framework.fields import ChoiceField, JSONField, URLField
 
 from .models import Inbox
 
 class InboxSerializer(serializers.ModelSerializer):
-    id              = UUIDField(read_only=True)
-    author          = UUIDField(read_only=True)
-    receivedAt      = DateTimeField(source='received_at', read_only=True)
     object          = URLField(source='object_id', required=True)
-    senderAuthorId  = URLField(source='sender_author_id', required=True)
+    author          = URLField(source='sender_author_id', required=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['@context'] = ChoiceField(choices=Inbox.W3ContextChoices.choices, source='context', required=True)
 
     class Meta:
         model = Inbox
-        fields = [  'id',
-                    'author',
-                    'receivedAt',
-                    'object', 'senderAuthorId',
-                    'context', 'summary', 'type',
+        fields = [  'summary',
+                    'type', 'author',
+                    'object'
         ]

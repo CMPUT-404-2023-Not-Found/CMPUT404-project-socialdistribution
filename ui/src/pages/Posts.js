@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import Backend from '../utils/Backend';
 import PostSummary from '../components/PostSummary';
 import AuthContext from '../context/AuthContext';
+import GridWrapper from '../components/common/GridWrapper/GridWrapper';
 
 const Posts = () => {
     //  variable declarations -------------------------------------
@@ -57,7 +58,9 @@ const Posts = () => {
     };
     // RENDER APP =================================================
     return (
-        <>{renderPosts(posts.items)}</>
+        <GridWrapper>
+        {renderPosts(posts.items)}
+        </GridWrapper>
     );
 }
 

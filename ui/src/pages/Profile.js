@@ -8,6 +8,7 @@ https://www.youtube.com/watch?v=2k8NleFjG7I
 */
 
 import React, { useContext, useEffect, useState } from 'react';
+import GridWrapper from '../components/common/GridWrapper/GridWrapper';
 
 import AuthContext from '../context/AuthContext';
 import Backend from '../utils/Backend';
@@ -122,10 +123,10 @@ const Profile = () => {
     }
     // RENDER APP =================================================
     return (
-        <>
+        <GridWrapper>
         {renderProfile(profile)}
         {renderUpdateForm()}
-        </>
+        </GridWrapper>
     );
 }
 

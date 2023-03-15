@@ -52,7 +52,7 @@ const Stream = () => {
                                 <PostHeader 
                                     author={item.author} 
                                     title={item.title} 
-                                    time={(item.updated_at ? item.updated_at : item.publisehd)} 
+                                    time={(item.updated_at ? item.updated_at : item.published)} 
                                 />}
                             content={
                                 <PostContent 

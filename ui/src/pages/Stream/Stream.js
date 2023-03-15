@@ -5,13 +5,12 @@ ui/src/pages/Stream/Stream.js
 */
 
 import React, { useContext, useEffect, useState } from 'react';
-import Grid from "@mui/material/Grid";
-import CommonCard from '../../components/common/commonCard/CommonCard';
-
+import { Typography } from '@mui/material';
 
 import Backend from '../../utils/Backend';
 import AuthContext from '../../context/AuthContext';
-import { Typography } from '@mui/material';
+import BasicCard from '../../components/common/BasicCard/BasicCard';
+import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
 
 const Stream = () => {
     //  variable declarations -------------------------------------
@@ -45,7 +44,7 @@ const Stream = () => {
                 case 'post':
                     console.log(item);
                     itemsRender.push(
-                        <CommonCard key={idx} data={item}></CommonCard>
+                        <BasicCard key={idx} data={item}></BasicCard>
                     )
                     break;
                 case 'comment':
@@ -65,9 +64,9 @@ const Stream = () => {
     };
 
     return (
-        <Grid item xs={8}>
+        <GridWrapper>
         {renderInbox(inbox.items)}
-        </Grid>
+        </GridWrapper>
     );
 }
 

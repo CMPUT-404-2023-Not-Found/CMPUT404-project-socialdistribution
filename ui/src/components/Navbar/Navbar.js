@@ -19,8 +19,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 
 import AuthContext from '../../context/AuthContext';
-import { mainNavbarItems, secondaryNavbarItems } from './consts/navbarItems';
-import { navbarStyles } from './consts/styles';
+import { mainNavbarItems, secondaryNavbarItems } from './navbarItems';
+import { navbarStyles } from './styles';
 import { Grid } from '@mui/material';
 
 const Navbar = () => {
@@ -29,7 +29,6 @@ const Navbar = () => {
 
     if (user) {
         return (
-            <Grid item xs={2}>
             <Drawer
             sx={navbarStyles.drawer}
             variant="permanent"
@@ -66,7 +65,6 @@ const Navbar = () => {
                 ))}
             </List>
             </Drawer>
-            </Grid>
         );
     }
 }

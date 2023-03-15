@@ -12,8 +12,8 @@ pages/Login.css
     background-image: url(/src/images/loginbg.png);
     background-size: cover;
     background-position: center center;
-    
 }
+
 .h1{
     font-Family: "'IM Fell English SC', serif",
 }
@@ -39,16 +39,15 @@ pages/Login.css
     margin-left: 5px;
 }
 
-.input-field {
+.input-container input { 
     flex: 1;
-    padding: 5px;
+    padding: 5pt;
+    margin-bottom: 5pt;
     border-radius: 5px;
     border: 1px solid #ccc;
 }
 
 .show-password-icon {
-    display: flex;
-    align-items: center;
     margin-left: -30px;
     cursor: pointer;
 }

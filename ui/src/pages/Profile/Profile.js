@@ -8,6 +8,10 @@ https://www.youtube.com/watch?v=2k8NleFjG7I
 */
 
 import React, { useContext, useEffect, useState } from 'react';
+import Avatar from '@mui/material/Avatar';
+import { CardContent, CardHeader, IconButton, Typography } from '@mui/material';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import BasicCard from '../../components/common/BasicCard/BasicCard';
 import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
 
 import AuthContext from '../../context/AuthContext';
@@ -53,38 +57,92 @@ const Profile = () => {
     };
 
     // render functions ------------------------------------------
+    // const renderProfile = (profile) => {
+    //     if (!profile) {
+    //         return(
+    //             <div>No profile</div>
+    //         );
+    //     } else {
+    //         return(
+    //             <div className='profile'>
+    //                 <table>
+    //                     <thead>
+    //                         <tr>
+    //                             <th>Display Name</th>
+    //                             <th>Node Id</th>
+    //                             <th>GitHub</th>
+    //                             <th>Profile Image</th>
+    //                         </tr>
+    //                     </thead>
+    //                     <tbody>
+    //                         <tr>
+    //                             <td>{profile.displayName}</td>
+    //                             <td>{profile.id}</td>
+    //                             <td>{profile.github}</td>
+    //                             <td>{profile.profileImage}</td>
+    //                         </tr>
+    //                     </tbody>
+    //                 </table>
+    //                 <br></br>
+    //                 <div>Full Payload: <pre>{JSON.stringify(profile, null, 2)}</pre></div>
+    //             </div>
+    //         );
+    //     }
+    // };
+
+    const renderAvatar = (author) => {
+        let authorName = (author.displayName ? author.displayName : user.username);
+        let authorNameShort = authorName.charAt(0);
+        if (author.profileImage) {
+            return (
+            <Avatar alt={authorName} src={author.profileImage} sx={{ width: 128, height: 128 }}></Avatar>
+            )
+        } else {
+            return (
+            <Avatar sx={{ bgcolor: 'primary.main', width: 128, height: 128 }}>{authorNameShort}</Avatar>
+            )
+        }
+    }
+
     const renderProfile = (profile) => {
         if (!profile) {
-            return(
-                <div>No profile</div>
-            );
-        } else {
-            return(
-                <div className='profile'>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Display Name</th>
-                                <th>Node Id</th>
-                                <th>GitHub</th>
-                                <th>Profile Image</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>{profile.displayName}</td>
-                                <td>{profile.id}</td>
-                                <td>{profile.github}</td>
-                                <td>{profile.profileImage}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <br></br>
-                    <div>Full Payload: <pre>{JSON.stringify(profile, null, 2)}</pre></div>
-                </div>
-            );
+            return (
+                <BasicCard>
+                    <CardHeader title='Opps' subheader="Couldn't Find Profile"></CardHeader>
+                    <CardContent></CardContent>
+                </BasicCard>
+            )
         }
-    };
+        let profileTitle = (profile.displayName ? profile.displayName : user.username)
+        return (
+            <BasicCard>
+                <CardHeader
+                    avatar={renderAvatar(profile)}
+                    title={profileTitle}
+                    titleTypographyProps={
+                        {
+                            variant: 'h3'
+                        }
+                    }
+                    subheader={profile.host}
+                    subheaderTypographyProps={
+                        {
+                            variant: 'h4'
+                        }
+                    }
+                    action={
+                    <IconButton size='large' aria-label="github" onClick={() => { console.log(profile.github) }}>
+                        <GitHubIcon fontSize='large'/>
+                    </IconButton>
+                    }
+                />
+                <CardContent>
+                    <Typography variant='h5'>ID</Typography>
+                    <Typography variant='body1'>{profile.url}</Typography>
+                </CardContent>
+            </BasicCard>
+        )
+    }
 
     const renderUpdateForm = () => {
         if (!update) {

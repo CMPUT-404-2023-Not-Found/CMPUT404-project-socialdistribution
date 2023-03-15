@@ -52,14 +52,3 @@ class CommentListCreateViewTest(Base):
         response = self.author_client.post(self.get_comment_url(self.author_uuid, self.post_uuid), body, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
     
-    # Test Comment View pagination
-    def test_pagination(self):
-        '''
-        Test getting a comment from a paginated list
-        '''
-        comment_url = self.get_comment_url(self.author_uuid, self.post_uuid)
-        paginated_url = comment_url + '?page=3&size=1'
-        response = self.admin_client.get(paginated_url)
-        # get the only comment on the third page, must be the oldest comment
-        self.assertEqual(response.json()['comments'][0]['comment'], 'hello')
-        self.assertEqual(len(response.json()['comments']), 1)

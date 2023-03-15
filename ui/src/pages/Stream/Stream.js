@@ -19,20 +19,20 @@ const Stream = () => {
     
     //  event listners --------------------------------------------
     useEffect(() => {
+        const getInbox = async () => {
+            const [response, data] = await Backend.get(`/api/authors/${user.user_id}/inbox/`, authTokens.access);
+            if (response.status && response.status === 200) {
+                setInbox(data);
+            } else if (response.statusText === 'Unauthorized'){
+                logoutUser();
+            } else {
+                console.log('Failed to get posts');
+            }
+        };
         getInbox();
-    }, []);
+    }, [user, authTokens, logoutUser]);
 
     //  async functions -------------------------------------------
-    const getInbox = async () => {
-        const [response, data] = await Backend.get(`/api/authors/${user.user_id}/inbox/`, authTokens.access);
-        if (response.status && response.status === 200) {
-            setInbox(data);
-        } else if (response.statusText === 'Unauthorized'){
-            logoutUser();
-        } else {
-            console.log('Failed to get posts');
-        }
-    };
 
     // RENDER APP =================================================
     const renderInbox = (items) => {

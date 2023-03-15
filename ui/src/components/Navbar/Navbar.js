@@ -21,7 +21,6 @@ import ListItemText from '@mui/material/ListItemText';
 import AuthContext from '../../context/AuthContext';
 import { mainNavbarItems, secondaryNavbarItems } from './navbarItems';
 import { navbarStyles } from './styles';
-import { Grid } from '@mui/material';
 
 const Navbar = () => {
     let {user, logoutUser} = useContext(AuthContext);

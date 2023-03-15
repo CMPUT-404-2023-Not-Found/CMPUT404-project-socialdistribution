@@ -22,21 +22,20 @@ const Profile = () => {
     
     //  event listners --------------------------------------------
     useEffect(() => {
+        const getProfile = async () => {
+            const [response, data] = await Backend.get(`/api/authors/${user.user_id}/`, authTokens.access);
+            if (response.status && response.status === 200) {
+                setProfile(data);
+            } else if (response.statusText === 'Unauthorized'){
+                logoutUser();
+            } else {
+                console.log('Failed to get profile');
+            }
+        };
         getProfile();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [user, authTokens, logoutUser]);
 
     //  async functions -------------------------------------------
-    const getProfile = async () => {
-        const [response, data] = await Backend.get(`/api/authors/${user.user_id}/`, authTokens.access);
-        if (response.status && response.status === 200) {
-            setProfile(data);
-        } else if (response.statusText === 'Unauthorized'){
-            logoutUser();
-        } else {
-            console.log('Failed to get profile');
-        }
-    };
 
     const updateProfile = async (e) => {
         e.preventDefault();

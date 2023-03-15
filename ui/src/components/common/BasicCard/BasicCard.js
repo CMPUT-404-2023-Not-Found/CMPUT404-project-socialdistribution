@@ -6,7 +6,7 @@ import * as React from 'react';
 import Card from '@mui/material/Card';
 // import CardMedia from '@mui/material/CardMedia';
 
-export default function BasicCard({ header, content, data }) { 
+export default function BasicCard({ header, content }) { 
     return (
       <Card>
         {header}

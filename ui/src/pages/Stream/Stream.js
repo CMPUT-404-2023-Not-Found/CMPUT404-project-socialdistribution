@@ -47,8 +47,7 @@ const Stream = () => {
                     console.log(item);
                     itemsRender.push(
                         <BasicCard 
-                            key={idx} 
-                            data={item} 
+                            key={idx}
                             header={
                                 <PostHeader 
                                     author={item.author} 

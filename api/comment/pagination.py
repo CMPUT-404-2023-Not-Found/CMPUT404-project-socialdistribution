@@ -9,10 +9,7 @@ from urllib.parse import urlsplit
 from author.models import Author
 from post.models import Post
 from post.serializers import PostSerializer
-from utils.node_comm import NodeComm
 from utils.pagination import CustomPagination
-
-NodeComm = NodeComm()
 
 import logging
 logger = logging.getLogger('django')

@@ -11,6 +11,7 @@ import Backend from '../../utils/Backend';
 import AuthContext from '../../context/AuthContext';
 import BasicCard from '../../components/common/BasicCard/BasicCard';
 import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
+import PostHeader from '../../components/Post/PostHeader';
 
 const Stream = () => {
     //  variable declarations -------------------------------------
@@ -44,7 +45,15 @@ const Stream = () => {
                 case 'post':
                     console.log(item);
                     itemsRender.push(
-                        <BasicCard key={idx} data={item}></BasicCard>
+                        <BasicCard 
+                            key={idx} 
+                            data={item} 
+                            header={
+                                <PostHeader 
+                                    author={item.author} 
+                                    title={item.title} 
+                                    time={(item.updated_at ? item.updated_at : item.publisehd)} />}>
+                        </BasicCard>
                     )
                     break;
                 case 'comment':

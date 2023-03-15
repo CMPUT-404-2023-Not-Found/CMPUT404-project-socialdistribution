@@ -9,20 +9,15 @@ https://mui.com/material-ui/react-card/#complex-interaction
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Collapse from '@mui/material/Collapse';
-import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-
-import { utcToLocal } from '../../../utils/Utils';
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -35,38 +30,16 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-export default function CommonCard({ data }) {
+export default function BasicCard({ header, data }) {
     const [expanded, setExpanded] = React.useState(false);
   
     const handleExpandClick = () => {
       setExpanded(!expanded);
     };
     
-    const renderAvatar = (author) => {
-      let authorName = (author.displayName ? author.displayName : author.username);
-      let authorNameShort = authorName.charAt(0);
-      if (author.profileImage) {
-        return (
-          <Avatar alt={authorName} src={author.profileImage}>foobar</Avatar>
-        )
-      } else {
-        return (
-          <Avatar sx={{ bgcolor: 'primary.main' }}>{authorNameShort}</Avatar>
-        )
-      }
-    }
     return (
       <Card>
-        <CardHeader
-          avatar={renderAvatar(data.author)}
-          action={
-            <IconButton aria-label="settings">
-              <MoreVertIcon />
-            </IconButton>
-          }
-          title={data.title}
-          subheader={(data.updated_at > data.published ? utcToLocal(data.published) : utcToLocal(data.updated_at))}
-        />
+        {header}
         <CardContent>
           <Typography variant="body2" color="text.secondary">
             {data.description}

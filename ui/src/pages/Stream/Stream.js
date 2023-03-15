@@ -12,6 +12,7 @@ import AuthContext from '../../context/AuthContext';
 import BasicCard from '../../components/common/BasicCard/BasicCard';
 import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
 import PostHeader from '../../components/Post/PostHeader';
+import PostContent from '../../components/Post/PostContent';
 
 const Stream = () => {
     //  variable declarations -------------------------------------
@@ -52,8 +53,14 @@ const Stream = () => {
                                 <PostHeader 
                                     author={item.author} 
                                     title={item.title} 
-                                    time={(item.updated_at ? item.updated_at : item.publisehd)} />}>
-                        </BasicCard>
+                                    time={(item.updated_at ? item.updated_at : item.publisehd)} />}
+                            content={
+                                <PostContent 
+                                    description={item.description}
+                                    content={item.content}
+                                />
+                            }
+                        />
                     )
                     break;
                 case 'comment':

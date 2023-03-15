@@ -12,7 +12,6 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { utcToLocal } from '../../utils/Utils';
 
 const PostHeader = ({ author, title, subheader, time }) => {
-    //  variable declarations -------------------------------------
     // RENDER APP =================================================
     const renderAvatar = (author) => {
         let authorName = (author.displayName ? author.displayName : author.username);

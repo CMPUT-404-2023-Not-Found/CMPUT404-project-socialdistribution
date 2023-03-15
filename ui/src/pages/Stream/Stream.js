@@ -38,7 +38,7 @@ const Stream = () => {
     // RENDER APP =================================================
     const renderInbox = (items) => {
         // console.log(items);
-        if (!items || items.length <= 0) return (<Typography>No Posts</Typography>);
+        if (!items || items.length <= 0) return (<Typography paragraph >No Posts</Typography>);
         let itemsRender = [];
         items.forEach((item, idx) => {
             switch(item.type) {

@@ -11,7 +11,6 @@ import logging
 
 from .models import Comment
 from post.models import Post
-from .pagination import CommentPagination
 
 logger = logging.getLogger('django')
 rev = 'rev: $xujSyn7$x' # not really sure what to set this to
@@ -24,7 +23,6 @@ class CommentListCreateView(ListCreateAPIView):
     serializer_class = CommentSerializer
     queryset = Comment.objects.all()
     lookup_url_kwarg = 'post_uuid'
-    pagination_class = CommentPagination
 
     # I think this is is the method that is ultimately called when a post request is made to this url
     # because ListCreateAPIView has a post method, which calls a create method, which calls a 
@@ -38,7 +36,6 @@ class CommentListCreateView(ListCreateAPIView):
         return serializer.save(post=post_obj, author=author_url)
     
     def get_queryset(self):
-        self.request.kwargs = self.kwargs
         logger.info(rev)
         post_uuid = self.kwargs.get(self.lookup_url_kwarg)
         if (self.request.query_params): # type: ignore

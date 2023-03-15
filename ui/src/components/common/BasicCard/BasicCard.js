@@ -1,10 +1,6 @@
 /*
 2023-03-14
 ui/src/components/common/commonCard/CommonCard.js
-
-This code is modified from a documentation guide on Material UI Card components from Material UI SAS 2023, retrieved 2023-03-13 from mui.com
-guide here
-https://mui.com/material-ui/react-card/#complex-interaction
 */
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
@@ -19,6 +15,11 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
+/*
+This code is modified from a documentation guide on Material UI Card components from Material UI SAS 2023, retrieved 2023-03-13 from mui.com
+guide here
+https://mui.com/material-ui/react-card/#complex-interaction
+*/
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
     return <IconButton {...other} />;

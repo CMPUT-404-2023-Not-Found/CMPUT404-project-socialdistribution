@@ -46,8 +46,8 @@ class FollowerSerializer(serializers.ModelSerializer):
             # make call to the author url
             pass
         return str(obj.follower)
-    type            = serializers.SerializerMethodField('get_type')
-    def get_type(self, obj): return 'followers'
+    # type            = serializers.SerializerMethodField('get_type')
+    # def get_type(self, obj): return 'followers'
     class Meta:
         model = Follower
-        fields = ['type','follower']
+        fields = ['follower']

@@ -15,14 +15,12 @@ const NoMatch = () => {
     let navigate = useNavigate();
     return (
         <GridWrapper>
-            <BasicCard
-                header={<CardHeader title='404' subheader='Page Not Found' />}
-                content={
-                    <CardContent>
-                        <Button variant='contained' onClick={() => {navigate('/')}}>Go Back To Stream</Button>
-                    </CardContent>
-                }
-            />
+            <BasicCard>
+                <CardHeader title='404' subheader='Page Not Found' />
+                <CardContent>
+                    <Button variant='contained' onClick={() => {navigate('/')}}>Go Back To Stream</Button>
+                </CardContent>
+            </BasicCard>
         </GridWrapper>
     );
 }

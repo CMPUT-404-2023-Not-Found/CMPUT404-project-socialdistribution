@@ -46,22 +46,29 @@ const CreatePost = () => {
 
     //  async functions -------------------------------------------
     const createPost = async (formData) => {
-        // const [response, data] = await Backend.post(`/api/authors/${user.user_id}/posts/`, authTokens.access, JSON.stringify(formData));
-        // if (response.status && response.status === 201) {
-        //     navigate('/posts');
-        // } else if (response.statusText === 'Unauthorized'){
-        //     logoutUser();
-        // } else {
-        //     console.log('Failed to create post');
+        let fileContentTypes = ['image/jpeg;base64', 'image/png;base64', 'application/base64']
+        // if (fileContentTypes.includes(formData.contentType)) {
+        //     let fileList = formData.file;
+        //     let fileReader = new FileReader();
+        //     fileReader.readAsDataURL(fileList[0]);
+        //     fileReader.onload = () => {
+        //         formData.content =  fileReader.result;
+        //     }
+        //     console.log('i was in funciton');
         // }
-        // console.log(formData);
-        let fileList = formData.file;
-        console.log(fileList);
-        let fileReader = new FileReader();
-        fileReader.readAsDataURL(fileList[0]);
-        fileReader.onload = () => {
-            console.log(fileReader.result);
+
+        delete formData.file;
+        formData.content = 'data/';
+
+        const [response, data] = await Backend.post(`/api/authors/${user.user_id}/posts/`, authTokens.access, JSON.stringify(formData));
+        if (response.status && response.status === 201) {
+            navigate('/posts');
+        } else if (response.statusText === 'Unauthorized'){
+            logoutUser();
+        } else {
+            console.log('Failed to create post');
         }
+        console.log(formData);
     }
 
 

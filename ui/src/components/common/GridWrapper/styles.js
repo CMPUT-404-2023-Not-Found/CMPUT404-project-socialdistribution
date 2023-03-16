@@ -2,7 +2,7 @@
 2023-03-14
 ui/src/componenets/common/GridWrapper/styles.js
 
-This code is from a github repo for materialUi-in-react from theatypicaldeveloper, last commit on 2022-01-01, retrieved 2023-03-14
+This code is modified from a github repo for materialUi-in-react from theatypicaldeveloper, last commit on 2022-01-01, retrieved 2023-03-14
 github repo here:
 https://github.com/theatypicaldeveloper/materialUi-in-react/blob/lesson-5-card-and-searchbar/src/components/common/GridWrapper/styles.js
 */

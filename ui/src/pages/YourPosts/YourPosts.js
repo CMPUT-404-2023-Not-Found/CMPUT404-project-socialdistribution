@@ -16,6 +16,7 @@ import AuthContext from '../../context/AuthContext';
 import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
 import PostHeader from '../../components/Post/PostHeader';
 import PostContent from '../../components/Post/PostContent';
+import PageHeader from '../../components/Page/PageHeader';
 
 const YourPosts = () => {
     //  variable declarations -------------------------------------
@@ -65,9 +66,12 @@ const YourPosts = () => {
     }
     // RENDER APP =================================================
     return (
-        <GridWrapper>
-        {renderPosts(posts.items)}
-        </GridWrapper>
+        <>
+            <PageHeader title='Your Posts'></PageHeader>
+            <GridWrapper>
+            {renderPosts(posts.items)}
+            </GridWrapper>
+        </>
     );
 }
 

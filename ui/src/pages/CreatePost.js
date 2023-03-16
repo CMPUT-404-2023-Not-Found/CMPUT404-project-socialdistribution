@@ -7,6 +7,7 @@ import Backend from '../utils/Backend';
 import {useForm} from 'react-hook-form';
 
 import GridWrapper from '../components/common/GridWrapper/GridWrapper';
+import PageHeader from '../components/Page/PageHeader';
 
 /*
     This code was adapted from a video by Ssali Jonathan, 2022-02-10, retrieved on 2023-02-27, 
@@ -54,15 +55,18 @@ const CreatePost = () => {
     // so if you pass null to dynamic form it gives an error
     // not sure of another way to fix it
     return (
-       <GridWrapper>
-       {options ?
-            <DynamicForm options={options} formSubmitFunction={createPost}></DynamicForm>
-            : 
-            <div>
-                Loading form ...
-            </div>
-        }
-       </GridWrapper>
+        <>
+            <PageHeader title='Create a Post'></PageHeader>
+            <GridWrapper>
+            {options ?
+                    <DynamicForm options={options} formSubmitFunction={createPost}></DynamicForm>
+                    : 
+                    <div>
+                        Loading form ...
+                    </div>
+                }
+            </GridWrapper>
+       </>
     );
 }
 

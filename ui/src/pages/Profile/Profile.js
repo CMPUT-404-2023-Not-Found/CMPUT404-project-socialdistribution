@@ -132,11 +132,13 @@ const Profile = () => {
     }
     // RENDER APP =================================================
     return (
-        <GridWrapper>
-        <PageHeader profile={profile} title='Profile'></PageHeader>
-        {renderProfile()}
-        {renderUpdateForm()}
-        </GridWrapper>
+        <>
+            <PageHeader profile={profile} title='Profile'></PageHeader>
+            <GridWrapper>
+                {renderProfile()}
+                {renderUpdateForm()}
+            </GridWrapper>
+        </>
     );
 }
 

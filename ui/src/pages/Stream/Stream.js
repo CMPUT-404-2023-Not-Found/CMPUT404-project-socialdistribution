@@ -13,6 +13,7 @@ import BasicCard from '../../components/common/BasicCard/BasicCard';
 import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
 import PostHeader from '../../components/Post/PostHeader';
 import PostContent from '../../components/Post/PostContent';
+import PageHeader from '../../components/Page/PageHeader';
 
 const Stream = () => {
     //  variable declarations -------------------------------------
@@ -79,9 +80,12 @@ const Stream = () => {
     };
 
     return (
-        <GridWrapper>
-        {renderInbox(inbox.items)}
-        </GridWrapper>
+        <>
+            <PageHeader title='Stream'></PageHeader>
+            <GridWrapper>
+            {renderInbox(inbox.items)}
+            </GridWrapper>
+        </>
     );
 }
 

@@ -10,9 +10,11 @@ export const pageStyles = {
     PageHeader: {
         wrapper: {
             display: 'flex',
+            width: '100%',
             flexDirection: 'column',
             backgroundColor: 'primary.light',
             padding: '20px',
+            marginLeft: '320px'
         },
         topRow: {
             display: 'flex',

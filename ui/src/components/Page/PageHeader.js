@@ -14,10 +14,10 @@ const PageHeader = ({ title, profile }) => {
   return (
     <Box sx={pageStyles.PageHeader.wrapper}>
         <Box sx={pageStyles.PageHeader.topRow}>
-            <BasicAvatar profile={profile} size='medium'></BasicAvatar>
+            {(profile && <BasicAvatar profile={profile} size='medium'></BasicAvatar>)}
         </Box>
         <Box sx={pageStyles.PageHeader.middleRow}>
-            <Typography variant='h1' color='white'>{title}</Typography>
+            <Typography variant='h2' color='white'>{title}</Typography>
         </Box>
     </Box>
   );

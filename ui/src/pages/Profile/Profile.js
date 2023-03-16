@@ -8,12 +8,13 @@ https://www.youtube.com/watch?v=2k8NleFjG7I
 */
 
 import React, { useContext, useEffect, useState } from 'react';
-import BasicAvatar from '../../components/common/BasicAvatar/BasicAvatar';
 import { CardContent, CardHeader, IconButton, Typography } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import ToolTip from '@mui/material/Tooltip';
+
+import BasicAvatar from '../../components/common/BasicAvatar/BasicAvatar';
 import BasicCard from '../../components/common/BasicCard/BasicCard';
 import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
-
 import AuthContext from '../../context/AuthContext';
 import Backend from '../../utils/Backend';
 
@@ -80,9 +81,11 @@ const Profile = () => {
                     subheader={profile.host}
                     subheaderTypographyProps={{ variant: 'h4' }}
                     action={
+                    <ToolTip title={(profile.github && profile.github)}>
                     <IconButton size='large' aria-label="github" onClick={() => { console.log(profile.github) }}>
                         <GitHubIcon fontSize='large'/>
                     </IconButton>
+                    </ToolTip>
                     }
                 />
                 <CardContent>

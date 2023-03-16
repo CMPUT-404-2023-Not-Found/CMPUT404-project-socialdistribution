@@ -10,7 +10,6 @@ import * as React from 'react';
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Drawer from '@mui/material/Drawer';
-import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
@@ -21,6 +20,7 @@ import ListItemText from '@mui/material/ListItemText';
 import AuthContext from '../../context/AuthContext';
 import { mainNavbarItems, secondaryNavbarItems } from './navbarItems';
 import { navbarStyles } from './styles';
+import { Typography } from '@mui/material';
 
 const Navbar = () => {
     let {user, logoutUser} = useContext(AuthContext);
@@ -33,7 +33,7 @@ const Navbar = () => {
             variant="permanent"
             anchor="left"
             >
-            <Toolbar />
+            <Typography variant='h2' textAlign='center'>SD7</Typography>
             <Divider />
             <List>
                 {mainNavbarItems.map((item, index) => (

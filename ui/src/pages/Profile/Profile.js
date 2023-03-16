@@ -20,7 +20,7 @@ import Backend from '../../utils/Backend';
 const Profile = () => {
     //  variable declarations -------------------------------------
     const [ displayName, setDisplayName ] = useState('');
-    const [ profile, setProfile ] = useState([]);
+    const [ profile, setProfile ] = useState({});
     const [ update, setUpdate ] = useState(false);
     const { user, authTokens, logoutUser } = useContext(AuthContext);
     
@@ -29,6 +29,8 @@ const Profile = () => {
         const getProfile = async () => {
             const [response, data] = await Backend.get(`/api/authors/${user.user_id}/`, authTokens.access);
             if (response.status && response.status === 200) {
+                console.log('Got profile');
+                console.log(data);
                 setProfile(data);
             } else if (response.statusText === 'Unauthorized'){
                 logoutUser();
@@ -37,7 +39,7 @@ const Profile = () => {
             }
         };
         getProfile();
-    }, [user, authTokens, logoutUser]);
+    }, [ user, authTokens, logoutUser ]);
 
     //  async functions -------------------------------------------
 
@@ -57,40 +59,7 @@ const Profile = () => {
     };
 
     // render functions ------------------------------------------
-    // const renderProfile = (profile) => {
-    //     if (!profile) {
-    //         return(
-    //             <div>No profile</div>
-    //         );
-    //     } else {
-    //         return(
-    //             <div className='profile'>
-    //                 <table>
-    //                     <thead>
-    //                         <tr>
-    //                             <th>Display Name</th>
-    //                             <th>Node Id</th>
-    //                             <th>GitHub</th>
-    //                             <th>Profile Image</th>
-    //                         </tr>
-    //                     </thead>
-    //                     <tbody>
-    //                         <tr>
-    //                             <td>{profile.displayName}</td>
-    //                             <td>{profile.id}</td>
-    //                             <td>{profile.github}</td>
-    //                             <td>{profile.profileImage}</td>
-    //                         </tr>
-    //                     </tbody>
-    //                 </table>
-    //                 <br></br>
-    //                 <div>Full Payload: <pre>{JSON.stringify(profile, null, 2)}</pre></div>
-    //             </div>
-    //         );
-    //     }
-    // };
-
-    const renderProfile = (profile) => {
+    const renderProfile = () => {
         if (!profile) {
             return (
                 <BasicCard>
@@ -104,20 +73,12 @@ const Profile = () => {
             <BasicCard>
                 <CardHeader
                     avatar={
-                        <BasicAvatar profile={profile}></BasicAvatar>
+                        <BasicAvatar profile={profile} size='large'></BasicAvatar>
                     }
                     title={profileTitle}
-                    titleTypographyProps={
-                        {
-                            variant: 'h3'
-                        }
-                    }
+                    titleTypographyProps={{ variant: 'h3' }}
                     subheader={profile.host}
-                    subheaderTypographyProps={
-                        {
-                            variant: 'h4'
-                        }
-                    }
+                    subheaderTypographyProps={{ variant: 'h4' }}
                     action={
                     <IconButton size='large' aria-label="github" onClick={() => { console.log(profile.github) }}>
                         <GitHubIcon fontSize='large'/>
@@ -168,7 +129,7 @@ const Profile = () => {
     // RENDER APP =================================================
     return (
         <GridWrapper>
-        {renderProfile(profile)}
+        {renderProfile()}
         {renderUpdateForm()}
         </GridWrapper>
     );

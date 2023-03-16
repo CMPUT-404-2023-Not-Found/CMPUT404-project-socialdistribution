@@ -71,7 +71,10 @@ const PostDetail = () => {
             // do something
         } else {
             return (
-                <img src={content}></img>
+                <img src={content} style={{
+                    maxWidth: 100,
+                    height: '100%'
+                }}></img>
             )
         }
     }

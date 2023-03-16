@@ -19,17 +19,16 @@ class CommentPagination(CustomPagination):
     lookup_url_kwarg = 'post_uuid'
 
     def get_paginated_response(self, data):
-        post_uuid = self.request.kwargs.get(self.lookup_url_kwarg)
-        post_obj = Post.objects.get(id=post_uuid)
-        post_id = PostSerializer(post_obj).data['id']
-        id = post_id + '/comments'
+        comment_id = self.request.get_full_path()
+        # removes 'comments/' from teh string
+        post_id = comment_id[:-9]
         
         return Response(OrderedDict([
             ('type', 'comments'),
             ('page', self.page.number),
             ('size', self.page.paginator.per_page),
             ('post', post_id),
-            ('id', id),
+            ('id', comment_id),
             ('comments', data)
         ]))
 

@@ -67,6 +67,12 @@ const PostDetail = () => {
                     {content}
                 </ReactMarkdown>
             )
+        } else if (contentType === 'application/base64') {
+            // do something
+        } else {
+            return (
+                <img src={content}></img>
+            )
         }
     }
     return (

@@ -45,20 +45,26 @@ const CreatePost = () => {
     }, []);
 
     //  async functions -------------------------------------------
+
+    // https://stackoverflow.com/questions/48172934/error-using-async-and-await-with-filereader
+    const getFileData = (file) => {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.readAsDataURL(file);
+        })
+    }
+
     const createPost = async (formData) => {
         let fileContentTypes = ['image/jpeg;base64', 'image/png;base64', 'application/base64']
-        // if (fileContentTypes.includes(formData.contentType)) {
-        //     let fileList = formData.file;
-        //     let fileReader = new FileReader();
-        //     fileReader.readAsDataURL(fileList[0]);
-        //     fileReader.onload = () => {
-        //         formData.content =  fileReader.result;
-        //     }
-        //     console.log('i was in funciton');
-        // }
+        if (fileContentTypes.includes(formData.contentType)) {
+            let fileList = formData.file;
+    
+            let fileBase64 = await getFileData(fileList[0]);
+            formData.content =  fileBase64;
+        }
 
         delete formData.file;
-        formData.content = 'data/';
 
         const [response, data] = await Backend.post(`/api/authors/${user.user_id}/posts/`, authTokens.access, JSON.stringify(formData));
         if (response.status && response.status === 201) {
@@ -68,7 +74,7 @@ const CreatePost = () => {
         } else {
             console.log('Failed to create post');
         }
-        console.log(formData);
+        console.log(data);
     }
 
 

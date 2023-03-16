@@ -17,6 +17,7 @@ import BasicCard from '../../components/common/BasicCard/BasicCard';
 import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
 import AuthContext from '../../context/AuthContext';
 import Backend from '../../utils/Backend';
+import PageHeader from '../../components/Page/PageHeader';
 
 const Profile = () => {
     //  variable declarations -------------------------------------
@@ -132,6 +133,7 @@ const Profile = () => {
     // RENDER APP =================================================
     return (
         <GridWrapper>
+        <PageHeader profile={profile} title='Profile'></PageHeader>
         {renderProfile()}
         {renderUpdateForm()}
         </GridWrapper>

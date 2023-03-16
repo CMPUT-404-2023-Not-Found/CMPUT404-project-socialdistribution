@@ -36,9 +36,12 @@ class FollowerListCreateViewTest(Base):
         '''
         Test getting list of followers
         '''
-        # response = self.author_client.get(self.get_followers_url(self.author_uuid))
-        # self.assertEqual(response.status_code, status.HTTP_200_OK)
-        pass
+        response = self.author_client.put(self.get_follower_detail_url(self.author_uuid, self.follower))
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        response = self.author_client.get(self.get_followers_url(self.author_uuid))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['items']), 1)
     
     # Test Follower view GET /api/authors/<author_uuid>/followers/<follower>/
     def test_get_single_follower(self):

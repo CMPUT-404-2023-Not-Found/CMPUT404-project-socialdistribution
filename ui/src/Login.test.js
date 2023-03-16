@@ -2,7 +2,7 @@ import React from "react";
 import {fireEvent, render, getByRole,getByLabelText,screen, getByTestId,queryByTestId,queryByDisplayValue,getByPlaceholderText } from '@testing-library/react'
 import { AuthContext } from './context/AuthContext.js';
 import { AuthProvider } from './context/AuthContext';
-import Login from './pages/Login'
+import Login from './pages/Login/Login';
 import { act } from "react-dom/test-utils";
 
 // TODO: get these tests working 

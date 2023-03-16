@@ -61,6 +61,11 @@ const CreatePost = () => {
             let fileList = formData.file;
     
             let fileBase64 = await getFileData(fileList[0]);
+
+            if (fileBase64.length > 100000) {
+                alert('Image is too large to upload. Max size: 50kb');
+                return;
+            }
             formData.content =  fileBase64;
         }
 

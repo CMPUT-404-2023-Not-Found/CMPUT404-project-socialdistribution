@@ -18,6 +18,16 @@ class FollowerListView(ListAPIView):
     serializer_class = FollowerSerializer
     queryset = Follower.objects.all()
     pagination_class = FollowerPagination
+    lookup_url_kwarg = 'author_uuid'
+
+    def get_queryset(self):
+        logger.info(rev)
+        author_uuid = self.kwargs.get(self.lookup_url_kwarg)
+        if (self.request.query_params): # type: ignore
+            logger.info('Get recent followers for author_uuid: [%s] with query_params [%s]', author_uuid, str(self.request.query_params)) # type: ignore
+        else:
+            logger.info('Get recent followers for author_uuid: [%s]', author_uuid)
+        return self.queryset.filter(followee=author_uuid).order_by('-followed_at')
 
 class FollowerDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = FollowerSerializer
@@ -38,12 +48,14 @@ class FollowerDetailView(RetrieveUpdateDestroyAPIView):
         # check that author doesnt already follow the followee
         exists = Follower.objects.filter(followee=followee, follower=follower_url)
         # save entry to database
+        # TODO fix up response bodies
         if exists:
             return Response('follower already exists',status=status.HTTP_400_BAD_REQUEST)
         else:
             created = Follower.objects.create(followee=followee, follower=follower_url)  # type: ignore
         # return Response for succesful follow request
         # TODO better way to check if the entry was created?
+            # TODO fix up response bodies
             if created:
                 return Response('success', status=status.HTTP_201_CREATED)
             else:

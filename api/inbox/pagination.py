@@ -1,5 +1,5 @@
 # 2023-03-04
-# utils/pagination.py
+# inbox/pagination.py
 
 from collections import OrderedDict
 from django.conf import settings

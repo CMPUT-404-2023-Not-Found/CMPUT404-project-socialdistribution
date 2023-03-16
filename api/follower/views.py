@@ -1,14 +1,13 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User, auth
-from django.contrib import messages
-from django.http import HttpResponse
+# 2023-03-15
+# follower/views.py
 
-from .serializers import FollowerSerializer
+import logging
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
 
-import logging
+from .serializers import FollowerSerializer
+from .pagination import FollowerPagination
 from .models import Follower, Author
 
 logger = logging.getLogger('django')
@@ -18,13 +17,13 @@ rev = 'rev: $jsadasd'
 class FollowerListView(ListAPIView):
     serializer_class = FollowerSerializer
     queryset = Follower.objects.all()
+    pagination_class = FollowerPagination
 
 class FollowerDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = FollowerSerializer
     queryset = Follower.objects.all()
     lookup_field = 'follower'
-    # TODO QUESTION: we don't use the serializer for PUT, but we need it for GETing a specific follower?
-    # TODO QUESTION: How do we implement the "request" part of this? New app? 
+    
     def get_object(self):
         logger.info(rev)
         follower = self.kwargs.get(self.lookup_field)

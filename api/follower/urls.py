@@ -1,5 +1,8 @@
-from django.contrib import admin
-from django.urls import path, include
+# 2023-03-13
+# follower/urls.py
+
+from django.urls import path
+
 from .views import FollowerListView, FollowerDetailView
 
 urlpatterns = [

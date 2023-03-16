@@ -19,6 +19,15 @@ class FollowerListView(ListAPIView):
     queryset = Follower.objects.all()
     pagination_class = FollowerPagination
 
+    def get_queryset(self):
+        logger.info(rev)
+        author_uuid = self.kwargs.get(self.lookup_url_kwarg)
+        if (self.request.query_params): # type: ignore
+            logger.info('Get recent followers for author_uuid: [%s] with query_params [%s]', author_uuid, str(self.request.query_params)) # type: ignore
+        else:
+            logger.info('Get recent followers for author_uuid: [%s]', author_uuid)
+        return self.queryset.filter(followee=author_uuid).order_by('-followed_at')
+
 class FollowerDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = FollowerSerializer
     queryset = Follower.objects.all()

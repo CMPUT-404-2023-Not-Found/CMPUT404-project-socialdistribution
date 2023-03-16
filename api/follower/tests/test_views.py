@@ -58,5 +58,11 @@ class FollowerListCreateViewTest(Base):
         '''
         Test deleting a follower from a followee
         '''
-        pass
+        response = self.author_client.put(self.get_follower_detail_url(self.author_uuid, self.follower))
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
     
+        response = self.author_client.delete(self.get_follower_detail_url(self.author_uuid, self.follower))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        response = self.author_client.get(self.get_follower_detail_url(self.author_uuid, self.follower))
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

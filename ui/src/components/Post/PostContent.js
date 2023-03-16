@@ -9,6 +9,7 @@ import { styled } from '@mui/material/styles';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Collapse from '@mui/material/Collapse';
+import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import IconButton from '@mui/material/IconButton';
@@ -42,9 +43,13 @@ const PostContent = ({ description, content }) => {
         <Typography variant="body2" color="text.secondary">
             {description}
         </Typography>
+        <Divider light></Divider>
+        <Typography variant="body1" color="text.primary">
+            {content}
+        </Typography>
     </CardContent>
     <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
+        <IconButton aria-label="like">
         <FavoriteIcon />
         </IconButton>
         <IconButton aria-label="share">
@@ -62,7 +67,7 @@ const PostContent = ({ description, content }) => {
     <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
         <Typography paragraph>
-            {content}
+            Comments Go Here
         </Typography>
         </CardContent>
     </Collapse>

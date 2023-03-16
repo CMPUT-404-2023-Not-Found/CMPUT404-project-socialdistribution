@@ -9,9 +9,11 @@ https://youtu.be/uLSE7WtcrP0
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AllInboxIcon from '@mui/icons-material/AllInbox';
+import CreateIcon from '@mui/icons-material/Create';
 import EmailIcon from '@mui/icons-material/Email';
 import InboxIcon from '@mui/icons-material/Inbox';
 import LogoutIcon from '@mui/icons-material/Logout';
+import PeopleIcon from '@mui/icons-material/People';
 
 export const mainNavbarItems = [
     {
@@ -31,6 +33,18 @@ export const mainNavbarItems = [
         icon: <EmailIcon />,
         label: 'Your Posts',
         route: 'posts',
+    },
+    {
+        id: 3,
+        icon: <CreateIcon />,
+        label: 'Create a Post',
+        route: 'createpost',
+    },
+    {
+        id: 4,
+        icon: <PeopleIcon />,
+        label: 'Followers',
+        route: 'followers',
     }
 ]
 

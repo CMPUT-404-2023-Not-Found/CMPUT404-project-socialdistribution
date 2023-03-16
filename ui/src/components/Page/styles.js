@@ -11,7 +11,7 @@ export const pageStyles = {
         wrapper: {
             display: 'flex',
             flexDirection: 'column',
-            backgroundColor: '#265156',
+            backgroundColor: 'primary.light',
             padding: '20px',
         },
         topRow: {

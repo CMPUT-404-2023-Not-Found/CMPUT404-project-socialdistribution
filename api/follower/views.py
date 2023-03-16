@@ -9,9 +9,11 @@ from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
 from .serializers import FollowerSerializer
 from .pagination import FollowerPagination
 from .models import Follower, Author
+from utils.node_comm import NodeComm
 
 logger = logging.getLogger('django')
 rev = 'rev: $jsadasd'
+NodeComm = NodeComm()
 # Create your views here.
 
 class FollowerListView(ListAPIView):
@@ -19,7 +21,7 @@ class FollowerListView(ListAPIView):
     queryset = Follower.objects.all()
     pagination_class = FollowerPagination
     lookup_url_kwarg = 'author_uuid'
-
+    
     def get_queryset(self):
         logger.info(rev)
         author_uuid = self.kwargs.get(self.lookup_url_kwarg)
@@ -33,6 +35,14 @@ class FollowerDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = FollowerSerializer
     queryset = Follower.objects.all()
     lookup_field = 'follower'
+    error = {
+            "404_error":{
+                "Error": "Author not found",
+                },
+            "400_error":{
+                "Error":"Author already follows"
+                },
+        }
     
     def get_object(self):
         logger.info(rev)
@@ -41,7 +51,6 @@ class FollowerDetailView(RetrieveUpdateDestroyAPIView):
         return super().get_object()
     
     def put(self, request, *args, **kwargs):
-        serializer = FollowerSerializer(data=request.data)
         # get author(followee) uuid
         followee = Author.objects.get(id=kwargs['author_uuid'])
         # get follower url
@@ -49,20 +58,17 @@ class FollowerDetailView(RetrieveUpdateDestroyAPIView):
         # check that author doesnt already follow the followee
         exists = Follower.objects.filter(followee=followee, follower=follower_url)
         # save entry to database
-        # TODO fix up response bodies
-        if serializer.is_valid():
-            if exists:
-                return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        if exists:
+            return Response(self.error["400_error"],status=status.HTTP_400_BAD_REQUEST)
+        else:
+            created = Follower.objects.create(followee=followee, follower=follower_url)  # type: ignore
+        # return Response for succesful follow request
+        # TODO better way to check if the entry was created?
+            if created:
+                return Response(NodeComm.get_object("author", follower_url), status=status.HTTP_201_CREATED)
             else:
-                created = Follower.objects.create(followee=followee, follower=follower_url)  # type: ignore
-            # return Response for succesful follow request
-            # TODO better way to check if the entry was created?
-                # TODO fix up response bodies
-                if created:
-                    return Response(serializer.data, status=status.HTTP_201_CREATED)
-                else:
-                    return Response(serializer.errors,status=status.HTTP_404_NOT_FOUND)
-        
+                return Response(self.error["404_error"], status=status.HTTP_404_NOT_FOUND)
+    
     def perform_destroy(self, instance):
         logger.info(rev)
         follower = self.kwargs.get(self.lookup_field)

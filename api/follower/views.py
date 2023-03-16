@@ -18,6 +18,7 @@ class FollowerListView(ListAPIView):
     serializer_class = FollowerSerializer
     queryset = Follower.objects.all()
     pagination_class = FollowerPagination
+    lookup_url_kwarg = 'author_uuid'
 
     def get_queryset(self):
         logger.info(rev)

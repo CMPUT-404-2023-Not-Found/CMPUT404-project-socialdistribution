@@ -38,8 +38,12 @@ const Navbar = () => {
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemAvatar>
-                            <BasicAvatar profile={{displayName: 'P'}} size='medium'></BasicAvatar>
+                            <BasicAvatar profile={user} size='medium'></BasicAvatar>
                         </ListItemAvatar>
+                        <ListItemText 
+                            primary={(user.displayName ? user.displayName : user.username)} 
+                            primaryTypographyProps={navbarStyles.avatar.primaryTypographyProps}>    
+                        </ListItemText>
                     </ListItemButton>
                 </ListItem>
             </List>

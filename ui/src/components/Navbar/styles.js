@@ -19,6 +19,14 @@ export const navbarStyles = {
             color: 'red',
         },
     },
+    avatar: {
+        primaryTypographyProps: {
+            variant: 'h5',
+            sx: {
+                marginLeft: '10px'
+            }
+        }
+    },
     icons: {
         color: 'primary.main',
         marginLeft: '20px',

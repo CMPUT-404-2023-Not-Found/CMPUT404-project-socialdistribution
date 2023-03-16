@@ -41,6 +41,7 @@ class FollowerDetailView(RetrieveUpdateDestroyAPIView):
         return super().get_object()
     
     def put(self, request, *args, **kwargs):
+        serializer = FollowerSerializer(data=request.data)
         # get author(followee) uuid
         followee = Author.objects.get(id=kwargs['author_uuid'])
         # get follower url
@@ -49,17 +50,18 @@ class FollowerDetailView(RetrieveUpdateDestroyAPIView):
         exists = Follower.objects.filter(followee=followee, follower=follower_url)
         # save entry to database
         # TODO fix up response bodies
-        if exists:
-            return Response('follower already exists',status=status.HTTP_400_BAD_REQUEST)
-        else:
-            created = Follower.objects.create(followee=followee, follower=follower_url)  # type: ignore
-        # return Response for succesful follow request
-        # TODO better way to check if the entry was created?
-            # TODO fix up response bodies
-            if created:
-                return Response('success', status=status.HTTP_201_CREATED)
+        if serializer.is_valid():
+            if exists:
+                return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
             else:
-                return Response('error',status=status.HTTP_404_NOT_FOUND)
+                created = Follower.objects.create(followee=followee, follower=follower_url)  # type: ignore
+            # return Response for succesful follow request
+            # TODO better way to check if the entry was created?
+                # TODO fix up response bodies
+                if created:
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                else:
+                    return Response(serializer.errors,status=status.HTTP_404_NOT_FOUND)
         
     def perform_destroy(self, instance):
         logger.info(rev)

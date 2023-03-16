@@ -55,6 +55,15 @@ class AuthorViewTests(Base):
         response = self.author_client.get(self.get_author_detail_url(str(self.another_author.id)))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['id'], self.another_author.get_node_id())
+
+    def test_get_author_with_auth_basic(self):
+        '''
+        Test getting another author's profile with http basic 
+        '''
+        c = self.configure_client(user=self.basic_auth_author, auth_type='Basic')
+        response = c.get(self.get_author_detail_url(str(self.another_author.id)))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['id'], self.another_author.get_node_id())
     
     # Test Author view POST /api/authors/uuid/
     def test_update_author_profile(self):

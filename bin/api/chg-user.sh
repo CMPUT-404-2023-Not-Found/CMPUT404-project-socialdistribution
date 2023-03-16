@@ -17,4 +17,5 @@ do
 done
 
 echo "OK symlinked $user files"
-
+if [ -r .access_token ]; then rm .access_token; fi
+if [ -r .refresh_token ]; then rm .refresh_token; fi

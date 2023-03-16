@@ -7,6 +7,7 @@ import React from 'react'
 import Avatar from '@mui/material/Avatar';
 
 import { avatarStyles } from './styles';
+import { Tooltip } from '@mui/material';
 
 const BasicAvatar = ({ profile, size }) => {
     const authorName = profile.displayName;
@@ -14,7 +15,9 @@ const BasicAvatar = ({ profile, size }) => {
     const avatarSize = (size ? size : 'small');
     if (profile.profileImage) {
         return (
-        <Avatar alt={authorName} src={profile.profileImage} sx={avatarStyles[avatarSize]}></Avatar>
+            <Tooltip title={(authorName ? authorName : profile.url)}>
+                <Avatar alt={authorName} src={profile.profileImage} sx={avatarStyles[avatarSize]}></Avatar>
+            </Tooltip>
         );
     } else {
         return (

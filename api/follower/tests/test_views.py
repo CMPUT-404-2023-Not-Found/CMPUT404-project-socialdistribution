@@ -29,6 +29,7 @@ class FollowerListCreateViewTest(Base):
         '''
         response = self.author_client.put(self.get_follower_detail_url(self.author_uuid, self.follower))
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data, 'success')
     
     # Test Follower view GET /api/authors/<author_uuid>/followers/
     def test_get_list_of_followers(self):

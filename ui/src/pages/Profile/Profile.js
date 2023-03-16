@@ -8,7 +8,7 @@ https://www.youtube.com/watch?v=2k8NleFjG7I
 */
 
 import React, { useContext, useEffect, useState } from 'react';
-import Avatar from '@mui/material/Avatar';
+import BasicAvatar from '../../components/common/BasicAvatar/BasicAvatar';
 import { CardContent, CardHeader, IconButton, Typography } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import BasicCard from '../../components/common/BasicCard/BasicCard';
@@ -90,20 +90,6 @@ const Profile = () => {
     //     }
     // };
 
-    const renderAvatar = (author) => {
-        let authorName = (author.displayName ? author.displayName : user.username);
-        let authorNameShort = authorName.charAt(0);
-        if (author.profileImage) {
-            return (
-            <Avatar alt={authorName} src={author.profileImage} sx={{ width: 128, height: 128 }}></Avatar>
-            )
-        } else {
-            return (
-            <Avatar sx={{ bgcolor: 'primary.main', width: 128, height: 128 }}>{authorNameShort}</Avatar>
-            )
-        }
-    }
-
     const renderProfile = (profile) => {
         if (!profile) {
             return (
@@ -117,7 +103,9 @@ const Profile = () => {
         return (
             <BasicCard>
                 <CardHeader
-                    avatar={renderAvatar(profile)}
+                    avatar={
+                        <BasicAvatar profile={profile}></BasicAvatar>
+                    }
                     title={profileTitle}
                     titleTypographyProps={
                         {

@@ -9,6 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import BasicAvatar from '../common/BasicAvatar/BasicAvatar';
+import { postHeaderStyles } from './styles';
 import { utcToLocal } from '../../utils/Utils';
 
 const PostHeader = ({ author, title, subheader, time }) => {
@@ -22,7 +23,9 @@ const PostHeader = ({ author, title, subheader, time }) => {
             </IconButton>
             }
             title={title}
+            titleTypographyProps={postHeaderStyles.cardHeader.titleTypographyProps}
             subheader={(time ? utcToLocal(time) : subheader)}
+            subheaderTypographyProps={postHeaderStyles.cardHeader.subheaderTypographyProps}
         />
     )
 }

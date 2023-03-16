@@ -13,22 +13,16 @@ export const pageStyles = {
             width: '100%',
             flexDirection: 'column',
             backgroundColor: 'primary.light',
-            padding: '20px',
+            paddingTop: '20px',
+            paddingLeft: '20px',
+            paddingBottom: '10px',
             marginLeft: '320px'
         },
-        topRow: {
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'end',
-            alignItems: 'center',
-            marginBottom: '20px',
-        },
-        middleRow: {
+        row: {
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'start',
-            marginBottom: '10px',
         },
     }
 }

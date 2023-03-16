@@ -16,11 +16,12 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
 
 import AuthContext from '../../context/AuthContext';
 import { mainNavbarItems, secondaryNavbarItems } from './navbarItems';
 import { navbarStyles } from './styles';
-import { Typography } from '@mui/material';
+import BasicAvatar from '../common/BasicAvatar/BasicAvatar';
 
 const Navbar = () => {
     let {user, logoutUser} = useContext(AuthContext);
@@ -33,7 +34,15 @@ const Navbar = () => {
             variant="permanent"
             anchor="left"
             >
-            <Typography variant='h2' textAlign='center'>SD7</Typography>
+            <List>
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemAvatar>
+                            <BasicAvatar profile={{displayName: 'P'}} size='medium'></BasicAvatar>
+                        </ListItemAvatar>
+                    </ListItemButton>
+                </ListItem>
+            </List>
             <Divider />
             <List>
                 {mainNavbarItems.map((item, index) => (

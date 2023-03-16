@@ -7,17 +7,13 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import BasicAvatar from '../common/BasicAvatar/BasicAvatar';
 import { pageStyles } from './styles';
 
 const PageHeader = ({ title, profile }) => {
   return (
     <Box sx={pageStyles.PageHeader.wrapper}>
-        <Box sx={pageStyles.PageHeader.topRow}>
-            {(profile && <BasicAvatar profile={profile} size='medium'></BasicAvatar>)}
-        </Box>
-        <Box sx={pageStyles.PageHeader.middleRow}>
-            <Typography variant='h2' color='white'>{title}</Typography>
+        <Box sx={pageStyles.PageHeader.row}>
+            <Typography variant='h4' color='white'>{title}</Typography>
         </Box>
     </Box>
   );

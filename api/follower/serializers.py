@@ -14,12 +14,7 @@ rev = 'rev: $xani93n$x'
 # video here:
 # https://youtu.be/B3HGwFlBvi8
 class FollowerSerializer(serializers.ModelSerializer):
-    # TODO QUESTION: Can I change the Author serializer to match the spec? Some of the fields are out of order
-    # TODO Does this even matter? ^
-    
     follower  = URLField(required = False)
-    #follower = serializers.SerializerMethodField('get_follower')
-
     class Meta:
         model = Follower
         fields = ['follower']

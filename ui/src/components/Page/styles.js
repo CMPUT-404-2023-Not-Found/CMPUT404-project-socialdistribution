@@ -20,9 +20,6 @@ export const pageStyles = {
             justifyContent: 'end',
             alignItems: 'center',
             marginBottom: '20px',
-            '*': {
-                marginRight: '5px',
-            },
         },
         middleRow: {
             display: 'flex',

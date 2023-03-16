@@ -23,7 +23,8 @@ export const navbarStyles = {
         primaryTypographyProps: {
             variant: 'h5',
             sx: {
-                marginLeft: '10px'
+                marginLeft: '10px',
+                fontWeight: '400'
             }
         }
     },

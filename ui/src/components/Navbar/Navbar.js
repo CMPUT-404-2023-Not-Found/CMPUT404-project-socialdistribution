@@ -36,7 +36,7 @@ const Navbar = () => {
             >
             <List>
                 <ListItem disablePadding>
-                    <ListItemButton>
+                    <ListItemButton onClick={() => navigate('/profile')}>
                         <ListItemAvatar>
                             <BasicAvatar profile={user} size='medium'></BasicAvatar>
                         </ListItemAvatar>

@@ -6,10 +6,13 @@ from comment.models import Comment
 
 
 class Like(models.Model):
-    post = models.ForeignKey(to=Post, on_delete=models.CASCADE, related_name='likes', null=True, blank=True)
-    comment = models.ForeignKey(to=Comment, on_delete=models.CASCADE, related_name='likes', null=True, blank=True)
-    author = models.ForeignKey(to=Author, on_delete=models.CASCADE, verbose_name="who liked it")
-
+    class W3ContextChoices(models.TextChoices):
+        W3_AS=('https://www.w3.org/ns/activitystreams', 'W3 Activity Streams')
+    
+    post                = models.ForeignKey(to=Post, on_delete=models.CASCADE, related_name='likes', null=True, blank=True)
+    comment             = models.ForeignKey(to=Comment, on_delete=models.CASCADE, related_name='likes', null=True, blank=True)
+    author              = models.ForeignKey(to=Author, on_delete=models.CASCADE, verbose_name="who liked it")
+    context             = models.URLField(choices=W3ContextChoices.choices, default=W3ContextChoices.W3_AS, max_length=128)
     # summary = models.CharField(max_length=128, blank=True, null=True, verbose_name='Summary of the like')
 
     def __str__(self):
@@ -28,10 +31,10 @@ class Like(models.Model):
     (author1, post1, null) like2 # error => (author1, null, comment1) like2 
     
     '''
-    /**
-    * This code was adapted from a post from Jens on 2010-2-4, retrieved on 2023-3-13, 
-    * forum here:
-    * https://stackoverflow.com/a/2201687
-    */
+    # 
+    #  This code was adapted from a post from Jens on 2010-2-4, retrieved on 2023-3-13, 
+    #  forum here:
+    #  https://stackoverflow.com/a/2201687
+    # */
     class Meta:
         unique_together = ('author', 'post', 'comment')

@@ -5,5 +5,4 @@
 # # need to think about the like for comment url !!!
 # urlpatterns = [
 #     path('', LikeView.as_view(), name='like_for_post'),
-    
 # ]

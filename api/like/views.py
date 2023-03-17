@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 # this is like feature for post and comment
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
@@ -12,6 +12,7 @@ from like.serializers import LikeSerializer
 from post.models import Post
 from author.models import Author
 from comment.models import Comment
+from .pagination import LikePagination
 
 import logging
 
@@ -28,7 +29,8 @@ class PostLikeView(ListCreateAPIView):
     serializer_class = LikeSerializer
     queryset = Like.objects.all()
     lookup_author_kwarg = 'author_uuid'
-    lookup_url_kwarg = 'post_id'
+    lookup_url_kwarg = 'post_uuid'
+    pagination_class = LikePagination
 
     def create(self, request, *args, **kwargs):
         author_uuid = self.kwargs.get(self.lookup_author_kwarg)
@@ -59,6 +61,10 @@ class PostLikeView(ListCreateAPIView):
             logger.info('Get recent likes for post_uuid: [%s]', post_uuid)
         return self.queryset.filter(post=post)
 
+class PostLikeDetailView(RetrieveAPIView):
+    serializer_class = LikeSerializer()
+    queryset = Like.objects.all()
+
 class CommentLikeView(ListCreateAPIView):
     """
     A view for liking/unliking a comment
@@ -67,6 +73,7 @@ class CommentLikeView(ListCreateAPIView):
     queryset = Like.objects.all()
     lookup_author_kwarg = 'author_uuid'
     lookup_url_kwarg = 'comment_uuid'
+    pagination_class = LikePagination
 
     def create(self, request, *args, **kwargs):
         author_uuid = self.kwargs.get(self.lookup_author_kwarg)
@@ -96,3 +103,7 @@ class CommentLikeView(ListCreateAPIView):
         else:
             logger.info('Get recent likes for comment_uuid: [%s]', comment_uuid)
         return self.queryset.filter(comment=comment)
+    
+class CommentLikeDetailView(RetrieveAPIView):
+    serializer_class = LikeSerializer()
+    queryset = Like.objects.all()

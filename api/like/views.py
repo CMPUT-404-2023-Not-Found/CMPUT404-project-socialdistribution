@@ -63,8 +63,22 @@ class PostLikeView(ListCreateAPIView):
         return self.queryset.filter(post=post)
 
 class PostLikeDetailView(RetrieveAPIView):
-    serializer_class = LikeSerializer()
+    serializer_class = LikeSerializer
     queryset = Like.objects.all()
+    lookup_owner_kwarg = 'owner_uuid'
+    lookup_url_kwarg = 'post_uuid'
+
+    def get_object(self):
+        author_uuid = self.kwargs.get(self.lookup_owner_kwarg)
+        post_uuid = self.kwargs.get(self.lookup_url_kwarg)
+        post = Post.objects.get(id=post_uuid)
+        author = Author.objects.get(id=author_uuid)
+
+        obj = Like.objects.get(author=author, post=post)
+
+        self.check_object_permissions(self.request, obj)
+
+        return obj
 
 class CommentLikeView(ListCreateAPIView):
     """
@@ -106,5 +120,19 @@ class CommentLikeView(ListCreateAPIView):
         return self.queryset.filter(comment=comment)
     
 class CommentLikeDetailView(RetrieveAPIView):
-    serializer_class = LikeSerializer()
+    serializer_class = LikeSerializer
     queryset = Like.objects.all()
+    lookup_owner_kwarg = 'owner_uuid'
+    lookup_url_kwarg = 'comment_uuid'
+
+    def get_object(self):
+        author_uuid = self.kwargs.get(self.lookup_owner_kwarg)
+        comment_uuid = self.kwargs.get(self.lookup_url_kwarg)
+        comment = Comment.objects.get(id=comment_uuid)
+        author = Author.objects.get(id=author_uuid)
+
+        obj = Like.objects.get(author=author, comment=comment)
+
+        self.check_object_permissions(self.request, obj)
+
+        return obj

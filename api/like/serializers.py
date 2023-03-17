@@ -15,7 +15,7 @@ class LikeSerializer(serializers.ModelSerializer):
             return f'{obj.author.display_name} liked your post'
         else:
             return f'{obj.author.display_name} liked your comment'
-            
+
     type = serializers.SerializerMethodField('get_type')
     def get_type(self, obj): return 'Like' 
 
@@ -26,7 +26,7 @@ class LikeSerializer(serializers.ModelSerializer):
         if obj.post:
             return str(obj.author.get_node_id()) + '/posts/' + str(obj.post.id)
         else:
-            return str(obj.author.get_node_id()) + '/posts/' + str(obj.post.id) + '/comments/' + str(obj.comment.id)
+            return str(obj.author.get_node_id()) + '/posts/' + str(obj.comment.post.id) + '/comments/' + str(obj.comment.id)
 
     class Meta:
         # context, summary, type, author,  ID of the like (UUID)

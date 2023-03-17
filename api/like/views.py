@@ -11,6 +11,7 @@ from like.models import Like
 from like.serializers import LikeSerializer
 from post.models import Post
 from author.models import Author
+from comment.models import Comment
 
 import logging
 
@@ -26,33 +27,26 @@ class PostLikeView(ListCreateAPIView):
     """
     serializer_class = LikeSerializer
     queryset = Like.objects.all()
-    lookup_url_kwarg = 'post_uuid'
+    lookup_author_kwarg = 'author_uuid'
+    lookup_url_kwarg = 'post_id'
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        created = self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        if created:
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-        else:
-            return Response(serializer.data, status=status.HTTP_202_ACCEPTED, headers=headers)   
-
-    def perform_create(self, serializer):
-        author_uuid = self.kwargs.get('author_uuid')
-        post_uuid = self.kwargs.get('post_uuid')     # if get('post_uuid') can get the post_uuid? !!
+        author_uuid = self.kwargs.get(self.lookup_author_kwarg)
+        post_uuid = self.kwargs.get(self.lookup_url_kwarg)     
         post = Post.objects.get(id=post_uuid)
         author = Author.objects.get(id=author_uuid)
-        liked = Like.objects.filter(author=author, post=post).count()
-        # author_url = PostSerializer(post_obj).data['author']['id']  # this is the author of that post 
 
-        if not liked:
-            serializer.save(author=author, post=post)
-            return True
-        else:
-            instance = Like.objects.get(author=author, post=post)
-            instance.delete()
-            return False
+        # only create if doesn't exist, else return the existing object
+        if Like.objects.filter(author=author, post=post).count() == 1:
+            serializer = LikeSerializer(Like.objects.get(author=author, post=post))
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(author=author, post=post)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         
     def get_queryset(self):
         logger.info(rev)
@@ -60,27 +54,45 @@ class PostLikeView(ListCreateAPIView):
         post_uuid = self.kwargs.get(self.lookup_url_kwarg)
         post = Post.objects.get(id=post_uuid)
         if (self.request.query_params):
-            logger.info('Get recent likes for post_uuid: [%s] with query_params [%s]', post_uuid, str(self.request.query_params)) # type: ignore
+            logger.info('Get recent likes for post_uuid: [%s] with query_params [%s]', post_uuid, str(self.request.query_params))
         else:
             logger.info('Get recent likes for post_uuid: [%s]', post_uuid)
-        return self.queryset
+        return self.queryset.filter(post=post)
 
 class CommentLikeView(ListCreateAPIView):
     """
     A view for liking/unliking a comment
     """
     serializer_class = LikeSerializer
-    # permission_classes = [IsAuthenticated]
+    queryset = Like.objects.all()
+    lookup_author_kwarg = 'author_uuid'
+    lookup_url_kwarg = 'comment_uuid'
 
-    def perform_create(self, serializer):
-        author_uuid = self.kwargs.get('author_uuid')
-        comment_uuid = self.kwargs.get('comment_uuid')
-        liked = Like.objects.filter(author=author_uuid, comment=comment_uuid).count()
+    def create(self, request, *args, **kwargs):
+        author_uuid = self.kwargs.get(self.lookup_author_kwarg)
+        comment_uuid = self.kwargs.get(self.lookup_url_kwarg)     
+        comment = Comment.objects.get(id=comment_uuid)
+        author = Author.objects.get(id=author_uuid)
 
-        if not liked:
-            Like.objects.create(author=author_uuid, comment=comment_uuid)
+        # only create if doesn't exist, else return the existing object
+        if Like.objects.filter(author=author, comment=comment).count() == 1:
+            serializer = LikeSerializer(Like.objects.get(author=author, comment=comment))
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(author=author, comment=comment)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def get_queryset(self):
+        logger.info(rev)
+        self.request.kwargs = self.kwargs
+        comment_uuid = self.kwargs.get(self.lookup_url_kwarg)
+        comment = Comment.objects.get(id=comment_uuid)
+        if (self.request.query_params):
+            logger.info('Get recent likes for comment_uuid: [%s] with query_params [%s]', comment_uuid, str(self.request.query_params))
         else:
-            Like.objects.filter(author=author_uuid, comment=comment_uuid).delete()
-        Like.save() #save the changes in like db
-        return serializer.save()
-    
+            logger.info('Get recent likes for comment_uuid: [%s]', comment_uuid)
+        return self.queryset.filter(comment=comment)

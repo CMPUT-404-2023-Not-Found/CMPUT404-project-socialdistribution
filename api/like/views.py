@@ -3,7 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 # this is like feature for post and comment
 from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
-from rest_framework.permissions import IsAuthenticated
+from utils.permissions import IsAuthenticatedWithJWT
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -31,9 +31,10 @@ class PostLikeView(ListCreateAPIView):
     lookup_author_kwarg = 'author_uuid'
     lookup_url_kwarg = 'post_uuid'
     pagination_class = LikePagination
+    permission_classes = [IsAuthenticatedWithJWT]
 
     def create(self, request, *args, **kwargs):
-        author_uuid = self.kwargs.get(self.lookup_author_kwarg)
+        author_uuid = str(request.user)
         post_uuid = self.kwargs.get(self.lookup_url_kwarg)     
         post = Post.objects.get(id=post_uuid)
         author = Author.objects.get(id=author_uuid)
@@ -76,7 +77,7 @@ class CommentLikeView(ListCreateAPIView):
     pagination_class = LikePagination
 
     def create(self, request, *args, **kwargs):
-        author_uuid = self.kwargs.get(self.lookup_author_kwarg)
+        author_uuid = str(request.user)
         comment_uuid = self.kwargs.get(self.lookup_url_kwarg)     
         comment = Comment.objects.get(id=comment_uuid)
         author = Author.objects.get(id=author_uuid)

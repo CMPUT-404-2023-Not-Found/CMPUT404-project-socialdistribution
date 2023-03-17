@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from .models import Author, Inbox
 from .serializer import InboxSerializer
-from utils.permissions import IsOwner, NodesCanPost
+from utils.permissions import IsOwner, NodesCanPost, NonOwnerCanPost
 
 import logging
 logger = logging.getLogger('django')
@@ -17,7 +17,7 @@ class InboxListCreateDeleteView(DestroyAPIView, ListCreateAPIView):
     serializer_class = InboxSerializer
     queryset = Inbox.objects.all()
     lookup_url_kwarg = 'author_uuid'
-    permission_classes = [IsOwner|NodesCanPost]
+    permission_classes = [IsOwner|NodesCanPost|NonOwnerCanPost]
 
     # GET Paginated list of recent AUTHOR_UUID's inbox things
     def get_queryset(self):

@@ -53,6 +53,18 @@ class OwnerCanWrite(BasePermission):
         is_owner = True if str(request.user.id) == str(author_uuid) else False
         return (is_writeop and is_owner)
 
+class NonOwnerCanPost(BasePermission):
+    '''
+    The request is not the owner of the requested resource, but
+    only allow for POST methods.
+    '''
+    def has_permission(self, request, view):
+        is_httpbearer = True if 'Bearer' in request.META.get('HTTP_AUTHORIZATION', '') else False
+        resource_author_uuid = view.kwargs.get('author_uuid') if view.kwargs.get('author_uuid') else view.kwargs.get('id')
+        is_owner = True if str(request.user.id) == str(resource_author_uuid) else False
+        is_postonly = True if request.method == 'POST' else False
+        return bool(is_httpbearer and is_postonly and not is_owner)
+
 class NodesCanPost(BasePermission):
     '''
     The request is a node, but only allow for POST methods.

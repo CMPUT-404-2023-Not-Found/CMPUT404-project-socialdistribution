@@ -89,6 +89,7 @@ class CommentLikeView(ListCreateAPIView):
     lookup_author_kwarg = 'author_uuid'
     lookup_url_kwarg = 'comment_uuid'
     pagination_class = LikePagination
+    permission_classes = [IsAuthenticatedWithJWT]
 
     def create(self, request, *args, **kwargs):
         author_uuid = str(request.user)

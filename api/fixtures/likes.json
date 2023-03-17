@@ -1,0 +1,42 @@
+[
+  {
+    "model": "like.like",
+    "pk": 9,
+    "fields": {
+      "post": null,
+      "comment": "d18bf964-b9e2-4360-9a5c-1a036bc82db8",
+      "author": "398113ca-ce82-420a-b1e8-e8de260d3a64",
+      "context": "https://www.w3.org/ns/activitystreams"
+    }
+  },
+  {
+    "model": "like.like",
+    "pk": 10,
+    "fields": {
+      "post": "a0dfc41c-4d32-47d1-a567-aed24ae4736e",
+      "comment": null,
+      "author": "398113ca-ce82-420a-b1e8-e8de260d3a64",
+      "context": "https://www.w3.org/ns/activitystreams"
+    }
+  },
+  {
+    "model": "like.like",
+    "pk": 11,
+    "fields": {
+      "post": "a0dfc41c-4d32-47d1-a567-aed24ae4736e",
+      "comment": null,
+      "author": "ec812fcd-1c90-4080-bf1c-45c3000fb19b",
+      "context": "https://www.w3.org/ns/activitystreams"
+    }
+  },
+  {
+    "model": "like.like",
+    "pk": 12,
+    "fields": {
+      "post": null,
+      "comment": "d18bf964-b9e2-4360-9a5c-1a036bc82db8",
+      "author": "ec812fcd-1c90-4080-bf1c-45c3000fb19b",
+      "context": "https://www.w3.org/ns/activitystreams"
+    }
+  }
+]

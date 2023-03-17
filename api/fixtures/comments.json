@@ -1,0 +1,35 @@
+[
+  {
+    "model": "comment.comment",
+    "pk": "1bc05dee-7f18-426d-9f89-989bea9c49c5",
+    "fields": {
+      "post": "a0dfc41c-4d32-47d1-a567-aed24ae4736e",
+      "author": "http://localhost:8000/api/authors/398113ca-ce82-420a-b1e8-e8de260d3a64",
+      "published": "2023-03-03T18:06:07.827Z",
+      "comment": "hello",
+      "content_type": "text/plain"
+    }
+  },
+  {
+    "model": "comment.comment",
+    "pk": "d18bf964-b9e2-4360-9a5c-1a036bc82db8",
+    "fields": {
+      "post": "a0dfc41c-4d32-47d1-a567-aed24ae4736e",
+      "author": "http://localhost:8000/api/authors/398113ca-ce82-420a-b1e8-e8de260d3a64",
+      "published": "2023-03-15T20:48:55.438Z",
+      "comment": "another comment, the latest one",
+      "content_type": "text/plain"
+    }
+  },
+  {
+    "model": "comment.comment",
+    "pk": "f4bb2804-7ab2-4554-a9a0-3d3b0029f4ad",
+    "fields": {
+      "post": "a0dfc41c-4d32-47d1-a567-aed24ae4736e",
+      "author": "http://localhost:8000/api/authors/398113ca-ce82-420a-b1e8-e8de260d3a64",
+      "published": "2023-03-15T20:48:32.989Z",
+      "comment": "new comment for the post, will be middle",
+      "content_type": "text/markdown"
+    }
+  }
+]

@@ -2,13 +2,9 @@
 # inbox/pagination.py
 
 from collections import OrderedDict
-from django.conf import settings
 from rest_framework.response import Response
-from urllib.parse import urlsplit
 
 from author.models import Author
-from post.models import Post
-from post.serializers import PostSerializer
 from utils.node_comm import NodeComm
 from utils.pagination import CustomPagination
 

@@ -15,7 +15,7 @@ class Base(APITestCase):
     Base class for Author test suite
     '''
     app_host = settings.APP_URL
-    fixtures = ['fixtures/db.json']
+    fixtures = ['fixtures/small-comments.json']
 
     def setUp(self):
         self.author = Author.objects.get(username='georgerrmartin')

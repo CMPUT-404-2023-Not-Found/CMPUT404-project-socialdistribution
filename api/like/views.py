@@ -40,7 +40,7 @@ class PostLikeView(ListCreateAPIView):
         if Like.objects.filter(author=author, post=post).count() == 1:
             serializer = LikeSerializer(Like.objects.get(author=author, post=post))
             headers = self.get_success_headers(serializer.data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+            return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
         
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -78,7 +78,7 @@ class CommentLikeView(ListCreateAPIView):
         if Like.objects.filter(author=author, comment=comment).count() == 1:
             serializer = LikeSerializer(Like.objects.get(author=author, comment=comment))
             headers = self.get_success_headers(serializer.data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+            return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
         
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)

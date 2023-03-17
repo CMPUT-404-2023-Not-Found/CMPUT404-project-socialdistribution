@@ -13,6 +13,7 @@ class Like(models.Model):
     comment             = models.ForeignKey(to=Comment, on_delete=models.CASCADE, related_name='likes', null=True, blank=True)
     author              = models.ForeignKey(to=Author, on_delete=models.CASCADE, verbose_name="who liked it")
     context             = models.URLField(choices=W3ContextChoices.choices, default=W3ContextChoices.W3_AS, max_length=128)
+    published           = models.DateTimeField(auto_now=False, auto_now_add=True, verbose_name='Published At')
 
     def __str__(self):
         if self.post:

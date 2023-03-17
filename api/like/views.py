@@ -60,7 +60,7 @@ class PostLikeView(ListCreateAPIView):
             logger.info('Get recent likes for post_uuid: [%s] with query_params [%s]', post_uuid, str(self.request.query_params))
         else:
             logger.info('Get recent likes for post_uuid: [%s]', post_uuid)
-        return self.queryset.filter(post=post)
+        return self.queryset.filter(post=post).order_by('-published')
 
 class PostLikeDetailView(RetrieveAPIView):
     serializer_class = LikeSerializer
@@ -118,7 +118,7 @@ class CommentLikeView(ListCreateAPIView):
             logger.info('Get recent likes for comment_uuid: [%s] with query_params [%s]', comment_uuid, str(self.request.query_params))
         else:
             logger.info('Get recent likes for comment_uuid: [%s]', comment_uuid)
-        return self.queryset.filter(comment=comment)
+        return self.queryset.filter(comment=comment).order_by('-published')
     
 class CommentLikeDetailView(RetrieveAPIView):
     serializer_class = LikeSerializer

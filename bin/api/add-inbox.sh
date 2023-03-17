@@ -5,26 +5,33 @@
 
 # set -x
 if [ "#$APP_URL" = "#" ]; then echo "ERR Could could not find $APP_URL in env, is your env setup?"; exit 1; fi
-if [ "#$1" = "#" ]; then echo "Usage $0 [author_uuid]"; exit 1; fi
-author_uuid="$1"
-if [ ! -r .access_token ]
+if [ $# -lt 4 ]
 then
-    echo "ERR Could not find a .access_token file, try using ./get-token.sh [username] [password]"
+    echo "Usage $0 <author_uuid> <object_author_node_id> <object_type> <object_url> [object_summary]"
+    echo "Example:"
+    echo " $0 664925be-f3ce-42b0-9d34-1659d078f840 http://localhost:8000/api/authors/398113ca-ce82-420a-b1e8-e8de260d3a64 post http://localhost:8000/api/authors/398113ca-ce82-420a-b1e8-e8de260d3a64/posts/a0dfc41c-4d32-47d1-a567-aed24ae4736e 'This is a shared post'"
     exit 1
 fi
+author_uuid="$1"
+object_author_node_id="$2"
+object_type="$3"
+object_url="$4"
+object_summary="Shared $object_type"
+if [ "#$5" != "#" ]
+then
+    object_summary="$5"
+fi
 
-access_token=`cat .access_token`
-auth_hdr="Authorization: Bearer $access_token"
-
+auth_hdr=$(./get-auth.sh 'bearer' $(cat .username) $(cat .password))
 add_inbox_url="${AUTHOR_API}/$author_uuid/inbox/"
 
 cnt_body=`cat <<EOF
 {
   "@context": "https://www.w3.org/ns/activitystreams",
-  "summary": "Shared post",
-  "type": "post",
-  "author": "http://localhost:8000/api/authors/664925be-f3ce-42b0-9d34-1659d078f840/",
-  "object": "http://localhost:8000/api/authors/664925be-f3ce-42b0-9d34-1659d078f840/posts/185389cc-89f2-4714-abdd-6cccbbc24d0e/"
+  "summary": "$object_summary",
+  "type": "$object_type",
+  "author": "$object_author_node_id",
+  "object": "$object_url"
 }
 EOF`
 

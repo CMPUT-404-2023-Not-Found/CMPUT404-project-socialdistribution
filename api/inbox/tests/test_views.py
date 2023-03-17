@@ -13,7 +13,7 @@ class InboxViewTests(Base):
     # Test Inbox view GET /api/authors/uuid/inbox
     def test_get_inbox(self):
         '''
-        Test getting an inbox of an author
+        Test getting an inbox of an author 
         '''
         response = self.author_client.get(self.get_inbox_url(self.first_author.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)

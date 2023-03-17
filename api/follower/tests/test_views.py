@@ -22,9 +22,7 @@ class FollowerListCreateViewTest(Base):
     '''
     Test suite for Follower views
     '''
-    # from fixtures
     author_uuid = '398113ca-ce82-420a-b1e8-e8de260d3a64'
-    # TODO any way to not hardcode? - Yep, use fixtures/fucntions
     follower = 'http://localhost:8000/api/authors/664925be-f3ce-42b0-9d34-1659d078f840'
     
     def create_follower(self, follower):
@@ -34,7 +32,7 @@ class FollowerListCreateViewTest(Base):
         return self.author_client.put(self.get_follower_detail_url(self.author_uuid, follower))
 
     
-    # Test Follower View PUT /api/authors/<author_uuid>/followers/
+    
     def test_put_follower(self):
         '''
         Test creating a follower
@@ -43,12 +41,11 @@ class FollowerListCreateViewTest(Base):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data["id"], self.follower)
     
-    # Test Follower view GET /api/authors/<author_uuid>/followers/
     def test_get_list_of_followers(self):
         '''
         Test getting list of followers
         '''
-        # response = self.author_client.put(self.get_follower_detail_url(self.author_uuid, self.follower))
+        
         response = self.create_follower(self.follower)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -56,12 +53,10 @@ class FollowerListCreateViewTest(Base):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['items']), 1)
 
-    # Test Follower view GET /api/authors/<author_uuid>/followers/<follower>/
     def test_get_single_follower(self):
         '''
         Test getting a single follower
         '''
-        # response = self.author_client.put(self.get_follower_detail_url(self.author_uuid, self.follower))
         response = self.create_follower(self.follower)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
     
@@ -72,7 +67,6 @@ class FollowerListCreateViewTest(Base):
         '''
         Test deleting a follower from a followee
         '''
-        # response = self.author_client.put(self.get_follower_detail_url(self.author_uuid, self.follower))
         response = self.create_follower(self.follower)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
     

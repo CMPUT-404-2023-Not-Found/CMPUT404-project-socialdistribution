@@ -6,7 +6,6 @@ from collections import OrderedDict
 
 from utils.pagination import CustomPagination
 from utils.node_comm import NodeComm
-from .models import Author
 
 NodeComm = NodeComm()
 

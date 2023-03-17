@@ -25,7 +25,7 @@ class FollowerListView(ListAPIView):
     def get_queryset(self):
         logger.info(rev)
         author_uuid = self.kwargs.get(self.lookup_url_kwarg)
-        if (self.request.query_params): # type: ignore
+        if (self.request.query_params):
             logger.info('Get recent followers for author_uuid: [%s] with query_params [%s]', author_uuid, str(self.request.query_params)) # type: ignore
         else:
             logger.info('Get recent followers for author_uuid: [%s]', author_uuid)
@@ -51,19 +51,13 @@ class FollowerDetailView(RetrieveUpdateDestroyAPIView):
         return super().get_object()
     
     def put(self, request, *args, **kwargs):
-        # get author(followee) uuid
         followee = Author.objects.get(id=kwargs['author_uuid'])
-        # get follower url
         follower_url = kwargs['follower']
-        # check that author doesnt already follow the followee
         exists = Follower.objects.filter(followee=followee, follower=follower_url)
-        # save entry to database
         if exists:
             return Response(self.error["400_error"],status=status.HTTP_400_BAD_REQUEST)
         else:
-            created = Follower.objects.create(followee=followee, follower=follower_url)  # type: ignore
-        # return Response for succesful follow request
-        # TODO better way to check if the entry was created?
+            created = Follower.objects.create(followee=followee, follower=follower_url)
             if created:
                 return Response(NodeComm.get_object("author", follower_url), status=status.HTTP_201_CREATED)
             else:

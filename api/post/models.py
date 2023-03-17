@@ -55,3 +55,6 @@ class Post(Model):
 
     def __str__(self):
         return f'{self.author} {self.title}'
+
+    def get_node_id(self):
+        return f'{self.author.get_node_id()}/posts/{self.id}'

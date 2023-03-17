@@ -2,7 +2,6 @@
 # post/views.py
 
 from django.shortcuts import render
-import logging
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -11,7 +10,9 @@ from rest_framework.response import Response
 from .serializers import PostSerializer
 from .models import Author
 from .models import Post
+from utils.permissions import IsAuthenticatedWithJWT, NodeReadOnly, OwnerCanWrite
 
+import logging
 logger = logging.getLogger('django')
 rev = 'rev: $xujSyn7$x'
 
@@ -22,7 +23,7 @@ class PostListCreateView(ListCreateAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
     lookup_url_kwarg = 'author_uuid'
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedWithJWT|OwnerCanWrite|NodeReadOnly]
 
     def perform_create(self, serializer):
         logger.info(rev)

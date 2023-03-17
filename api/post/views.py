@@ -45,6 +45,7 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
     lookup_field = 'id'
+    permission_classes = [IsAuthenticatedWithJWT|OwnerCanWrite|NodeReadOnly]
 
     def get_object(self):
         logger.info(rev)

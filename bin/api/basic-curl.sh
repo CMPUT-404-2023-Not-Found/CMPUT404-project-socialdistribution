@@ -5,4 +5,8 @@
 
 node_usr=`cat .node-username`
 node_pwd=`cat .node-password`
-curl -u "${node_usr}:${node_pwd}" "$@"
+hdr_dump=`mktemp`
+
+curl -D "$hdr_dump" -u "${node_usr}:${node_pwd}" "$@"
+echo ""
+echo "Response headers can be found in hdr_dump [$hdr_dump]" >&2

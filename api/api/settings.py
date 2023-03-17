@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'node',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'follower',
 ]
 
 MIDDLEWARE = [

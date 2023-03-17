@@ -1,15 +1,15 @@
 # 2023-02-18
 # inbox/views.py
 
-from django.shortcuts import render
-import logging
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, DestroyAPIView
 from rest_framework.response import Response
 
 from .models import Author, Inbox
 from .serializer import InboxSerializer
+from utils.permissions import IsOwner, NodesCanPost
 
+import logging
 logger = logging.getLogger('django')
 rev = 'rev: $xUfCac2$x'
 
@@ -17,6 +17,7 @@ class InboxListCreateDeleteView(DestroyAPIView, ListCreateAPIView):
     serializer_class = InboxSerializer
     queryset = Inbox.objects.all()
     lookup_url_kwarg = 'author_uuid'
+    permission_classes = [IsOwner|NodesCanPost]
 
     # GET Paginated list of recent AUTHOR_UUID's inbox things
     def get_queryset(self):

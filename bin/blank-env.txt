@@ -9,6 +9,7 @@ export AUTHOR_API="${APP_URL}/api/authors"
 export NODE_API="${APP_URL}/api/node"
 export POST_API="${AUTHOR_API}/%s/posts"
 export TOKEN_API="${APP_URL}/api/token"
+export COMMENT_API="${AUTHOR_API}/%s/posts/%s/comments"
 
 # Personalization
 export MONIKER= <set this>

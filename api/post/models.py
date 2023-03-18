@@ -58,7 +58,7 @@ class Post(Model):
     def get_category_item_list(self):
         return ', '.join(self.categories_set.values_list('categories', flat=True))
 
-class Category(models.Model):
+class Category(Model):
     categories          = models.CharField(max_length=128, blank=True, default="post", verbose_name='Categories')
     category_items      = models.ForeignKey(to=Post, on_delete=models.CASCADE, verbose_name="Category Items", related_name='post')
     

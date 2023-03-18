@@ -9,7 +9,7 @@ from rest_framework.response import Response
 import logging
 
 from .models import Node
-from .serializers import NodeSerializer
+from .serializers import NodeRetrieveSerializer, NodeSendSerializer
 from utils.node_comm import NodeComm
 from utils.permissions import IsAuthenticatedWithJWT
 
@@ -22,11 +22,19 @@ class NodeView(GenericAPIView):
     '''
     Node view for node-to-node communication
     '''
-    serializer_class = NodeSerializer
     queryset = Node.objects.all()
     permission_classes = [IsAuthenticatedWithJWT]
 
+    def get_serializer_class(self):
+        if (self.request.method in ['post', 'put']):
+            return NodeSendSerializer
+        else:
+            return NodeRetrieveSerializer
+
     def get(self, request, *args, **kwargs):
+        '''
+        Get an object from another node
+        '''
         logger.info(rev)
         object_url = request.GET.get('url', '')
         object_type = request.GET.get('type', '')
@@ -34,7 +42,8 @@ class NodeView(GenericAPIView):
             'url': object_url,
             'type': object_type
         }
-        serializer = NodeSerializer(data=query_data)
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(data=query_data)
         if not serializer.is_valid():
             logger.error('Request query data is bad [%s]', serializer.error_messages)
             return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
@@ -46,8 +55,12 @@ class NodeView(GenericAPIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request, *args, **kwargs):
+        '''
+        Post an object to a node's author's inboxes
+        '''
         logger.info(rev)
-        serializer = NodeSerializer(data=request.data)
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(data=request.data)
         if not serializer.is_valid():
             logger.error('Request data is bad [%s]', serializer.error_messages)
             return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)

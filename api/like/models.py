@@ -1,22 +1,30 @@
+# 2023-03-17
+# api/like/models.py
 
 from django.db import models
-from author.models import Author
 from post.models import Post
 from comment.models import Comment
-
 
 class Like(models.Model):
     class W3ContextChoices(models.TextChoices):
         W3_AS=('https://www.w3.org/ns/activitystreams', 'W3 Activity Streams')
     
+    # Identification Fields
     post                = models.ForeignKey(to=Post, on_delete=models.CASCADE, related_name='likes', null=True, blank=True)
     comment             = models.ForeignKey(to=Comment, on_delete=models.CASCADE, related_name='likes', null=True, blank=True)
-    author              = models.ForeignKey(to=Author, on_delete=models.CASCADE, verbose_name="who liked it")
+    author              = models.URLField(max_length=128, db_index=True, verbose_name="Who liked it", null=False, blank=False)
+
+    # Content Fields
     context             = models.URLField(choices=W3ContextChoices.choices, default=W3ContextChoices.W3_AS, max_length=128)
-    published           = models.DateTimeField(auto_now=False, auto_now_add=True, verbose_name='Published At')
+    summary             = models.CharField(max_length=128)
+
+    # Modification Fields
+    liked_at            = models.DateTimeField(auto_now=False, auto_now_add=True, verbose_name='Liked At')
 
     def __str__(self):
-        if self.post:
+        if self.summary:
+            return f'{self.summary}'
+        elif self.post:
             return f'{self.author} liked post {self.post.id}'
         else:
             return f'{self.author} liked comment {self.comment.id}'

@@ -59,11 +59,16 @@ class Post(Model):
         return f'{self.author.get_node_id()}/posts/{self.id}'
 
     def get_category_item_list(self):
-        return ', '.join(self.categories_set.values_list('category', flat=True))
+        return ', '.join(self.category_set.values_list('category', flat=True))
 
 class Category(models.Model):
-    category           = models.CharField(max_length=128, blank=True, default="post")
+    id                 = models.AutoField(primary_key=True)
+    category           = models.CharField(max_length=128, null=True, blank=True, default="post")
     post               = models.ForeignKey(to=Post, on_delete=models.CASCADE)
     
     def __str__(self):
-        return f'{self.categories}'
+        return f'{self.category}'
+    
+    class Meta:
+        verbose_name_plural = 'Categories'
+    

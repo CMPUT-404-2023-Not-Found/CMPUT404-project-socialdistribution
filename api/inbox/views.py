@@ -13,7 +13,7 @@ from .pagination import InboxPagination
 from .serializer import InboxSerializer
 
 logger = logging.getLogger('django')
-rev = 'rev: $xUfCac2$x'
+rev = 'rev: $xn8sc2$x'
 
 class InboxListCreateDeleteView(DestroyAPIView, ListCreateAPIView):
     serializer_class = InboxSerializer

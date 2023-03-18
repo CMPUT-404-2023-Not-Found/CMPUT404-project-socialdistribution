@@ -1,7 +1,6 @@
 # 2023-02-13
 # node/views.py
 
-import json
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -75,7 +74,7 @@ class NodeView(GenericAPIView):
         if not serializer.is_valid():
             logger.error('Request data is bad [%s]', serializer.errors)
             return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
-        data_to_send = json.dumps(serializer.data)
+        data_to_send = serializer.data
 
         inbox_url = request.GET.get('url', '')
         logger.info('Sending a [%s] object to inbox [%s]', req_data['type'], inbox_url)

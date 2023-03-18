@@ -65,7 +65,13 @@ class NodeComm():
         URL matches a known node object, thus query that node for data
         '''
         ret = None
-        node_data = Node.objects.get(host=host_url)
+        node_data = {'username': '', 'password': ''}
+        try:
+            node_data = Node.objects.get(host=host_url)
+        except Exception as e:
+            logger.error('Unknown node host [%s] e [%s]', host_url, e)
+            return ret
+
         r = requests.get(object_url, auth=(node_data.username, node_data.password))
         try:
             ret = json.loads(r.content.decode('utf-8'))

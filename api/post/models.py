@@ -59,7 +59,7 @@ class Post(Model):
         return f'{self.author.get_node_id()}/posts/{self.id}'
 
     def get_category_item_list(self):
-        return ', '.join(self.category_set.values_list('category', flat=True))
+        return self.category_set.values_list('category', flat=True)
 
 class Category(models.Model):
     id                 = models.AutoField(primary_key=True)

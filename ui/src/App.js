@@ -11,44 +11,19 @@ tutorial video here:
 https://www.youtube.com/watch?v=2k8NleFjG7I
 */
 
-import './App.css'
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import Grid from '@mui/material/Grid';
 
-import { Routes, Route } from 'react-router-dom';
-// Componenets
-import Navbar from './components/Navbar';
-// Utils
-import PrivateRoutes from './utils/PrivateRoutes'
-// Contexts
-import { AuthProvider } from './context/AuthContext';
-// General & Login pages
-import Login from './pages/Login';
-import Profile from './pages/Profile';
-import Stream from './pages/Stream';
-// Post pages
-import Posts from './pages/Posts';
-import PostDetail from './components/PostDetail';
-// Error pages
-import NotFound from './components/NotFound';
-import CreatePost from './pages/CreatePost';
+import Navbar from './components/Navbar/Navbar';
+import './App.css'
 
 const App = () => {
     return (
-    <div className='App'>
-        <AuthProvider>
-            <Navbar />
-            <Routes>
-                    <Route element={<PrivateRoutes />}>
-                        <Route path="/" element={<Stream/>} exact/>
-                        <Route path="/posts" element={<Posts />} />
-                        <Route path="/posts/:postid" element={<PostDetail />} />
-                        <Route path="/profile" element={<Profile />} />
-                        <Route path="/createpost" element={<CreatePost />} />
-                    </Route>
-                    <Route path="/login" element={<Login />} />
-                    <Route path="*" element={<NotFound />} />
-            </Routes>
-        </AuthProvider>
-    </div>
+    <Grid container>
+        <Navbar />
+        <Outlet />
+    </Grid>
     );
 };
 

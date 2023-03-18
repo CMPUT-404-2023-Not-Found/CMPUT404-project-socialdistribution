@@ -1,0 +1,26 @@
+[
+  {
+    "model": "like.like",
+    "pk": 1,
+    "fields": {
+      "post": "a0dfc41c-4d32-47d1-a567-aed24ae4736e",
+      "comment": null,
+      "author": "http://localhost:8000/api/authors/df396b9e-1815-4f89-9c9f-6e850e00f7c3/",
+      "context": "https://www.w3.org/ns/activitystreams",
+      "summary": "Liked it",
+      "liked_at": "2023-03-18T15:56:39.480Z"
+    }
+  },
+  {
+    "model": "like.like",
+    "pk": 2,
+    "fields": {
+      "post": null,
+      "comment": "1bc05dee-7f18-426d-9f89-989bea9c49c5",
+      "author": "http://localhost:8000/api/authors/ec812fcd-1c90-4080-bf1c-45c3000fb19b/",
+      "context": "https://www.w3.org/ns/activitystreams",
+      "summary": "friendlybaker liked your comment",
+      "liked_at": "2023-03-18T15:57:27.800Z"
+    }
+  }
+]

@@ -8,8 +8,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
 
-        # TODO Send author information in access token via author serializer
         token['username'] = user.username 
         token['displayName'] = user.display_name
-        
+        token['profileImage'] = user.profile_image
+        token['github'] = user.github
+
         return token

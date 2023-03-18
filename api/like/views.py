@@ -1,56 +1,31 @@
-from django.shortcuts import render
+# 2023-03-17
+# api/like/views.py
+# Views for likes on both Post & Comments
 
-# Create your views here.
-# this is like feature for post and comment
-from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
-from utils.permissions import IsAuthenticatedWithJWT
-from rest_framework.response import Response
-from rest_framework import status
+from rest_framework.generics import ListAPIView
 
-from like.models import Like
-from like.serializers import LikeSerializer
+from .models import Like
+from .serializers import LikeSerializer
 from post.models import Post
-from author.models import Author
-from comment.models import Comment
 from .pagination import LikePagination
 
+from comment.models import Comment
+from utils.permissions import IsAuthenticatedWithJWT
+
 import logging
-
 logger = logging.getLogger('django')
-rev = 'rev: $xujSyn7$x' # not really sure what to set this to
+rev = 'rev: $xna8syn7$x'
 
-class PostLikeView(ListCreateAPIView):
+class PostLikeView(ListAPIView):
     """
-    A view for liking/unliking a post
-
-    If there is no existing like for the post, a new like object is created, and 
-    if there is an existing like for the post, it is deleted. 
+    A view for getting a list of likes on a post
     """
     serializer_class = LikeSerializer
     queryset = Like.objects.all()
-    lookup_author_kwarg = 'author_uuid'
     lookup_url_kwarg = 'post_uuid'
     pagination_class = LikePagination
     permission_classes = [IsAuthenticatedWithJWT]
 
-    def create(self, request, *args, **kwargs):
-        author_uuid = str(request.user)
-        post_uuid = self.kwargs.get(self.lookup_url_kwarg)     
-        post = Post.objects.get(id=post_uuid)
-        author = Author.objects.get(id=author_uuid)
-
-        # only create if doesn't exist, else return the existing object
-        if Like.objects.filter(author=author, post=post).count() == 1:
-            serializer = LikeSerializer(Like.objects.get(author=author, post=post))
-            headers = self.get_success_headers(serializer.data)
-            return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
-        
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(author=author, post=post)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-        
     def get_queryset(self):
         logger.info(rev)
         self.request.kwargs = self.kwargs
@@ -60,54 +35,17 @@ class PostLikeView(ListCreateAPIView):
             logger.info('Get recent likes for post_uuid: [%s] with query_params [%s]', post_uuid, str(self.request.query_params))
         else:
             logger.info('Get recent likes for post_uuid: [%s]', post_uuid)
-        return self.queryset.filter(post=post).order_by('-published')
+        return self.queryset.filter(post=post).order_by('-liked_at')
 
-class PostLikeDetailView(RetrieveAPIView):
-    serializer_class = LikeSerializer
-    queryset = Like.objects.all()
-    lookup_owner_kwarg = 'owner_uuid'
-    lookup_url_kwarg = 'post_uuid'
-
-    def get_object(self):
-        author_uuid = self.kwargs.get(self.lookup_owner_kwarg)
-        post_uuid = self.kwargs.get(self.lookup_url_kwarg)
-        post = Post.objects.get(id=post_uuid)
-        author = Author.objects.get(id=author_uuid)
-
-        obj = Like.objects.get(author=author, post=post)
-
-        self.check_object_permissions(self.request, obj)
-
-        return obj
-
-class CommentLikeView(ListCreateAPIView):
+class CommentLikeView(ListAPIView):
     """
-    A view for liking/unliking a comment
+    A view for getting a list of likes on a comment
     """
     serializer_class = LikeSerializer
     queryset = Like.objects.all()
-    lookup_author_kwarg = 'author_uuid'
     lookup_url_kwarg = 'comment_uuid'
     pagination_class = LikePagination
     permission_classes = [IsAuthenticatedWithJWT]
-
-    def create(self, request, *args, **kwargs):
-        author_uuid = str(request.user)
-        comment_uuid = self.kwargs.get(self.lookup_url_kwarg)     
-        comment = Comment.objects.get(id=comment_uuid)
-        author = Author.objects.get(id=author_uuid)
-
-        # only create if doesn't exist, else return the existing object
-        if Like.objects.filter(author=author, comment=comment).count() == 1:
-            serializer = LikeSerializer(Like.objects.get(author=author, comment=comment))
-            headers = self.get_success_headers(serializer.data)
-            return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
-        
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(author=author, comment=comment)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def get_queryset(self):
         logger.info(rev)
@@ -118,22 +56,4 @@ class CommentLikeView(ListCreateAPIView):
             logger.info('Get recent likes for comment_uuid: [%s] with query_params [%s]', comment_uuid, str(self.request.query_params))
         else:
             logger.info('Get recent likes for comment_uuid: [%s]', comment_uuid)
-        return self.queryset.filter(comment=comment).order_by('-published')
-    
-class CommentLikeDetailView(RetrieveAPIView):
-    serializer_class = LikeSerializer
-    queryset = Like.objects.all()
-    lookup_owner_kwarg = 'owner_uuid'
-    lookup_url_kwarg = 'comment_uuid'
-
-    def get_object(self):
-        author_uuid = self.kwargs.get(self.lookup_owner_kwarg)
-        comment_uuid = self.kwargs.get(self.lookup_url_kwarg)
-        comment = Comment.objects.get(id=comment_uuid)
-        author = Author.objects.get(id=author_uuid)
-
-        obj = Like.objects.get(author=author, comment=comment)
-
-        self.check_object_permissions(self.request, obj)
-
-        return obj
+        return self.queryset.filter(comment=comment).order_by('-liked_at')

@@ -11,12 +11,6 @@ foreign_node_url="$2"
 
 auth_hdr=$(./get-auth.sh 'bearer' $(cat .username) $(cat .password))
 get_node_url="${NODE_API}/"
-cnt_body=`cat <<EOF
-{
-  "url": "$foreign_node_url",
-  "type": "$object_type"
-}
-EOF`
 
 hdr_dump=`mktemp`
 rsp=`curl -sG \

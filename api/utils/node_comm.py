@@ -29,6 +29,7 @@ class NodeComm():
         }
     }
 
+    # Retrieve objects from other nodes
     def get_object(self, type, url):
         '''
         Do a lookup of the url and retrieve the object
@@ -65,20 +66,44 @@ class NodeComm():
         URL matches a known node object, thus query that node for data
         '''
         ret = None
-        node_data = {'username': '', 'password': ''}
-        try:
-            node_data = Node.objects.get(host=host_url)
-        except Exception as e:
-            logger.error('Unknown node host [%s] e [%s]', host_url, e)
-            return ret
-
-        r = requests.get(object_url, auth=(node_data.username, node_data.password))
-        try:
-            ret = json.loads(r.content.decode('utf-8'))
-        except Exception as e:
-            logger.error('Not JSON-parsable in response from [%s]. e [%s]', object_url, e)
+        node_data = self.get_node_auth(host_url)
+        if node_data:
+            r = requests.get(object_url, auth=(node_data.username, node_data.password))
+            try:
+                ret = json.loads(r.content.decode('utf-8'))
+            except Exception as e:
+                logger.error('Not JSON-parsable in response from [%s]. e [%s]', object_url, e)
+        return ret
+    
+    # Send objects to other nodes
+    def send_object(self, url):
+        '''
+        Do a lookup of the url and retrieve the object
+        '''
+        ret = None
+        urlparse = urlsplit(url)
+        host_url = urlparse.scheme + '://' + urlparse.netloc
+        if host_url == self.APP_URL:
+            ret = self.send_internal_object(url)
+        else:
+            ret = self.send_external_object(url)
         return ret
 
+    def send_interal_object(self, url):
+        pass
+
+    def send_external_object(self, url):
+        pass
+
+    # Helper functions
+    def get_node_auth(self, node_host):
+        ret = None
+        try:
+            ret = Node.objects.get(host=node_host)
+        except Exception as e:
+            logger.error('Unknown node host [%s] e [%s]', node_host, e)
+        return ret
+    
     def parse_object_uuid(self, url):
         '''
         Return an objects UUID

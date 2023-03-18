@@ -43,6 +43,7 @@ class InboxListCreateDeleteView(DestroyAPIView, ListCreateAPIView):
         POST Add new object to author's inbox
         '''
         logger.info(rev)
+        logger.info('Got new inbox object request data [%s]', request.data)
         return super().post(request, *args, **kwargs)
 
     def perform_create(self, serializer):

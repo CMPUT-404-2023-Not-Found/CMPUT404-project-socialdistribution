@@ -76,24 +76,37 @@ class NodeComm():
         return ret
     
     # Send objects to other nodes
-    def send_object(self, url):
+    def send_object(self, inbox_url, data):
         '''
-        Do a lookup of the url and retrieve the object
+        Send a object to a node url inbox
         '''
         ret = None
-        urlparse = urlsplit(url)
+        ret_status = 500
+        urlparse = urlsplit(inbox_url)
         host_url = urlparse.scheme + '://' + urlparse.netloc
         if host_url == self.APP_URL:
-            ret = self.send_internal_object(url)
+            ret, ret_status = self.send_internal_object(inbox_url, data)
         else:
-            ret = self.send_external_object(url)
-        return ret
+            ret, ret_status = self.send_external_object(host_url, inbox_url, data)
+        return ret, ret_status
 
-    def send_interal_object(self, url):
-        pass
+    def send_internal_object(self, inbox_url, data):
+        ret = None
+        ret_status = 500
+        return ret, ret_status
 
-    def send_external_object(self, url):
-        pass
+    def send_external_object(self, host_url, inbox_url, data):
+        ret = None
+        ret_status = 500
+        node_data = self.get_node_auth(host_url)
+        if node_data:
+            r = requests.post(url=inbox_url, json=data, auth=(node_data.username, node_data.password))
+            try:
+                ret = json.loads(r.content.decode('utf-8'))
+            except Exception as e:
+                logger.error('Not JSON-parsable in response from [%s]. e [%s]', inbox_url, e)
+            ret_status = r.status_code
+        return ret, ret_status
 
     # Helper functions
     def get_node_auth(self, node_host):
@@ -101,7 +114,7 @@ class NodeComm():
         try:
             ret = Node.objects.get(host=node_host)
         except Exception as e:
-            logger.error('Unknown node host [%s] e [%s]', node_host, e)
+            logger.error('Failed to get node model for host [%s] e [%s]', node_host, e)
         return ret
     
     def parse_object_uuid(self, url):

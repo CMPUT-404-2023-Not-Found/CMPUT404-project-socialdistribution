@@ -22,7 +22,6 @@ hdr_dump=`mktemp`
 rsp=`curl -sG \
      -D "$hdr_dump" \
      -H "$auth_hdr" \
-     --trace-ascii x.txt \
      --data-urlencode "type=${object_type}" \
      --data-urlencode "url=${foreign_node_url}" \
      "$get_node_url"`

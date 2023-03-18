@@ -15,7 +15,8 @@ if [ "#$4" != "#" ]; then summary="$4"; fi
 
 auth_hdr=$(./get-auth.sh 'bearer' $(cat .username) $(cat .password))
 
-send_node_url="${NODE_API}/?url=${authors_inbox}"
+query_param="url=$(echo -n "$authors_inbox" | jq -sRr '@uri')"
+send_node_url="${NODE_API}/?${query_param}"
 cnt_body=`cat <<EOF
 {
   "summary": "$summary",

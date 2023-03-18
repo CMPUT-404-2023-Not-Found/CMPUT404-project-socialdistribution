@@ -57,27 +57,20 @@ class NodeView(GenericAPIView):
         Post an object to a node's author's inboxes
         '''
         logger.info(rev)
-        req_data = {
-            '@context': 'https://www.w3.org/ns/activitystreams',
-            'author': request.user.get_node_id(),
-            'type': request.data.get('type', ''),
-            'object': request.data.get('object', ''),
-            'summary': request.data.get('summary', '')
-        }
-        if not req_data.get('summary'): 
+        request.data['author'] = request.user.get_node_id()
+        if not request.data.get('summary'): 
             requester_name = request.user.display_name if request.user.display_name else request.user.username
-            req_type = req_data['type']
-            req_data.summary = f'{requester_name} sent a {req_type}'
+            req_type = request.data.get('type')
+            request.data['summary'] = f'{requester_name} sent a {req_type}'
 
         serializer_class = self.get_serializer_class()
-        serializer = serializer_class(data=req_data)
+        serializer = serializer_class(data=request.data)
         if not serializer.is_valid():
             logger.error('Request data is bad [%s]', serializer.errors)
             return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
         data_to_send = serializer.data
 
         inbox_url = request.GET.get('url', '')
-        logger.info('Sending a [%s] object to inbox [%s]', req_data['type'], inbox_url)
         response_data, response_status = NodeComm.send_object(inbox_url=inbox_url, data=data_to_send)
         if response_status == 201:
             return Response(status=status.HTTP_201_CREATED, data=response_data)

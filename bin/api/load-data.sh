@@ -1,7 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 # 2023-03-17
 # load-data.sh
 # load data from the fixtures
+
 # set -x
 source .env
 

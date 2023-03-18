@@ -26,6 +26,25 @@ class NodeView(GenericAPIView):
     queryset = Node.objects.all()
     permission_classes = [IsAuthenticatedWithJWT]
 
+    def get(self, request, *args, **kwargs):
+        logger.info(rev)
+        object_url = request.GET.get('url', '')
+        object_type = request.GET.get('type', '')
+        query_data = {
+            'url': object_url,
+            'type': object_type
+        }
+        serializer = NodeSerializer(data=query_data)
+        if not serializer.is_valid():
+            logger.error('Request query data is bad [%s]', serializer.error_messages)
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
+        logger.info('Doing lookup of object_type [%s] object_url [%s]', object_type, object_url)
+        object_data = NodeComm.get_object(type=object_type, url=object_url)
+        if object_data:
+            return Response(status=status.HTTP_200_OK, data=object_data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
     def post(self, request, *args, **kwargs):
         logger.info(rev)
         serializer = NodeSerializer(data=request.data)

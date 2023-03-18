@@ -31,7 +31,6 @@ hdr_dump=`mktemp`
 rsp=`curl -sX POST \
      -D "$hdr_dump" \
      -d "$cnt_body" \
-     --trace-ascii x.txt \
      -H "Content-Type: application/json" \
      -H "$auth_hdr" \
      "$send_node_url"`

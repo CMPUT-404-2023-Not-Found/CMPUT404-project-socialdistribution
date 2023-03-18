@@ -12,6 +12,7 @@ from author.serializers import ExistingAuthorSerializer
 from node.models import Node
 from post.models import Post
 from post.serializers import PostSerializer
+from inbox.serializer import InboxSerializer
 
 logger = logging.getLogger('django')
 rev = 'rev: $xAnad89$x'
@@ -80,21 +81,32 @@ class NodeComm():
         '''
         Send a object to a node url inbox
         '''
-        ret = None
-        ret_status = 500
         urlparse = urlsplit(inbox_url)
         host_url = urlparse.scheme + '://' + urlparse.netloc
         if host_url == self.APP_URL:
-            ret, ret_status = self.send_internal_object(inbox_url, data)
+            return self.send_internal_object(inbox_url, data)
         else:
-            ret, ret_status = self.send_external_object(host_url, inbox_url, data)
-        return ret, ret_status
+            return self.send_external_object(host_url, inbox_url, data)
 
     def send_internal_object(self, inbox_url, data):
         ret = None
-        ret_status = 500
+        ret_status = 400
+        serializer = InboxSerializer(data=data)
+        if serializer.is_valid():
+            author_uuid = self.parse_author_uuid_from_inbox(inbox_url)
+            try:
+                author_obj = Author.objects.get(id=author_uuid)
+                serializer.save(author=author_obj)
+                ret = serializer.data
+                ret_status = 201
+            except Exception as e:
+                logger.error('Failed to create inbox object for author_uuid [%s]. e [%s]', author_uuid, e)
+                ret = e
+        else:
+            logger.error('Request inbox object has invalid data e [%s]', serializer.errors)
+            ret = serializer.errors
         return ret, ret_status
-
+    
     def send_external_object(self, host_url, inbox_url, data):
         ret = None
         ret_status = 500
@@ -126,3 +138,16 @@ class NodeComm():
         '''
         object_uuid = url.rstrip('/').split('/')[-1]
         return object_uuid if object_uuid else None
+
+    def parse_author_uuid_from_inbox(self, url):
+        '''
+        Return an author's UUID
+        Assume URL looks like:
+            http://sitename.com/api/authors/d3bb924f-f37b-4d14-8d8e-f38b09703bab/inbox/
+        '''
+        short_url = None
+        if url.endswith('/'):
+            short_url = url[:-6]
+        else:
+            short_url = url[:-5]
+        return self.parse_object_uuid(short_url)

@@ -1,19 +1,25 @@
 #!/bin/sh
-# 2023-03-07
-# call-node.sh
-# Do a node-to-node communication
+# 2023-03-18
+# send-node.sh
+# Do a POST node-to-node communication
 
 # set -x
 if [ "#$APP_URL" = "#" ]; then echo "ERR Could could not find $APP_URL in env, is your env setup?"; exit 1; fi
-if [ "#$1" = "#" -o "#$2" = "#" ]; then echo "Usage $0 <object_type> <foreign_node_url>"; exit 1; fi
-object_type="$1"
+if [ $# -lt 3 ]; then echo "Usage $0 <authors_inbox> <foreign_node_url> <object_type> [summary]"; exit 1; fi
+authors_inbox="$1"
 foreign_node_url="$2"
+object_type="$3"
+
+summary="I sent you a $object_type"
+if [ "#$4" != "#" ]; then summary="$4"; fi
 
 auth_hdr=$(./get-auth.sh 'bearer' $(cat .username) $(cat .password))
-call_node_url="${NODE_API}/"
+
+send_node_url="${NODE_API}/?url=${authors_inbox}"
 cnt_body=`cat <<EOF
 {
-  "url": "$foreign_node_url",
+  "summary": "$summary",
+  "object": "$foreign_node_url",
   "type": "$object_type"
 }
 EOF`
@@ -25,13 +31,14 @@ hdr_dump=`mktemp`
 rsp=`curl -sX POST \
      -D "$hdr_dump" \
      -d "$cnt_body" \
+     --trace-ascii x.txt \
      -H "Content-Type: application/json" \
      -H "$auth_hdr" \
-     "$call_node_url"`
+     "$send_node_url"`
 e=$?
 if [ $e -ne 0 ]
 then
-    echo "ERR Could not POST to $call_node_url"
+    echo "ERR Could not POST to $send_node_url"
     cat "$hdr_dump"; rm "$hdr_dump"
     echo "$rsp"
     exit $e

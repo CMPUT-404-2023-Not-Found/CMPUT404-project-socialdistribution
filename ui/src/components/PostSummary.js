@@ -16,9 +16,9 @@ const PostSummary = ({...data}) => {
         <a onClick={() => navigate(`/posts/${postId}`)}>View Details</a>
         <p>Comments: {data.commentCount}, Likes: {data.likeCount}</p>
         <p>Full payload</p>
-        {/* <p>
+        <p>
           {JSON.stringify(data)}
-        </p> */}
+        </p>
     </div>
   )
 }

@@ -46,6 +46,7 @@ const CreatePost = () => {
 
     //  async functions -------------------------------------------
 
+    // This code is adapted from a post by Endless on StackOverflow on 2018-01-09, retrieved on 2023-03-17, found here
     // https://stackoverflow.com/questions/48172934/error-using-async-and-await-with-filereader
     const getFileData = (file) => {
         return new Promise((resolve) => {

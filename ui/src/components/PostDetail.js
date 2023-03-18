@@ -68,7 +68,10 @@ const PostDetail = () => {
                 </ReactMarkdown>
             )
         } else if (contentType === 'application/base64') {
-            // do something
+            // for now it should work with .gif or whatever
+            return (
+                <img src={content}></img>
+            )
         } else {
             return (
                 <img src={content}></img>

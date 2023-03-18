@@ -57,6 +57,6 @@ else
     echo "$rsp" | jq 2>/dev/null
     e=$?; if [ $e -ne 0 ]; then echo "$rsp"; exit $e; fi
     post_data=`echo "$rsp" | jq -c 2>/dev/null`
-    echo "`date -Iseconds` $post_data" >> .post.log
+    echo "`date -Is` $post_data" >> .post.log
 fi
 

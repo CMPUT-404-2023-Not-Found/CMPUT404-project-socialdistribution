@@ -1,14 +1,11 @@
 # 2023-03-05
-# comments/tests/base.py
+# api/like/tests/base.py
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from django.utils.crypto import get_random_string
 from rest_framework.test import APIClient, APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.core.management import call_command
-
 
 Author = get_user_model()
 
@@ -48,15 +45,3 @@ class Base(APITestCase):
         Return string http://sitename/authors/<author_uuid>/posts/<post_uuid>/comments/<comment_uuid>/likes
         '''
         return reverse('commentLikeListView', kwargs={'author_uuid': str(author_uuid), 'post_uuid': str(post_uuid), 'comment_uuid': str(comment_uuid)})
-
-    def get_post_like_detail_url(self, author_uuid, post_uuid, owner_uuid):
-        '''
-        Return string http://sitename/authors/<author_uuid>/posts/<post_uuid>/likes/<owner_uuid>
-        '''
-        return reverse('postLikeDetailView', kwargs={'author_uuid': str(author_uuid), 'post_uuid': str(post_uuid), 'owner_uuid': str(owner_uuid)})
-
-    def get_comment_like_detail_url(self, author_uuid, post_uuid, comment_uuid, owner_uuid):
-        '''
-        Return string http://sitename/authors/<author_uuid>/posts/<post_uuid>/comments/<comment_uuid>/likes/<owner_uuid>
-        '''
-        return reverse('commentLikeDetailView', kwargs={'author_uuid': str(author_uuid), 'post_uuid': str(post_uuid), 'comment_uuid': str(comment_uuid), 'owner_uuid': str(owner_uuid)})

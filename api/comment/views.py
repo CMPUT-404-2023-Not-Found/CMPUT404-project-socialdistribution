@@ -4,6 +4,7 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from django.shortcuts import render
 from .serializers import CommentSerializer
 from post.serializers import PostSerializer
+from .pagination import CommentPagination
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -22,6 +23,7 @@ rev = 'rev: $xujSyn7$x' # not really sure what to set this to
 class CommentListCreateView(ListCreateAPIView):
     serializer_class = CommentSerializer
     queryset = Comment.objects.all()
+    pagination_class = CommentPagination
     lookup_url_kwarg = 'post_uuid'
 
     # I think this is is the method that is ultimately called when a post request is made to this url
@@ -37,6 +39,7 @@ class CommentListCreateView(ListCreateAPIView):
     
     def get_queryset(self):
         logger.info(rev)
+        self.request.kwargs = self.kwargs
         post_uuid = self.kwargs.get(self.lookup_url_kwarg)
         if (self.request.query_params): # type: ignore
             logger.info('Get recent comments for post_uuid: [%s] with query_params [%s]', post_uuid, str(self.request.query_params)) # type: ignore

@@ -4,6 +4,7 @@
 from django.urls import reverse
 from django.utils.crypto import get_random_string
 from rest_framework import status
+import uuid
 
 from post.models import Post
 from post.views import PostListCreateView
@@ -97,7 +98,12 @@ class PostViewTests(Base):
     Test Post view GET /authors/uuid/posts/uuid
     '''
     def test_get_post_detail(self):
-        pass
+        detail_post_url = self.get_detail_post_url(self.author.id, self.author_post_uuid)
+        detail_response = self.author_client.get(detail_post_url)
+        self.assertEqual(detail_response.status_code, status.HTTP_200_OK)
+
+        expect_post_node_id = f'{self.author.get_node_id()}/posts/{self.author_post_uuid}'
+        self.assertEqual(detail_response.data['id'], expect_post_node_id)
     
     def test_get_public_post_as_stranger(self):
         pass
@@ -133,7 +139,10 @@ class PostViewTests(Base):
     Test Post view POST /authors/uuid/posts/uuid
     '''
     def test_update_post(self):
-        pass
+        detail_post_url = self.get_detail_post_url(self.author.id, self.author_post_uuid)
+        test_post_data = self.post_data
+        detail_response = self.author_client.post(detail_post_url, data=test_post_data)
+        self.assertEqual(detail_response.status_code, status.HTTP_200_OK)
     
     def test_update_post_without_author_uuid(self):
         pass
@@ -163,7 +172,14 @@ class PostViewTests(Base):
     Test Post view PUT /authors/uuid/posts/uuid
     '''
     def test_put_post_with_id(self):
-        pass
+        test_post_uuid = str(uuid.uuid4())
+        detail_post_url = self.get_detail_post_url(self.author.id, test_post_uuid)
+        test_post_data = self.post_data
+        test_post_data['description'] = 'test'
+        detail_response = self.author_client.put(detail_post_url, data=test_post_data)
+        self.assertEqual(detail_response.status_code, status.HTTP_201_CREATED)
+        expect_post_node_id = f'{self.author.get_node_id()}/posts/{test_post_uuid}'
+        self.assertEqual(detail_response.data['id'], expect_post_node_id)
 
     def test_put_post_without_author_uuid(self):
         pass
@@ -193,7 +209,9 @@ class PostViewTests(Base):
     Test Post view DELETE /authors/uuid/posts/uuid
     '''
     def test_delete_post(self):
-        pass
+        detail_post_url = self.get_detail_post_url(self.author.id, self.author_post_uuid)
+        detail_response = self.author_client.delete(detail_post_url)
+        self.assertEqual(detail_response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_delete_post_without_author_uuid(self):
         pass

@@ -1,5 +1,5 @@
-# 2023-03-05
-# comments/tests/base.py
+# 2023-03-15
+# follower/tests/base.py
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -15,7 +15,7 @@ class Base(APITestCase):
     Base class for Author test suite
     '''
     app_host = settings.APP_URL
-    fixtures = ['fixtures/small-comments.json']
+    fixtures = ['fixtures/db.json']
 
     def setUp(self):
         self.author = Author.objects.get(username='georgerrmartin')
@@ -33,16 +33,16 @@ class Base(APITestCase):
         client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
         return client
     
-    def get_comment_url(self, author_uuid, post_uuid):
+    def get_followers_url(self, author_uuid):
         '''
-        Return string http://sitename/authors/<author_uuid>/posts/<post_uuid>/comments
+        Return string http://sitename/authors/<author_uuid>/followers/
         '''
-        return reverse('comment', kwargs={'author_uuid': str(author_uuid), 'post_uuid': str(post_uuid)})
+        return reverse('listFollower', kwargs={'author_uuid': str(author_uuid)})
     
-    def get_comment_detail_url(self, author_uuid, post_uuid, uuid):
+    def get_follower_detail_url(self, author_uuid, follower ):
         '''
-        Return string http://sitename/authors/<author_uuid>/
+        Return string http://sitename/authors/<author_uuid>/followers/<follower>/
         '''
-        return reverse('detailComment', kwargs={'author_uuid': str(author_uuid), 'post_uuid': str(post_uuid), 'id': str(uuid)})
+        return reverse('detailFollower', kwargs={'author_uuid': str(author_uuid),'follower': str(follower)})
 
 

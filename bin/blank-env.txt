@@ -6,9 +6,13 @@
 export APP_HOST='localhost:8000'
 export APP_URL="http://${APP_HOST}"
 export AUTHOR_API="${APP_URL}/api/authors"
+export NODE_API="${APP_URL}/api/node"
 export POST_API="${AUTHOR_API}/%s/posts"
-export TOKEN_API="$APP_URL/api/token"
-export NODE_API="$APP_URL/api/node"
+export TOKEN_API="${APP_URL}/api/token"
+export COMMENT_API="${AUTHOR_API}/%s/posts/%s/comments"
+
+export FIXTURE_FILES='fixtures/db.json fixtures/authors.json fixtures/comments.json fixtures/likes.json fixtures/node-group.json fixtures/posts.json fixtures/small-comments.json'
 
 # Personalization
 export MONIKER=''
+export AUTHOR_NODE_ID="${AUTHOR_API}/${AUTHOR_UUID}"

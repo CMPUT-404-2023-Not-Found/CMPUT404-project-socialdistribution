@@ -27,3 +27,6 @@ class Comment(Model):
 
     def __str__(self):
         return f'Comment by: {self.author} on : {self.post}, {self.comment}'
+
+    def get_node_id(self):
+        return f'{self.post.get_node_id()}/comments/{self.id}'

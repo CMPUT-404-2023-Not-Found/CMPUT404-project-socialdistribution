@@ -57,18 +57,22 @@ class NodeView(GenericAPIView):
         Post an object to a node's author's inboxes
         '''
         logger.info(rev)
+        req_data = request.data
+        if not req_data.get('summary'): 
+            requester_name = request.user.displayName if request.user.displayName else request.user.username
+            req_data['summary'] = f'${requester_name} sent a ${req_data.type}'
+
         serializer_class = self.get_serializer_class()
-        serializer = serializer_class(data=request.data)
+        serializer = serializer_class(data=req_data)
         if not serializer.is_valid():
             logger.error('Request data is bad [%s]', serializer.error_messages)
             return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
-        request_data = serializer.validated_data
+        data_to_send = serializer.validated_data
 
-        object_url = request_data.get('url')
-        object_type = request_data.get('type')
-        logger.info('Doing lookup of object_type [%s] object_url [%s]', object_type, object_url)
-        object_data = NodeComm.get_object(type=object_type, url=object_url)
-        if object_data:
-            return Response(status=status.HTTP_200_OK, data=object_data)
+        object_url = request.POST.get('url', '')
+        logger.info('Sending a [%s] object to inbox [%s]', data_to_send.type, object_url)
+        object_sent, response_status = NodeComm.send_object(url=object_url, data=data_to_send)
+        if object_sent:
+            return Response(status=status.HTTP_201_CREATED, data=data_to_send)
         else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(status=response_status)

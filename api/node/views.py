@@ -1,17 +1,15 @@
 # 2023-02-13
 # node/views.py
 
-from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
-from rest_framework.renderers import JSONRenderer
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 import logging
 
 from .models import Node
 from .serializers import NodeRetrieveSerializer, NodeSendSerializer
 from utils.node_comm import NodeComm
-from utils.permissions import IsAuthenticatedWithJWT
 
 NodeComm = NodeComm()
 
@@ -23,7 +21,7 @@ class NodeView(GenericAPIView):
     Node view for node-to-node communication
     '''
     queryset = Node.objects.all()
-    permission_classes = [IsAuthenticatedWithJWT]
+    permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
         if (self.request.method in ['post', 'put']):

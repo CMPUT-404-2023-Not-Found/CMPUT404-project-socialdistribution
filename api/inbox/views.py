@@ -43,7 +43,10 @@ class InboxListCreateDeleteView(DestroyAPIView, ListCreateAPIView):
         POST Add new object to author's inbox
         '''
         logger.info(rev)
-        logger.info('Got new inbox object request data [%s]', request.data)
+        logger.info('Got new inbox object request data: %s', request.data)
+        serializer = self.get_serializer(request.data)
+        if not serializer.is_valid():
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return super().post(request, *args, **kwargs)
 
     def perform_create(self, serializer):

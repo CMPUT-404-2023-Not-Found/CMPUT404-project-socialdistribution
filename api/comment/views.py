@@ -1,6 +1,7 @@
 # 2023-02-25
 # comment/views.py
 
+from drf_spectacular.utils import extend_schema
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.permissions import IsAuthenticated
 
@@ -13,11 +14,11 @@ from utils.permissions import NodeReadOnly
 
 import logging
 logger = logging.getLogger('django')
-rev = 'rev: $xnaoie2$x'
+rev = 'rev: $xuasEcn7$x'
 
-# This code is modifed from a video tutorial from Cryce Truly on 2020-06-19 retrieved on 2023-02-16, to Youtube crycetruly
-# video here:
-# https://youtu.be/B3HGwFlBvi8
+import logging
+logger = logging.getLogger('django')
+rev = 'rev: $xujSyn7$x' # not really sure what to set this to
 
 class CommentListCreateView(ListCreateAPIView):
     serializer_class = CommentSerializer
@@ -26,6 +27,9 @@ class CommentListCreateView(ListCreateAPIView):
     lookup_url_kwarg = 'post_uuid'
     permission_classes = [IsAuthenticated|NodeReadOnly]
 
+    @extend_schema(
+        operation_id='comment_create'
+    )
     def perform_create(self, serializer):
         logger.info(rev)
         post_uuid = self.kwargs.get(self.lookup_url_kwarg)

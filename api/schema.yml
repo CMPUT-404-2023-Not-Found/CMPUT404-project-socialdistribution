@@ -714,7 +714,7 @@ paths:
                 $ref: '#/components/schemas/Comment'
           description: ''
     post:
-      operationId: authors_posts_comments_create_2
+      operationId: comment_post_update
       parameters:
       - in: path
         name: author_uuid
@@ -760,7 +760,7 @@ paths:
                 $ref: '#/components/schemas/Comment'
           description: ''
     put:
-      operationId: authors_posts_comments_update
+      operationId: comment_put_create_update
       parameters:
       - in: path
         name: author_uuid

@@ -43,22 +43,3 @@ class CommentListCreateView(ListCreateAPIView):
         else:
             logger.info('Get recent comments for post_uuid: [%s]', post_uuid)
         return self.queryset.filter(post_id=post_uuid).order_by('-published')
-
-class CommentDetailView(RetrieveUpdateDestroyAPIView):
-    serializer_class = CommentSerializer
-    queryset = Comment.objects.all()
-    lookup_field = 'id'
-    permission_classes = [IsAuthenticatedWithJWT|IsOwner]
-    http_method_names = ['get', 'head', 'options', 'delete']
-
-    def get_object(self):
-        logger.info(rev)
-        comment_id = self.kwargs.get(self.lookup_field)
-        logger.info('Getting content for comment id: [%s]', comment_id)
-        return super().get_object()
-    
-    def perform_destroy(self, instance):
-        logger.info(rev)
-        comment_id = self.kwargs.get(self.lookup_field)
-        logger.info('Deleting comment id: [%s]', comment_id)
-        return super().perform_destroy(instance)

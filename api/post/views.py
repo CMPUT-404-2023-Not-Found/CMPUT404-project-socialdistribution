@@ -4,12 +4,12 @@
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .serializers import PostSerializer
 from .models import Author
 from .models import Post
+from utils.permissions import IsAuthenticatedWithJWT, NodeReadOnly, OwnerCanWrite
 
 import logging
 logger = logging.getLogger('django')
@@ -22,7 +22,7 @@ class PostListCreateView(ListCreateAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
     lookup_url_kwarg = 'author_uuid'
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedWithJWT|OwnerCanWrite|NodeReadOnly]
 
     @extend_schema(
         operation_id='post_create'
@@ -47,6 +47,7 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
     lookup_field = 'id'
+    permission_classes = [IsAuthenticatedWithJWT|OwnerCanWrite|NodeReadOnly]
 
     def get_object(self):
         logger.info(rev)

@@ -26,10 +26,10 @@ class AuthorViewTests(Base):
     
     def test_get_list_of_authors_without_permissions(self):
         '''
-        Test getting list of authors with non-admin permissions
+        Test getting list of authors as an author
         '''
         response = self.author_client.get(self.get_author_url())
-        self.assertEquals(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEquals(response.status_code, status.HTTP_200_OK)
     
     def test_get_list_of_authors_as_anonymous_user(self):
         '''
@@ -84,7 +84,7 @@ class AuthorViewTests(Base):
         '''
         test_author_data = {'displayName': 'test'}
         response = self.author_client.post(self.get_author_detail_url(str(self.another_author.id)), test_author_data)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         another_author_profile = Author.objects.get(username=self.another_author.get_username())
         self.assertNotEqual(another_author_profile.display_name, 'test')
@@ -95,7 +95,7 @@ class AuthorViewTests(Base):
         '''
         test_author_data = {'username': 'testme01'}
         response = self.author_client.post(self.get_author_detail_url(str(self.another_author.id)), test_author_data)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         author_profile = Author.objects.get(username=self.author.get_username())
         self.assertNotEqual(author_profile.get_username, 'testme01')

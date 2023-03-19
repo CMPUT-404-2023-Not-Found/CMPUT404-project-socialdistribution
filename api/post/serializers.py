@@ -6,6 +6,7 @@ from rest_framework import serializers
 from rest_framework.fields import CharField, ChoiceField, DateTimeField, IntegerField, ListField, URLField
 
 from author.serializers import ExistingAuthorSerializer
+from comment.serializers import CommentSerializer
 from .models import Post
 
 import logging
@@ -40,6 +41,11 @@ class PostSerializer(serializers.ModelSerializer):
     @extend_schema_field(URLField)
     def get_comments(self, obj): 
         return obj.author.get_node_id() + '/posts/' + str(obj.id) + '/comments'
+
+    # commentsSrc     = serializers.SerializerMethodField('get_commentsSrc')
+    # @extend_schema_field(CommentSerializer)
+    # def get_commentsSrc(self, obj):
+    #     pass
 
     class Meta:
         model = Post

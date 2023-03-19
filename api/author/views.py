@@ -7,14 +7,15 @@ from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
-import logging
 
 from .models import Author
+from .pagination import AuthorPagination
 from .serializers import NewAuthorSerializer, ExistingAuthorSerializer
 from utils.permissions import AnonymousCanPost, IsAuthenticatedWithJWT, NodeReadOnly
 
+import logging
 logger = logging.getLogger('django')
-rev = 'rev: $xJekOd1$x'
+rev = 'rev: $xNs8Od1$x'
 
 class AuthorView(ListCreateAPIView):
     '''
@@ -23,6 +24,7 @@ class AuthorView(ListCreateAPIView):
     serializer_class = NewAuthorSerializer
     queryset = Author.objects.all()
     permission_classes = [IsAdminUser|AnonymousCanPost]
+    pagination_class = AuthorPagination
 
     def get(self, request, *args, **kwargs):
         '''

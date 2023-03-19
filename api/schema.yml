@@ -1351,6 +1351,7 @@ components:
           maxLength: 128
         object:
           type: string
+          format: uri
           readOnly: true
         '@context':
           $ref: '#/components/schemas/@contextEnum'

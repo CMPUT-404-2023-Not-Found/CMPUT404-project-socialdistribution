@@ -4,4 +4,14 @@
 from django.contrib import admin
 
 from .models import Node
-admin.site.register(Node)
+
+class NodeAdmin(admin.ModelAdmin):
+    model = Node
+    list_display = ('host', 'username', 'password')
+    list_display_links = None
+    list_editable = ('host', 'username', 'password')
+    list_filter = ('host',)
+    search_fields = ('host', 'username')
+    ordering = ('host',)
+
+admin.site.register(Node, NodeAdmin)

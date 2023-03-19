@@ -1,7 +1,7 @@
 # 2023-02-25
 # comment/views.py
 
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Comment
@@ -9,7 +9,7 @@ from .pagination import CommentPagination
 from .serializers import CommentSerializer
 from post.models import Post
 from post.serializers import PostSerializer
-from utils.permissions import NodeReadOnly, IsOwner, IsAuthenticatedWithJWT
+from utils.permissions import NodeReadOnly
 
 import logging
 logger = logging.getLogger('django')

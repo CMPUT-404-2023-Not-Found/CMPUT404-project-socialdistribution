@@ -408,7 +408,7 @@ paths:
                 $ref: '#/components/schemas/Post'
           description: ''
     post:
-      operationId: authors_posts_create_2
+      operationId: post_post_update
       parameters:
       - in: path
         name: author_uuid
@@ -448,7 +448,7 @@ paths:
                 $ref: '#/components/schemas/Post'
           description: ''
     put:
-      operationId: authors_posts_update
+      operationId: post_put_create_update
       parameters:
       - in: path
         name: author_uuid

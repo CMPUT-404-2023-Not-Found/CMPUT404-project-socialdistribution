@@ -20,6 +20,7 @@ class CommentAdmin(admin.ModelAdmin):
         return obj.get_node_id()
     node_id.short_description = 'Node Id'
 
+    date_hierarchy = 'published'
     list_display = ('node_id', 'comment', 'content_type', 'post_id', 'post_title', 'author', 'published')
     list_filter = ('post__title', 'author', 'content_type')
     search_fields = ('id', 'author', 'comment', 'post__title')

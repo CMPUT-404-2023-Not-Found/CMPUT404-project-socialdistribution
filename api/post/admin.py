@@ -15,6 +15,7 @@ class PostAdmin(admin.ModelAdmin):
         return obj.author.display_name if obj.author.display_name else obj.author.username
     author_name.short_description = 'Author'
 
+    date_hierarchy = 'updated_at'
     list_editable = ('visibility', 'unlisted',)
     list_display = ('node_id', 'author_name', 'title', 'description', 'content_type', 'visibility', 'unlisted', 'updated_at')
     list_filter = ('id', 'title', 'content_type', 'updated_at')

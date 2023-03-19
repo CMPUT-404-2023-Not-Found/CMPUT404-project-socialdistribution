@@ -15,6 +15,7 @@ class FollowerAdmin(admin.ModelAdmin):
         return obj.followee.get_node_id()
     followee_node_id.short_description = 'Followee Node Id'
 
+    date_hierarchy = 'followed_at'
     list_display = ('follower', 'followee_name', 'followee_node_id', 'followed_at')
     list_filter = ('followee', 'follower')
     search_fields = ('follower', 'followee__display_name')

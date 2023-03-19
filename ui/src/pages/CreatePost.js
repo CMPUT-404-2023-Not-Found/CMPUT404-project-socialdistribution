@@ -31,6 +31,15 @@ const CreatePost = () => {
     useEffect(() => {
         const getOptions = async () => {
             const [response, data] = await Backend.options(`/api/authors/${user.user_id}/posts/`, authTokens.access);
+            data.actions.POST = {
+                ...data.actions.POST,
+                'file': {
+                    'type' : 'file',
+                    'label': 'File',
+                    'required': false,
+                    'read_only': false,
+                }
+            }
             setOptions(data);
             console.log(data);
         }
@@ -39,7 +48,33 @@ const CreatePost = () => {
     }, []);
 
     //  async functions -------------------------------------------
+
+    // This code is adapted from a post by Endless on StackOverflow on 2018-01-09, retrieved on 2023-03-17, found here
+    // https://stackoverflow.com/questions/48172934/error-using-async-and-await-with-filereader
+    const getFileData = (file) => {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.readAsDataURL(file);
+        })
+    }
+
     const createPost = async (formData) => {
+        let fileContentTypes = ['image/jpeg;base64', 'image/png;base64', 'application/base64']
+        if (fileContentTypes.includes(formData.contentType)) {
+            let fileList = formData.file;
+    
+            let fileBase64 = await getFileData(fileList[0]);
+
+            if (fileBase64.length > 100000) {
+                alert('Image is too large to upload. Max size: 50kb');
+                return;
+            }
+            formData.content =  fileBase64;
+        }
+
+        delete formData.file;
+
         const [response, data] = await Backend.post(`/api/authors/${user.user_id}/posts/`, authTokens.access, JSON.stringify(formData));
         if (response.status && response.status === 201) {
             navigate('/posts');
@@ -48,6 +83,7 @@ const CreatePost = () => {
         } else {
             console.log('Failed to create post');
         }
+        console.log(data);
     }
 
 

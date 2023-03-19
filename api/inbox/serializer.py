@@ -25,3 +25,18 @@ class InboxSerializer(serializers.ModelSerializer):
                     'type', 'author',
                     'object'
         ]
+
+    def to_internal_value(self, data):
+        new_data = {
+            'context': data.get('@context', ''),
+            'summary': data.get('summary', ''),
+            'type': data.get('type', ''),
+            'author': data.get('author', {}).get('url', ''),
+            'object': data.get('object', '')
+        }
+        return super().to_internal_value(new_data)
+
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance)
+    #     representation['@context'] = representation.pop('context')
+    #     return representation

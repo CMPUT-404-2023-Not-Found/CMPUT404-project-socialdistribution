@@ -43,4 +43,10 @@ For more information about required dependencies, setting up and environment to 
 
 # Integration & Collaboration
 
+## TLDR
+
+- Basic Auth Creds are `node01:P*ssw0rd!` to `https://sd7-api.herokuapp.com/api`
+- API https://sd7-api.herokuapp.com/api/
+- OpenAPI link https://sd7-api.herokuapp.com/api/schema/docs/
+
 Trying to integrate with us? Great! Go to our [integration wiki](https://github.com/CMPUT-404-2023-Not-Found/CMPUT404-project-socialdistribution/wiki/OpenAPI-and-Integration) to get started.

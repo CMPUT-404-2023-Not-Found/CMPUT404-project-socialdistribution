@@ -1,20 +1,19 @@
 # 2023-02-25
 # comment/views.py
+
+from drf_spectacular.utils import extend_schema
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from django.shortcuts import render
-from .serializers import CommentSerializer
-from post.serializers import PostSerializer
-from .pagination import CommentPagination
-
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-import logging
 
-from .models import Comment
 from post.models import Post
+from post.serializers import PostSerializer
+from .serializers import CommentSerializer
+from .pagination import CommentPagination
+from .models import Comment
 
+import logging
 logger = logging.getLogger('django')
-rev = 'rev: $xujSyn7$x' # not really sure what to set this to
+rev = 'rev: $xuasEcn7$x'
 
 # This code is modifed from a video tutorial from Cryce Truly on 2020-06-19 retrieved on 2023-02-16, to Youtube crycetruly
 # video here:
@@ -26,9 +25,9 @@ class CommentListCreateView(ListCreateAPIView):
     pagination_class = CommentPagination
     lookup_url_kwarg = 'post_uuid'
 
-    # I think this is is the method that is ultimately called when a post request is made to this url
-    # because ListCreateAPIView has a post method, which calls a create method, which calls a 
-    # perform_create method. I think we are overriding it here
+    @extend_schema(
+        operation_id='comment_create'
+    )
     def perform_create(self, serializer):
         logger.info(rev)
         post_uuid = self.kwargs.get(self.lookup_url_kwarg)
@@ -41,8 +40,8 @@ class CommentListCreateView(ListCreateAPIView):
         logger.info(rev)
         self.request.kwargs = self.kwargs
         post_uuid = self.kwargs.get(self.lookup_url_kwarg)
-        if (self.request.query_params): # type: ignore
-            logger.info('Get recent comments for post_uuid: [%s] with query_params [%s]', post_uuid, str(self.request.query_params)) # type: ignore
+        if (self.request.query_params):
+            logger.info('Get recent comments for post_uuid: [%s] with query_params [%s]', post_uuid, str(self.request.query_params))
         else:
             logger.info('Get recent comments for post_uuid: [%s]', post_uuid)
         return self.queryset.filter(post_id=post_uuid).order_by('-published')
@@ -58,10 +57,16 @@ class CommentDetailView(RetrieveUpdateDestroyAPIView):
         logger.info('Getting content for comment id: [%s]', comment_id)
         return super().get_object()
 
+    @extend_schema(
+        operation_id='comment_post_update'
+    )
     def post(self, request, *args, **kwargs):
         logger.info(rev)
         return self.update(request, *args, **kwargs)
 
+    @extend_schema(
+        operation_id='comment_put_create_update'
+    )
     def put(self, request, *args, **kwargs):
         logger.info(rev)
         logger.info('Validating content for comment id: [%s]', kwargs.get(self.lookup_field))

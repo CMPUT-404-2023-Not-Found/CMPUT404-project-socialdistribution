@@ -1,8 +1,7 @@
 # 2023-02-16
 # post/views.py
 
-from django.shortcuts import render
-import logging
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -12,6 +11,7 @@ from .serializers import PostSerializer
 from .models import Author
 from .models import Post
 
+import logging
 logger = logging.getLogger('django')
 rev = 'rev: $xujSyn7$x'
 
@@ -24,6 +24,9 @@ class PostListCreateView(ListCreateAPIView):
     lookup_url_kwarg = 'author_uuid'
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(
+        operation_id='post_create'
+    )
     def perform_create(self, serializer):
         logger.info(rev)
         author_uuid = self.kwargs.get(self.lookup_url_kwarg)
@@ -51,10 +54,16 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
         logger.info('Getting content for post id: [%s]', post_id)
         return super().get_object()
 
+    @extend_schema(
+        operation_id='post_post_update'
+    )
     def post(self, request, *args, **kwargs):
         logger.info(rev)
         return self.update(request, *args, **kwargs)
 
+    @extend_schema(
+        operation_id='post_put_create_update'
+    )
     def put(self, request, *args, **kwargs):
         logger.info(rev)
         post_uuid = kwargs.get(self.lookup_field)

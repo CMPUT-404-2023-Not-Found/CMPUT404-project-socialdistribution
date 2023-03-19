@@ -1,20 +1,20 @@
-from rest_framework import serializers
-from rest_framework.fields import ChoiceField, DateTimeField, IntegerField, URLField
-
-from author.serializers import ExistingAuthorSerializer
-from post.serializers import PostSerializer
-from .models import Comment
-from author.models import Author
-from urllib.parse import urlparse
+# 2023-03-18
+# api/comment/serializers.py
 
 from django.conf import settings
+from drf_spectacular.utils import extend_schema_field
+from rest_framework import serializers
+from rest_framework.fields import CharField, ChoiceField, DateTimeField, JSONField, URLField
+from urllib.parse import urlparse
 
-# This code is modifed from a video tutorial from Cryce Truly on 2020-06-19 retrieved on 2023-02-16, to Youtube crycetruly
-# video here:
-# https://youtu.be/B3HGwFlBvi8
+from author.models import Author
+from author.serializers import ExistingAuthorSerializer
+from .models import Comment
+
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.SerializerMethodField('get_author')
 
+    @extend_schema_field(ExistingAuthorSerializer)
     def get_author(self, obj):
         url = str(obj.author)
         parsedURL = urlparse(url)
@@ -41,14 +41,14 @@ class CommentSerializer(serializers.ModelSerializer):
         return str(obj.author)
 
     id              = serializers.SerializerMethodField('get_id')
-    # http://localhost:8000/authors/<UUID>/posts/<UUID>/comments/<UUID>
+    @extend_schema_field(URLField)
     def get_id(self, obj): return str(obj.author) + '/posts/' + str(obj.post.id) + '/comments/' + str(obj.id) 
 
     published       = DateTimeField(read_only=True, required=False)
-
     contentType     = ChoiceField(choices=Comment.CONTENT_TYPE_OPTIONS, source='content_type', required=True)
-
+    
     type            = serializers.SerializerMethodField('get_type')
+    @extend_schema_field(CharField)
     def get_type(self, obj): return 'comment'
 
     class Meta:

@@ -11,7 +11,6 @@ from post.models import Post
 from .pagination import LikePagination
 
 from comment.models import Comment
-from utils.permissions import IsAuthenticatedWithJWT
 
 import logging
 logger = logging.getLogger('django')

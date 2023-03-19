@@ -45,7 +45,7 @@ class AuthorManager(BaseUserManager):
 class Author(AbstractBaseUser, PermissionsMixin):
     # Identification fields
     id                  = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    host                = models.URLField(default=settings.APP_URL, max_length=128)
+    host                = models.URLField(default=settings.APP_URL, max_length=255)
     username            = models.CharField(max_length=32, unique=True, db_index=True)
 
     # Modification fields
@@ -55,8 +55,8 @@ class Author(AbstractBaseUser, PermissionsMixin):
     
     # Personalization fields
     display_name        = models.CharField(blank=True, default='', max_length=128, verbose_name='Display Name')
-    github              = models.URLField(blank=True, default='', max_length=128, verbose_name='GitHub')
-    profile_image       = models.URLField(blank=True, default='', max_length=128, verbose_name='Profile Image')
+    github              = models.URLField(blank=True, default='', max_length=255, verbose_name='GitHub')
+    profile_image       = models.URLField(blank=True, default='', max_length=255, verbose_name='Profile Image')
 
     # System Fields
     is_staff            = models.BooleanField(default=False)

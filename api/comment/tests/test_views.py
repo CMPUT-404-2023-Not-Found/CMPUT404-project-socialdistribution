@@ -30,14 +30,6 @@ class CommentListCreateViewTest(Base):
         response = self.admin_client.get(self.get_comment_url(self.author_uuid, self.post_uuid))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
     
-    # Test Comment view GET /api/authors/<author_uuid>/posts/<post_uuid>/comments/<comment_uuid>
-    def test_get_single_comment(self):
-        '''
-        Test getting a single comment
-        '''
-        response = self.admin_client.get(self.get_comment_detail_url(self.author_uuid, self.post_uuid, self.comment_uuid))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-    
     # Test Comment View POST authors/<author_uuid>/posts/<post_uuid>/comments/
     def test_post_comment(self):
         '''

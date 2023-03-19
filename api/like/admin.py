@@ -23,6 +23,7 @@ class LikeAdmin(admin.ModelAdmin):
         return obj.comment.comment if obj.comment else None
     comment_content.short_description = 'Comment Content'
 
+    empty_value_display = '-empty-'
     list_display = ('author', 'post_node_id', 'comment_node_id', 'summary', 'post_title', 'comment_content', 'liked_at')
     list_filter = ('author', 'post__title', 'comment__comment', 'liked_at')
     search_fields = ('author', 'summary', 'post__title', 'comment__comment')

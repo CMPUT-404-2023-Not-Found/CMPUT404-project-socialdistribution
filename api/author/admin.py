@@ -24,7 +24,11 @@ class AuthorAdmin(UserAdmin):
         return ' '.join(groups)
     group.short_description = 'Groups'
 
-    list_display = ('id', 'username', 'host', 'is_superuser', 'is_active', 'group', 'last_login')
+    def node_id(self, user):
+        return user.get_node_id()
+    node_id.short_description = 'Node Id'
+
+    list_display = ('node_id', 'username', 'is_superuser', 'is_active', 'group', 'last_login')
     list_filter = ('id', 'username', 'host', 'is_superuser', 'is_active', 'last_login')
     fieldsets = (
         (None, {'fields': ('username', 'password', 'host', 'display_name', 'github', 'profile_image')}),

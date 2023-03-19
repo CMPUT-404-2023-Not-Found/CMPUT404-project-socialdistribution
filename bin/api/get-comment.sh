@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # 2023-03-04
 # get-comment.sh
 # Get a specific comment for a post

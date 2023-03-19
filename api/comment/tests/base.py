@@ -38,11 +38,3 @@ class Base(APITestCase):
         Return string http://sitename/authors/<author_uuid>/posts/<post_uuid>/comments
         '''
         return reverse('comment', kwargs={'author_uuid': str(author_uuid), 'post_uuid': str(post_uuid)})
-    
-    def get_comment_detail_url(self, author_uuid, post_uuid, uuid):
-        '''
-        Return string http://sitename/authors/<author_uuid>/
-        '''
-        return reverse('detailComment', kwargs={'author_uuid': str(author_uuid), 'post_uuid': str(post_uuid), 'id': str(uuid)})
-
-

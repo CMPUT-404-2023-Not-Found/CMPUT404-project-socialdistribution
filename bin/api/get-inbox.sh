@@ -26,14 +26,16 @@ fi
 auth_hdr=$(./get-auth.sh 'bearer' $(cat .username) $(cat .password))
 get_inbox_url="${AUTHOR_API}/$author_uuid/inbox/${page_query}"
 
-rsp=`curl -s -H "$auth_hdr" "$get_inbox_url"`
+hdr_dump=`mktemp`
+rsp=`curl -s -D "$hdr_dump" -H "$auth_hdr" "$get_inbox_url"`
 e=$?; if [ $e -ne 0 ]; then echo -n "ERR Could not GET to $get_inbox_url "; echo "$rsp"; exit $e; fi
 
 echo "$rsp" | grep -q "items"
 e=$?
 if [ $e -ne 0 ]
 then
-    echo "ERR Could not get author $author_uuid's inbox"
+    cat $hdr_dump >&2
+    echo "ERR Could not get author $author_uuid's inbox" >&2
     echo "$rsp"
 else
     echo "$rsp" | jq 2>/dev/null

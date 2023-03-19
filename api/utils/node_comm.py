@@ -91,6 +91,8 @@ class NodeComm():
     def send_internal_object(self, inbox_url, data):
         ret = None
         ret_status = 400
+        sender_author_info = data.pop('author', {})
+        data['author'] = sender_author_info.get('url', '') if sender_author_info else ''
         serializer = InboxSerializer(data=data)
         if serializer.is_valid():
             author_uuid = self.parse_author_uuid_from_inbox(inbox_url)

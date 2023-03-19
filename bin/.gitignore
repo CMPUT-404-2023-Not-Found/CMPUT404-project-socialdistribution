@@ -6,5 +6,6 @@
 *.refresh_token
 *.username
 *.node-username
+*.node-password
 *.env
 *.env-*

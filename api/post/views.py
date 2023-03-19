@@ -29,7 +29,7 @@ class PostListCreateView(ListCreateAPIView):
         logger.info(rev)
         author_uuid = self.kwargs.get(self.lookup_url_kwarg)
         author_obj = Author.objects.get(id=author_uuid)
-        logger.info('Creating post for author_uuid: [%s]', author_uuid)
+        logger.info('Creating new post for author_uuid: [%s]', author_uuid)
         return serializer.save(author=author_obj)
     
     def get_queryset(self):
@@ -59,13 +59,24 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
 
     def put(self, request, *args, **kwargs):
         logger.info(rev)
-        logger.info('Validating content for post id: [%s]', kwargs.get(self.lookup_field))
-        serializer = PostSerializer(data=request.data)
+        post_uuid = kwargs.get(self.lookup_field)
+        author_uuid = kwargs.get('author_uuid')
+        post_exists = True if Post.objects.filter(id=post_uuid).exists() else False
+        serializer = PostSerializer()
+        if post_exists:
+            logger.info('Got PUT request for post update for author_uuid: [%s] at id: [%s]', author_uuid, post_uuid)
+            post_obj = Post.objects.get(id=post_uuid)
+            serializer = PostSerializer(post_obj, data=request.data, partial=True)
+        else:
+            logger.info('Got PUT request for new post for author_uuid: [%s] at id: [%s]', author_uuid, post_uuid)
+            serializer = PostSerializer(data=request.data)
+    
         if serializer.is_valid():
-            if Author.objects.filter(id=kwargs['author_uuid']):
-                author_uuid = Author.objects.get(id=kwargs['author_uuid'])
-                obj, created = Post.objects.update_or_create(id=kwargs['id'], author=author_uuid, defaults=serializer.validated_data)  # type: ignore
-                return Response(serializer.data, status=status.HTTP_201_CREATED) if created else Response(serializer.data)
+            if Author.objects.filter(id=author_uuid):
+                author_obj = Author.objects.get(id=author_uuid)
+                obj, created = Post.objects.update_or_create(id=kwargs['id'], author=author_obj, defaults=serializer.validated_data)
+                obj_serializer = PostSerializer(obj)
+                return Response(obj_serializer.data, status=status.HTTP_201_CREATED) if created else Response(obj_serializer.data)
             else:
                 logger.error('Cannot create/update post for unknown author id: [%s]', kwargs['author_uuid'])
             

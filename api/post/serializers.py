@@ -17,8 +17,7 @@ rev = 'rev: $xani93n$x'
 class PostSerializer(serializers.ModelSerializer):
     author          = ExistingAuthorSerializer(required=False, read_only=True)
     id              = serializers.SerializerMethodField('get_id')
-    # http://localhost:8000/authors/<UUID>/posts/<UUID>
-    def get_id(self, obj): return obj.author.get_node_id() + '/posts/' + str(obj.id)
+    def get_id(self, obj): return obj.get_node_id()
 
     published       = DateTimeField(read_only=True, required=False)
     updated_at      = DateTimeField(read_only=True, required=False)

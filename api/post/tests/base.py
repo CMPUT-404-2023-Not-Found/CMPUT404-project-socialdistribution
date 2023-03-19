@@ -28,6 +28,7 @@ class Base(APITestCase):
     def setUp(self):
         self.author = Author.objects.get(username='georgerrmartin')
         self.author_client = self.configure_client(self.author)
+        self.author_post_uuid = 'a0dfc41c-4d32-47d1-a567-aed24ae4736e'
         self.admin = Author.objects.get(username='stephenking')
         self.admin_client = self.configure_client(self.admin)
     

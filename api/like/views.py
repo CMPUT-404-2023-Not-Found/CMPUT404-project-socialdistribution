@@ -3,6 +3,7 @@
 # Views for likes on both Post & Comments
 
 from rest_framework.generics import ListAPIView
+from rest_framework.permissions import IsAuthenticated
 
 from .models import Like
 from .serializers import LikeSerializer
@@ -24,7 +25,7 @@ class PostLikeView(ListAPIView):
     queryset = Like.objects.all()
     lookup_url_kwarg = 'post_uuid'
     pagination_class = LikePagination
-    permission_classes = [IsAuthenticatedWithJWT]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         logger.info(rev)
@@ -45,7 +46,7 @@ class CommentLikeView(ListAPIView):
     queryset = Like.objects.all()
     lookup_url_kwarg = 'comment_uuid'
     pagination_class = LikePagination
-    permission_classes = [IsAuthenticatedWithJWT]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         logger.info(rev)

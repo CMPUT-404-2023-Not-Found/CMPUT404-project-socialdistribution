@@ -118,7 +118,9 @@ class NodeComm():
             try:
                 ret = json.loads(r.content.decode('utf-8'))
             except Exception as e:
-                logger.error('Not JSON-parsable in response from [%s]. e [%s]', inbox_url, e)
+                logger.error('Not JSON-parsable in response from [%s]. e [%s] ret status [%s] ret body [%s]', 
+                            inbox_url, e, 
+                            r.status_code, repr(r.content.decode('utf-8')[0:255]))
             ret_status = r.status_code
         return ret, ret_status
 

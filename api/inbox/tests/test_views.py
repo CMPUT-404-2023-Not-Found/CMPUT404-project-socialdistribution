@@ -2,7 +2,6 @@
 # author/tests/test_views.py
 
 from rest_framework import status
-from rest_framework.test import APIClient
 from .base import Base
 
 class InboxViewTests(Base):
@@ -26,10 +25,10 @@ class InboxViewTests(Base):
         test_inbox_data = {'@context': 'https://www.w3.org/ns/activitystreams',
                             'summary': 'Shared post',
                             'type': 'post',
-                            'author': self.second_author.get_node_id(),
+                            'author': self.serialize_author(self.second_author),
                             'object': self.second_author_public_post_node_id
                         }
-        response = self.author_client.post(self.get_inbox_url(self.first_author.id), test_inbox_data)
+        response = self.author_client.post(self.get_inbox_url(self.first_author.id), test_inbox_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
     
     # Test Inbox view DELETE /api/authors/uuid/

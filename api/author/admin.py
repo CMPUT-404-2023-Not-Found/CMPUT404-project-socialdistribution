@@ -24,12 +24,14 @@ class AuthorAdmin(UserAdmin):
         return ' '.join(groups)
     group.short_description = 'Groups'
 
-    def node_id(self, obj):
-        return obj.get_node_id()
+    def node_id(self, user):
+        return user.get_node_id()
     node_id.short_description = 'Node Id'
 
-    list_display = ('node_id', 'username', 'host', 'is_superuser', 'is_active', 'group', 'last_login')
-    list_filter = ('id', 'username', 'host', 'is_superuser', 'is_active', 'last_login')
+    date_hierarchy = 'updated_at'
+    list_editable = ('is_active', )
+    list_display = ('node_id', 'username', 'display_name', 'is_superuser', 'is_active', 'group', 'last_login', 'updated_at')
+    list_filter = ('host', 'is_superuser', 'is_active', 'last_login')
     fieldsets = (
         (None, {'fields': ('username', 'password', 'host', 'display_name', 'github', 'profile_image')}),
         ('Permissions', {'fields': ("is_staff", "is_active", "is_superuser", "groups", "user_permissions")})
@@ -44,7 +46,7 @@ class AuthorAdmin(UserAdmin):
             )}
         ),
     )
-    search_fields = ('id', 'username', 'host')
+    search_fields = ('id', 'username', 'host', 'display_name')
     ordering = ('id', 'username', 'host')
 
 admin.site.register(Author, AuthorAdmin)

@@ -11,7 +11,15 @@ class PostAdmin(admin.ModelAdmin):
         return obj.get_node_id()
     node_id.short_description = 'Node Id'
 
-    list_display = ('node_id', 'author', 'title', 'description', 'content_type', 'unlisted', 'visibility', 'published', 'updated_at')
-    list_filter = ('author', 'content_type', 'updated_at')
+    def author_name(self, obj):
+        return obj.author.display_name if obj.author.display_name else obj.author.username
+    author_name.short_description = 'Author'
+
+    date_hierarchy = 'updated_at'
+    list_editable = ('visibility', 'unlisted',)
+    list_display = ('node_id', 'author_name', 'title', 'description', 'content_type', 'visibility', 'unlisted', 'updated_at')
+    list_filter = ('author__display_name', 'author__username', 'content_type', 'updated_at')
+    search_fields = ('id', 'title')
+    ordering = ('id', 'title')
 
 admin.site.register(Post, PostAdmin)

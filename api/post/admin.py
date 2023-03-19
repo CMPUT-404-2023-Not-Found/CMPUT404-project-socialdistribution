@@ -15,7 +15,7 @@ class PostAdmin(admin.ModelAdmin):
     list_display = ('id', 'description', 'categories')
     list_filter = ('author', )
 
-admin.site.register(Post, PostAdmin)
+# admin.site.register(Post, PostAdmin)
 admin.site.register(Category)
 class PostAdmin(admin.ModelAdmin):
     model = Post

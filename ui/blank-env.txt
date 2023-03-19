@@ -1,9 +1,0 @@
-# 2023-02-26
-# *** UI ENV FILE ***
-# This is the blank environment variables file
-# You must:
-#   1. Fill this out with appropraite values
-#   2. Rename ths file to: .env.local
-
-# Backend Django
-REACT_APP_API_URL='http://localhost:8000'

@@ -2,6 +2,7 @@ import React from 'react'
 
 import { useForm } from 'react-hook-form'
 import CheckboxInput from './CheckboxInput';
+import FileInput from './FileInput';
 import SelectInput from './SelectInput';
 import TextInput from './TextInput';
 
@@ -31,6 +32,7 @@ const DynamicForm = ({options, formSubmitFunction}) => {
     const textInputs = [];
     const selectInputs = [];
     const checkboxInputs = [];
+    const fileInputs = [];
 
     if (!options.actions || !options.actions.POST) {
         return (
@@ -49,6 +51,8 @@ const DynamicForm = ({options, formSubmitFunction}) => {
                 selectInputs.push({...obj, "name": property});
             } else if (obj.type === "boolean") {
                 checkboxInputs.push({...obj, "name": property});
+            } else if (obj.type === "file") {
+                fileInputs.push({...obj, "name": property})
             }
         }
     }
@@ -70,6 +74,12 @@ const DynamicForm = ({options, formSubmitFunction}) => {
             {checkboxInputs.map((checkboxInput, i) => {
                 return (
                     <CheckboxInput key={i} register={register} obj={checkboxInput}></CheckboxInput>
+                )
+            })}
+
+            {fileInputs.map((fileInput, i) => {
+                return (
+                    <FileInput key={i} register={register} obj={fileInput}></FileInput>
                 )
             })}
 

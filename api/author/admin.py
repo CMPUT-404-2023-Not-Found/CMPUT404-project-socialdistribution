@@ -28,6 +28,7 @@ class AuthorAdmin(UserAdmin):
         return user.get_node_id()
     node_id.short_description = 'Node Id'
 
+    list_editable = ( 'is_superuser', 'is_active')
     list_display = ('node_id', 'username', 'display_name', 'is_superuser', 'is_active', 'group', 'last_login')
     list_filter = ('host', 'is_superuser', 'is_active', 'last_login')
     fieldsets = (

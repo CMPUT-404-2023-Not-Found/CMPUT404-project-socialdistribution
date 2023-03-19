@@ -1242,7 +1242,8 @@ components:
           type: string
           readOnly: true
         author:
-          type: string
+          allOf:
+          - $ref: '#/components/schemas/ExistingAuthor'
           readOnly: true
         comment:
           type: string
@@ -1254,6 +1255,7 @@ components:
           readOnly: true
         id:
           type: string
+          format: uri
           readOnly: true
       required:
       - author
@@ -1508,7 +1510,8 @@ components:
           type: string
           readOnly: true
         author:
-          type: string
+          allOf:
+          - $ref: '#/components/schemas/ExistingAuthor'
           readOnly: true
         comment:
           type: string
@@ -1520,6 +1523,7 @@ components:
           readOnly: true
         id:
           type: string
+          format: uri
           readOnly: true
     PatchedFollower:
       type: object

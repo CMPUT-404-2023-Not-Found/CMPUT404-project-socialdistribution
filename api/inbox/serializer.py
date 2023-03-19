@@ -15,16 +15,9 @@ class InboxSerializer(serializers.ModelSerializer):
     object          = URLField(source='object_id', required=True)
     author          = URLField(source='sender_author_id', required=True)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['@context'] = ChoiceField(choices=Inbox.W3ContextChoices.choices, source='context', required=False)
-
     class Meta:
         model = Inbox
-        fields = [  'summary',
-                    'type', 'author',
-                    'object'
-        ]
+        fields = [ 'context', 'summary', 'type', 'author', 'object' ]
 
     def to_internal_value(self, data):
         new_data = {
@@ -36,7 +29,7 @@ class InboxSerializer(serializers.ModelSerializer):
         }
         return super().to_internal_value(new_data)
 
-    # def to_representation(self, instance):
-    #     representation = super().to_representation(instance)
-    #     representation['@context'] = representation.pop('context')
-    #     return representation
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['@context'] = representation.pop('context')
+        return representation

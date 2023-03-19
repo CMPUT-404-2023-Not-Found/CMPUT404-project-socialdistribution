@@ -1,8 +1,6 @@
 # 2023-02-18
 # inbox/views.py
 
-from django.shortcuts import render
-import logging
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, DestroyAPIView
 from rest_framework.response import Response
@@ -11,14 +9,17 @@ from author.models import Author
 from inbox.models import Inbox
 from .pagination import InboxPagination
 from .serializer import InboxSerializer
+from utils.permissions import IsOwner, NodesCanPost, NonOwnerCanPost
 
+import logging
 logger = logging.getLogger('django')
-rev = 'rev: $xUfCac2$x'
+rev = 'rev: $xn8sc2$x'
 
 class InboxListCreateDeleteView(DestroyAPIView, ListCreateAPIView):
     serializer_class = InboxSerializer
     queryset = Inbox.objects.all()
     lookup_url_kwarg = 'author_uuid'
+    permission_classes = [IsOwner|NodesCanPost|NonOwnerCanPost]
     pagination_class = InboxPagination
 
     def get(self, request, *args, **kwargs):
@@ -43,6 +44,10 @@ class InboxListCreateDeleteView(DestroyAPIView, ListCreateAPIView):
         POST Add new object to author's inbox
         '''
         logger.info(rev)
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            logger.error('Invalid inbox object request data: %s . e: ', request.data, serializer.errors)
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return super().post(request, *args, **kwargs)
 
     def perform_create(self, serializer):

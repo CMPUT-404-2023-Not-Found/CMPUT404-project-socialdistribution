@@ -13,7 +13,7 @@ class InboxSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['@context'] = ChoiceField(choices=Inbox.W3ContextChoices.choices, source='context', required=True)
+        self.fields['@context'] = ChoiceField(choices=Inbox.W3ContextChoices.choices, source='context', required=False)
 
     class Meta:
         model = Inbox

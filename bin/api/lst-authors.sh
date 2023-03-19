@@ -4,16 +4,23 @@
 # List authors
 
 # set -x
+usage () {
+    echo "Usage $0 [page_num] [page_size]" >&2
+}
 if [ "#$APP_URL" = "#" ]; then echo "ERR Could could not find $APP_URL in env, is your env setup?"; exit 1; fi
-if [ ! -r .access_token ]
+if [ $# -le 0 ]
 then
-    echo "ERR Could not find a .access_token file, try using ./get-token.sh [admin] [password]"
-    exit 1
+    usage
+else
+    page_query="?page=${1}"
+    if [ "#$2" != "#" ]
+    then
+        page_query="${page_query}&size=${2}"
+    fi
 fi
 
-access_token=`cat .access_token`
-auth_hdr="Authorization: Bearer $access_token"
-LST_AUTHOR_URL="${AUTHOR_API}/"
+auth_hdr=$(./get-auth.sh 'bearer' $(cat .username) $(cat .password))
+LST_AUTHOR_URL="${AUTHOR_API}/${page_query}"
 
 rsp=`curl -s -H "$auth_hdr" "$LST_AUTHOR_URL"`
 e=$?; if [ $e -ne 0 ]; then echo -n "ERR Could not GET to $LST_AUTHOR_URL "; echo "$rsp"; exit $e; fi

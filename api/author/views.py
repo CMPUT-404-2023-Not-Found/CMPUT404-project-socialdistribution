@@ -5,16 +5,16 @@ from django.db.models.functions import Lower
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
-from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
-import logging
 
 from .models import Author
+from .pagination import AuthorPagination
 from .serializers import NewAuthorSerializer, ExistingAuthorSerializer
-from utils.permissions import AnonymousCanPost, IsAuthenticatedWithJWT, NodeReadOnly
+from utils.permissions import AnonymousCanPost, IsAuthenticatedWithJWT, NodeReadOnly, OwnerCanWrite
 
+import logging
 logger = logging.getLogger('django')
-rev = 'rev: $xJekOd1$x'
+rev = 'rev: $xNs8Od1$x'
 
 class AuthorView(ListCreateAPIView):
     '''
@@ -22,7 +22,8 @@ class AuthorView(ListCreateAPIView):
     '''
     serializer_class = NewAuthorSerializer
     queryset = Author.objects.all()
-    permission_classes = [IsAdminUser|AnonymousCanPost]
+    permission_classes = [IsAuthenticatedWithJWT|NodeReadOnly|AnonymousCanPost]
+    pagination_class = AuthorPagination
 
     def get(self, request, *args, **kwargs):
         '''
@@ -67,7 +68,7 @@ class AuthorDetailView(RetrieveUpdateAPIView):
     queryset = Author.objects.all()
     lookup_field = 'id'
     http_method_names = ['get', 'post', 'head', 'options']
-    permission_classes = [IsAuthenticatedWithJWT|NodeReadOnly]
+    permission_classes = [IsAuthenticatedWithJWT|OwnerCanWrite|NodeReadOnly]
 
     def get(self, request, *args, **kwargs):
         '''
@@ -94,8 +95,4 @@ class AuthorDetailView(RetrieveUpdateAPIView):
         '''
         logger.info(rev)
         author_uuid = str(kwargs.get(self.lookup_field))
-        requester_uuid = str(request.user)
-        if not request.user.is_superuser and requester_uuid != author_uuid:
-            logger.warning('Denying profile update by non-admin & non-owner [%s] for profile [%s]', request.user, author_uuid)
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
         return self.partial_update(request, *args, **kwargs)

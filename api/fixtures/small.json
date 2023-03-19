@@ -231,5 +231,227 @@
       "summary": "Longing",
       "type": "post"
     }
+  },
+  {
+    "model": "comment.comment",
+    "pk": "19419a90-ef88-48b2-a8d2-66b072dd22d8",
+    "fields": {
+      "post": "6587d10f-e435-48b3-ab3e-30bae3b800fb",
+      "author": "http://localhost:8000/api/authors/d3bb924f-f37b-4d14-8d8e-f38b09703bab",
+      "published": "2023-03-19T05:27:50.788Z",
+      "comment": "A man of *great* virtue is Elrond.",
+      "content_type": "text/markdown"
+    }
+  },
+  {
+    "model": "comment.comment",
+    "pk": "28dfa91d-bbe1-4788-8b1d-cf375098f128",
+    "fields": {
+      "post": "1629b94f-04cc-459e-880e-44ebe979fb7e",
+      "author": "http://localhost:8000/api/authors/12fae447-fb43-4cbc-84f9-8965aab66926",
+      "published": "2023-03-19T05:20:12.933Z",
+      "comment": "Coffee is the preferred choice for men.",
+      "content_type": "text/plain"
+    }
+  },
+  {
+    "model": "comment.comment",
+    "pk": "46b37dd9-da3a-4a55-9c3e-587e92f19a59",
+    "fields": {
+      "post": "9095cfd8-8f6a-44aa-b75b-7d2abfb5f694",
+      "author": "http://localhost:8000/api/authors/80e83b86-0d26-4189-b68a-bf57e8c87af1",
+      "published": "2023-03-19T05:24:13.901Z",
+      "comment": "Neville could learn something about keeping secrets.",
+      "content_type": "text/plain"
+    }
+  },
+  {
+    "model": "comment.comment",
+    "pk": "6815e0f7-6570-482d-a415-750ffdb53f04",
+    "fields": {
+      "post": "89831aef-1b59-4c35-994e-a70a4380e221",
+      "author": "http://localhost:8000/api/authors/80e83b86-0d26-4189-b68a-bf57e8c87af1",
+      "published": "2023-03-19T05:25:38.638Z",
+      "comment": "Hermione always longed for Ron, though should would never admit it.",
+      "content_type": "text/plain"
+    }
+  },
+  {
+    "model": "comment.comment",
+    "pk": "937e1daa-f893-4861-953b-00091dc3dbf3",
+    "fields": {
+      "post": "281ae7ca-16b0-4429-b3d9-a7a6a5b39b26",
+      "author": "http://localhost:8000/api/authors/d3bb924f-f37b-4d14-8d8e-f38b09703bab/posts/9095cfd8-8f6a-44aa-b75b-7d2abfb5f694",
+      "published": "2023-03-19T05:21:38.238Z",
+      "comment": "Same would know something about bravery, *especially* with friends.",
+      "content_type": "text/markdown"
+    }
+  },
+  {
+    "model": "comment.comment",
+    "pk": "97cbe45d-1563-4fcb-b6f7-405735c26de8",
+    "fields": {
+      "post": "1629b94f-04cc-459e-880e-44ebe979fb7e",
+      "author": "http://localhost:8000/api/authors/80e83b86-0d26-4189-b68a-bf57e8c87af1/",
+      "published": "2023-03-19T05:17:21.760Z",
+      "comment": "I enjoy tea as well.",
+      "content_type": "text/plain"
+    }
+  },
+  {
+    "model": "like.like",
+    "pk": 1,
+    "fields": {
+      "post": "6587d10f-e435-48b3-ab3e-30bae3b800fb",
+      "comment": null,
+      "author": "http://localhost:8000/api/authors/12fae447-fb43-4cbc-84f9-8965aab66926",
+      "context": "https://www.w3.org/ns/activitystreams",
+      "summary": "C. S. Lewis liked your post",
+      "liked_at": "2023-03-19T05:22:37.892Z"
+    }
+  },
+  {
+    "model": "like.like",
+    "pk": 2,
+    "fields": {
+      "post": null,
+      "comment": "28dfa91d-bbe1-4788-8b1d-cf375098f128",
+      "author": "http://localhost:8000/api/authors/12fae447-fb43-4cbc-84f9-8965aab66926",
+      "context": "https://www.w3.org/ns/activitystreams",
+      "summary": "C. S. Lewis liked your comment",
+      "liked_at": "2023-03-19T05:22:58.669Z"
+    }
+  },
+  {
+    "model": "like.like",
+    "pk": 3,
+    "fields": {
+      "post": "281ae7ca-16b0-4429-b3d9-a7a6a5b39b26",
+      "comment": null,
+      "author": "http://localhost:8000/api/authors/d3bb924f-f37b-4d14-8d8e-f38b09703bab",
+      "context": "https://www.w3.org/ns/activitystreams",
+      "summary": "J. R. Tolkien Liked your post",
+      "liked_at": "2023-03-19T05:30:38.349Z"
+    }
+  },
+  {
+    "model": "like.like",
+    "pk": 4,
+    "fields": {
+      "post": "281ae7ca-16b0-4429-b3d9-a7a6a5b39b26",
+      "comment": null,
+      "author": "http://localhost:8000/api/authors/d3bb924f-f37b-4d14-8d8e-f38b09703bab",
+      "context": "https://www.w3.org/ns/activitystreams",
+      "summary": "J. R. Tolkien Liked your post",
+      "liked_at": "2023-03-19T05:30:47.341Z"
+    }
+  },
+  {
+    "model": "like.like",
+    "pk": 5,
+    "fields": {
+      "post": "6587d10f-e435-48b3-ab3e-30bae3b800fb",
+      "comment": null,
+      "author": "http://localhost:8000/api/authors/d3bb924f-f37b-4d14-8d8e-f38b09703bab",
+      "context": "https://www.w3.org/ns/activitystreams",
+      "summary": "J. R. Tolkien Liked your post",
+      "liked_at": "2023-03-19T05:30:54.987Z"
+    }
+  },
+  {
+    "model": "like.like",
+    "pk": 6,
+    "fields": {
+      "post": "89831aef-1b59-4c35-994e-a70a4380e221",
+      "comment": null,
+      "author": "http://localhost:8000/api/authors/d3bb924f-f37b-4d14-8d8e-f38b09703bab",
+      "context": "https://www.w3.org/ns/activitystreams",
+      "summary": "J. R. Tolkien Liked your post",
+      "liked_at": "2023-03-19T05:31:02.988Z"
+    }
+  },
+  {
+    "model": "like.like",
+    "pk": 7,
+    "fields": {
+      "post": "9095cfd8-8f6a-44aa-b75b-7d2abfb5f694",
+      "comment": null,
+      "author": "http://localhost:8000/api/authors/d3bb924f-f37b-4d14-8d8e-f38b09703bab",
+      "context": "https://www.w3.org/ns/activitystreams",
+      "summary": "J. R. Tolkien Liked your post",
+      "liked_at": "2023-03-19T05:31:28.940Z"
+    }
+  },
+  {
+    "model": "like.like",
+    "pk": 8,
+    "fields": {
+      "post": null,
+      "comment": "28dfa91d-bbe1-4788-8b1d-cf375098f128",
+      "author": "http://localhost:8000/api/authors/d3bb924f-f37b-4d14-8d8e-f38b09703bab",
+      "context": "https://www.w3.org/ns/activitystreams",
+      "summary": "J. R. Tolkien Liked your comment",
+      "liked_at": "2023-03-19T05:31:49.940Z"
+    }
+  },
+  {
+    "model": "like.like",
+    "pk": 9,
+    "fields": {
+      "post": null,
+      "comment": "6815e0f7-6570-482d-a415-750ffdb53f04",
+      "author": "http://localhost:8000/api/authors/d3bb924f-f37b-4d14-8d8e-f38b09703bab",
+      "context": "https://www.w3.org/ns/activitystreams",
+      "summary": "J. R. Tolkien Liked your comment",
+      "liked_at": "2023-03-19T05:32:04.924Z"
+    }
+  },
+  {
+    "model": "like.like",
+    "pk": 10,
+    "fields": {
+      "post": "1629b94f-04cc-459e-880e-44ebe979fb7e",
+      "comment": null,
+      "author": "http://localhost:8000/api/authors/80e83b86-0d26-4189-b68a-bf57e8c87af1",
+      "context": "https://www.w3.org/ns/activitystreams",
+      "summary": "J. K. Rowling liked your post",
+      "liked_at": "2023-03-19T05:33:15.941Z"
+    }
+  },
+  {
+    "model": "like.like",
+    "pk": 11,
+    "fields": {
+      "post": null,
+      "comment": "46b37dd9-da3a-4a55-9c3e-587e92f19a59",
+      "author": "http://localhost:8000/api/authors/80e83b86-0d26-4189-b68a-bf57e8c87af1",
+      "context": "https://www.w3.org/ns/activitystreams",
+      "summary": "J. K. Rowling liked your comment",
+      "liked_at": "2023-03-19T05:33:38.598Z"
+    }
+  },
+  {
+    "model": "follower.follower",
+    "pk": "http://localhost:8000/api/authors/12fae447-fb43-4cbc-84f9-8965aab66926",
+    "fields": {
+      "followee": "80e83b86-0d26-4189-b68a-bf57e8c87af1",
+      "followed_at": "2023-03-19T05:29:49.414Z"
+    }
+  },
+  {
+    "model": "follower.follower",
+    "pk": "http://localhost:8000/api/authors/80e83b86-0d26-4189-b68a-bf57e8c87af1",
+    "fields": {
+      "followee": "d3bb924f-f37b-4d14-8d8e-f38b09703bab",
+      "followed_at": "2023-03-19T05:28:32.518Z"
+    }
+  },
+  {
+    "model": "follower.follower",
+    "pk": "http://localhost:8000/api/authors/d3bb924f-f37b-4d14-8d8e-f38b09703bab",
+    "fields": {
+      "followee": "80e83b86-0d26-4189-b68a-bf57e8c87af1",
+      "followed_at": "2023-03-19T05:29:31.092Z"
+    }
   }
 ]

@@ -24,8 +24,8 @@ class LikeAdmin(admin.ModelAdmin):
     comment_content.short_description = 'Comment Content'
 
     empty_value_display = '-empty-'
-    list_display = ('author', 'post_node_id', 'comment_node_id', 'summary', 'post_title', 'comment_content', 'liked_at')
-    list_filter = ('author', 'post__title', 'comment__comment', 'liked_at')
+    list_display = ('summary', 'author', 'post_node_id', 'post_title', 'comment_node_id', 'comment_content', 'liked_at')
+    list_filter = ('author', 'post__id', 'comment__id', 'liked_at')
     search_fields = ('author', 'summary', 'post__title', 'comment__comment')
     ordering = ('author', 'liked_at')
 

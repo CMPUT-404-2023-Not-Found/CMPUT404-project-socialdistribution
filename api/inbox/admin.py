@@ -12,8 +12,9 @@ class InboxAdmin(admin.ModelAdmin):
     inbox_owner.short_description = 'Inbox Owner'
 
     date_hierarchy = 'received_at'
-    list_display = ('inbox_owner', 'summary', 'sender_author_id', 'type', 'received_at')
-    list_filter = ('author', 'sender_author_id')
+    list_display = ('inbox_owner', 'type', 'summary', 'object_id', 'sender_author_id', 'received_at')
+    list_display_links = ('summary', )
+    list_filter = ('author', 'sender_author_id', 'type', 'received_at')
     search_fields = ('summary', 'sender_author_id', 'author__username', 'author__display_name')
     ordering = ('id', 'received_at')
 admin.site.register(Inbox, InboxAdmin)

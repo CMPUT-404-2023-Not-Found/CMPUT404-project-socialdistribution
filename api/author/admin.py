@@ -29,7 +29,7 @@ class AuthorAdmin(UserAdmin):
     node_id.short_description = 'Node Id'
 
     date_hierarchy = 'updated_at'
-    list_editable = ( 'is_superuser', 'is_active')
+    list_editable = ('is_active', )
     list_display = ('node_id', 'username', 'display_name', 'is_superuser', 'is_active', 'group', 'last_login', 'updated_at')
     list_filter = ('host', 'is_superuser', 'is_active', 'last_login')
     fieldsets = (

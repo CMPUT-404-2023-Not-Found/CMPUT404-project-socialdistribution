@@ -22,8 +22,9 @@ class CommentAdmin(admin.ModelAdmin):
 
     date_hierarchy = 'published'
     list_display = ('node_id', 'comment', 'content_type', 'post_id', 'post_title', 'author', 'published')
+    list_display_links = ('comment', )
     list_filter = ('post__title', 'author', 'content_type')
     search_fields = ('id', 'author', 'comment', 'post__title')
-    ordering = ('id', )
+    ordering = ('id',)
 
 admin.site.register(Comment, CommentAdmin)

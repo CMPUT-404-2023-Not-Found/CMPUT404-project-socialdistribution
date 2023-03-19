@@ -12,7 +12,7 @@ class InboxAdmin(admin.ModelAdmin):
     inbox_owner.short_description = 'Inbox Owner'
 
     list_display = ('inbox_owner', 'summary', 'sender_author_id', 'type', 'received_at')
-    list_filter = ('author', )
-    search_fields = ('summary', 'sender_author_id')
+    list_filter = ('author', 'sender_author_id')
+    search_fields = ('summary', 'sender_author_id', 'author__username', 'author__display_name')
     ordering = ('id', 'received_at')
 admin.site.register(Inbox, InboxAdmin)

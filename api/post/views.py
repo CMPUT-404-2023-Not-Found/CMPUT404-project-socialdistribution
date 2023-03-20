@@ -3,8 +3,9 @@
 
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, GenericAPIView
 from rest_framework.response import Response
+import base64
 
 from .serializers import PostSerializer
 from .models import Author
@@ -32,7 +33,8 @@ class PostListCreateView(ListCreateAPIView):
         author_uuid = self.kwargs.get(self.lookup_url_kwarg)
         author_obj = Author.objects.get(id=author_uuid)
         logger.info('Creating new post for author_uuid: [%s]', author_uuid)
-        return serializer.save(author=author_obj)
+        logger.info(self.request.data)
+        return serializer.save(author=author_obj, content=self.request.data['content'])
     
     def get_queryset(self):
         logger.info(rev)
@@ -95,3 +97,30 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
         post_id = self.kwargs.get(self.lookup_field)
         logger.info('Deleting post id: [%s]', post_id)
         return super().perform_destroy(instance)
+
+class PostImageView(GenericAPIView):
+    '''
+    Node view for node-to-node communication
+    '''
+    queryset = Post.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        '''
+        Get an object from another node
+        '''
+        lookup_url_kwarg = 'id'
+        post_uuid = self.kwargs.get(lookup_url_kwarg)
+        logger.info(rev)
+
+        logger.info('Doing lookup of post_uuid [%s]', post_uuid)
+        post_obj = Post.objects.get(id=post_uuid)
+        logger.info(post_obj.content[:10])
+
+        # imageData = base64.b64encode(post_obj.content.split(',')[1].encode('utf-8'))
+        
+        imageData = post_obj.content
+        if post_obj and 'text' not in post_obj.content_type:
+            return Response(status=status.HTTP_200_OK, content_type=post_obj.content_type, data=imageData)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+  

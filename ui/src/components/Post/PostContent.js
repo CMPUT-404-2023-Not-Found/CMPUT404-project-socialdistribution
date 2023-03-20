@@ -15,6 +15,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import IconButton from '@mui/material/IconButton';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { CardMedia } from '@mui/material';
 
 /*
 This code is modified from a documentation guide on Material UI Card components from Material UI SAS 2023, retrieved 2023-03-13 from mui.com
@@ -32,7 +33,7 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-const PostContent = ({ description, content }) => {
+const PostContent = ({ description, content, isImage }) => {
     const [expanded, setExpanded] = React.useState(false);
 
     const handleExpandClick = () => {
@@ -44,9 +45,13 @@ const PostContent = ({ description, content }) => {
             {description}
         </Typography>
         <Divider light></Divider>
+        { isImage ?  
         <Typography variant="body1" color="text.primary">
             {content}
         </Typography>
+        :
+        <CardMedia component='img' alt='an image' src={content} title='an image'/>
+        }
     </CardContent>
     <CardActions disableSpacing>
         <IconButton aria-label="like">

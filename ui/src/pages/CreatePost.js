@@ -75,9 +75,12 @@ const CreatePost = () => {
 
         delete formData.file;
 
+        console.log(formData);
+        
         const [response, data] = await Backend.post(`/api/authors/${user.user_id}/posts/`, authTokens.access, JSON.stringify(formData));
         if (response.status && response.status === 201) {
-            navigate('/posts');
+            // navigate('/posts');
+            console.log(data);
         } else if (response.statusText === 'Unauthorized'){
             logoutUser();
         } else {

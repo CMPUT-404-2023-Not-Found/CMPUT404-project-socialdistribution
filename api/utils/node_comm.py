@@ -135,6 +135,9 @@ class NodeComm():
             logger.info('Could not create inbox object e %s', serializer.errors)
         return ret
 
+    def get_author_inbox(self, author_node_id):
+        return author_node_id + 'inbox/' if author_node_id.endswith('/') else author_node_id + '/inbox/'
+
     def get_node_auth(self, node_host):
         ret = None
         try:

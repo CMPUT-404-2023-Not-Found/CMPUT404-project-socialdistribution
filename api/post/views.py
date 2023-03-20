@@ -6,10 +6,14 @@ from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
 
+
+from author.models import Author
+from follower.models import Follower
 from .serializers import PostSerializer
-from .models import Author
 from .models import Post
 from utils.permissions import IsAuthenticatedWithJWT, NodeReadOnly, OwnerCanWrite
+from utils.node_comm import NodeComm
+nc = NodeComm()
 
 import logging
 logger = logging.getLogger('django')
@@ -31,8 +35,23 @@ class PostListCreateView(ListCreateAPIView):
         logger.info(rev)
         author_uuid = self.kwargs.get(self.lookup_url_kwarg)
         author_obj = Author.objects.get(id=author_uuid)
-        logger.info('Creating new post for author_uuid: [%s]', author_uuid)
-        return serializer.save(author=author_obj)
+        logger.info('Creating new post for author_uuid [%s]', author_uuid)
+        post = serializer.save(author=author_obj)
+        if post:
+            inbox_obj_raw = {
+                'summary': author_obj.get_name() + ' shared a post with you!',
+                'type': 'post',
+                'object': post.get_node_id()
+            }
+            inbox_obj = nc.create_inbox_obj_data(author_obj, inbox_obj_raw)
+            followers = Follower.objects.filter(followee=author_obj)
+            logger.info('Sending new post [%s] to inboxes of followers [%s] of author_uuid [%s]', post.id, len(followers), author_uuid)
+            for follower in followers:
+                follower_inbox = nc.get_author_inbox(follower.follower)
+                ret_body, ret_status = nc.send_object(follower_inbox, inbox_obj)
+                if ret_status not in [200, 201, 204]:
+                    logger.error('Failed to share post [%s] to inbox [%s]. Response status [%s]', post.id, follower_inbox,ret_status)
+        return post
     
     def get_queryset(self):
         logger.info(rev)

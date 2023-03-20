@@ -122,18 +122,24 @@ class NodeComm():
         ret_status = 500
         host_url = self.parse_host_url(inbox_url)
         node_data = self.get_node_auth(host_url)
-        if node_data:
+        if not node_data: return ret, ret_status
+        try:
             r = requests.post(url=inbox_url, 
-                                json=data, 
-                                auth=(node_data.username, node_data.password), 
-                                timeout=5)
-            try:
-                ret = json.loads(r.content.decode('utf-8'))
-            except Exception as e:
-                logger.error('Not JSON-parsable in response from [%s]. e [%s] ret status [%s] ret body [%s]', 
-                            inbox_url, e, 
-                            r.status_code, repr(r.content.decode('utf-8')[0:255]))
-            ret_status = r.status_code
+                            json=data, 
+                            auth=(node_data.username, node_data.password), 
+                            timeout=5)
+        except Exception as e:
+            logger.info('Failed requests.post to inbox [%s] e %s', inbox_url, e)
+            return ret, ret_status
+        
+        ret_raw = r.content.decode('utf-8')
+        try:
+            ret = json.loads(ret_raw)
+        except Exception as e:
+            logger.error('Not JSON-parsable in response from [%s]. e [%s] ret status [%s] ret body [%s]', 
+                        inbox_url, e, 
+                        r.status_code, repr(ret_raw[0:255]))
+
         return ret, ret_status
 
     # Helper functions

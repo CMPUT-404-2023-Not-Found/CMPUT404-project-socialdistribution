@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from threading import Thread
 
 from .models import Node
 from .serializers import NodeRetrieveSerializer
@@ -61,5 +62,6 @@ class NodeView(GenericAPIView):
         
         data_to_send = NodeComm.create_inbox_obj_data(author=request.user, request_data=request.data)
         logger.info('Sending object [%s] [%s] to [%s] inboxes', data_to_send['type'], data_to_send['object'], num_receiving_inbox)
-        NodeComm.send_object(inbox_urls, data_to_send)
+        thread = Thread(target=NodeComm.send_object, args=(inbox_urls, data_to_send))
+        thread.start()
         return Response(status=status.HTTP_201_CREATED, data=data_to_send)

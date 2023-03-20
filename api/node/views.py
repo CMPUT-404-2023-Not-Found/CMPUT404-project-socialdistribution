@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import Node
-from .serializers import NodeRetrieveSerializer, NodeSendSerializer
+from .serializers import NodeRetrieveSerializer
 from utils.node_comm import NodeComm
 
 NodeComm = NodeComm()
@@ -21,13 +21,8 @@ class NodeView(GenericAPIView):
     Node view for node-to-node communication
     '''
     queryset = Node.objects.all()
+    serializer_class = NodeRetrieveSerializer
     permission_classes = [IsAuthenticated]
-
-    def get_serializer_class(self):
-        if (self.request.method == 'POST'):
-            return NodeSendSerializer
-        else:
-            return NodeRetrieveSerializer
 
     def get(self, request, *args, **kwargs):
         '''
@@ -63,8 +58,7 @@ class NodeView(GenericAPIView):
             logger.error('Could not determine inbox_url from query params')
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
-        data_to_send = NodeComm.create_inbox_obj_data(author_uuid=request.user.id, data_to_serialize=request.data)
-
+        data_to_send = NodeComm.create_inbox_obj_data(author=request.user, request_data=request.data)
         response_data, response_status = NodeComm.send_object(inbox_url=inbox_url, data=data_to_send)
         if response_status == 201:
             return Response(status=status.HTTP_201_CREATED, data=response_data)

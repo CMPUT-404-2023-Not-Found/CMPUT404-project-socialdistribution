@@ -66,21 +66,14 @@ const CreatePost = () => {
     
             let fileBase64 = await getFileData(fileList[0]);
 
-            // if (fileBase64.length > 100000) {
-            //     alert('Image is too large to upload. Max size: 50kb');
-            //     return;
-            // }
             formData.content =  fileBase64;
         }
 
         delete formData.file;
-
-        console.log(formData);
         
         const [response, data] = await Backend.post(`/api/authors/${user.user_id}/posts/`, authTokens.access, JSON.stringify(formData));
         if (response.status && response.status === 201) {
-            // navigate('/posts');
-            console.log(data);
+            navigate('/posts');
         } else if (response.statusText === 'Unauthorized'){
             logoutUser();
         } else {

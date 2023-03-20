@@ -190,19 +190,50 @@ class PostModelTests(Base):
     Test Post model post.categories
     '''
     def test_create_with_missing_categories(self):
-        pass
+        test_post_data = self.post_data
+        create_post_url = self.get_create_post_url(self.author.id)
+        response = self.author_client.post(create_post_url, test_post_data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertQuerysetEqual(response.data.get('categories'),  Post.objects.none()) # type: ignore
 
     def test_create_with_blank_categories(self):
-        pass
+        test_post_data = self.post_data
+        test_post_data['categories'] = Post.objects.none()
+        create_post_url = self.get_create_post_url(self.author.id)
+        response = self.author_client.post(create_post_url, test_post_data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertQuerysetEqual(response.data.get('categories'),  Post.objects.none()) # type: ignore
 
     def test_create_with_blacklist_categories(self):
         pass
 
     def test_create_with_one_category(self):
-        pass
+        test_post_data = self.post_data
+        test_post_data['categories'] = ['test']
+        create_post_url = self.get_create_post_url(self.author.id)
+        response = self.author_client.post(create_post_url, test_post_data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        if response.data.get('categories') is not None:
+            if 'test' in response.data.get('categories'):
+                self.assertTrue(True)
+            else:
+                self.assertTrue(False)
+         # type: ignore
 
     def test_create_with_multiple_categories(self):
-        pass
+        test_post_data = self.post_data
+        test_post_data['categories'] = ['test1', 'test2']
+        create_post_url = self.get_create_post_url(self.author.id)
+        response = self.author_client.post(create_post_url, test_post_data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        if response.data.get('categories') is not None:
+            if 'test1' in response.data.get('categories'):
+                if 'test2' in response.data.get('categories'):
+                    self.assertTrue(True)
+                else:
+                    self.assertTrue(False)
+            else:
+                self.assertTrue(False)
 
     def test_create_with_too_many_categories(self):
         pass

@@ -37,9 +37,9 @@ class PostListCreateView(ListCreateAPIView):
         author_obj = Author.objects.get(id=author_uuid)
         logger.info('Creating new post for author_uuid [%s]', author_uuid)
         post = serializer.save(author=author_obj)
-        if post:
+        if post and not post.unlisted:
             inbox_obj_raw = {
-                'summary': author_obj.get_name() + ' shared a post with you!',
+                'summary': post.title,
                 'type': 'post',
                 'object': post.get_node_id()
             }

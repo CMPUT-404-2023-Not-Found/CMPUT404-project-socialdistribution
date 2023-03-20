@@ -53,14 +53,20 @@ class NodeView(GenericAPIView):
         '''
         logger.info(rev)
 
-        inbox_url = request.GET.get('url', '')
-        if not inbox_url:
-            logger.error('Could not determine inbox_url from query params')
+        # inbox_url = request.GET.get('url', '')
+        inbox_urls = request.GET.getlist('url', '')
+        if not inbox_urls or len(inbox_urls) == 0:
+            logger.error('Missing url query params')
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        num_receiving_inbox = len(inbox_urls)
+        if num_receiving_inbox > 8:
+            logger.error('Too many receiving inboxes [%s], denying request', num_receiving_inbox)
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
         data_to_send = NodeComm.create_inbox_obj_data(author=request.user, request_data=request.data)
-        response_data, response_status = NodeComm.send_object(inbox_url=inbox_url, data=data_to_send)
-        if response_status == 201:
-            return Response(status=status.HTTP_201_CREATED, data=response_data)
-        else:
-            return Response(status=response_status)
+        for inbox_url in inbox_urls:
+            response_data, response_status = NodeComm.send_object(inbox_url=inbox_url, data=data_to_send)
+            if response_status not in [200, 201, 204]:
+                logger.error('Failed to send object to inbox [%s]', inbox_url)
+        return Response(status=status.HTTP_201_CREATED, data=data_to_send)

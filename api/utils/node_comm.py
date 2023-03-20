@@ -66,7 +66,10 @@ class NodeComm():
         host_url = self.parse_host_url(object_url)
         node_data = self.get_node_auth(host_url)
         if node_data:
-            r = requests.get(object_url, auth=(node_data.username, node_data.password))
+            r = requests.get(object_url, 
+                                auth=(node_data.username, node_data.password), 
+                                timeout=5, 
+                                allow_redirects=True)
             try:
                 ret = json.loads(r.content.decode('utf-8'))
             except Exception as e:
@@ -110,7 +113,10 @@ class NodeComm():
         host_url = self.parse_host_url(inbox_url)
         node_data = self.get_node_auth(host_url)
         if node_data:
-            r = requests.post(url=inbox_url, json=data, auth=(node_data.username, node_data.password))
+            r = requests.post(url=inbox_url, 
+                                json=data, 
+                                auth=(node_data.username, node_data.password), 
+                                timeout=5)
             try:
                 ret = json.loads(r.content.decode('utf-8'))
             except Exception as e:

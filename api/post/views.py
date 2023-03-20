@@ -5,6 +5,7 @@ from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, GenericAPIView
 from rest_framework.response import Response
+from django.http import HttpResponse
 import base64
 
 from .serializers import PostSerializer
@@ -114,13 +115,19 @@ class PostImageView(GenericAPIView):
 
         logger.info('Doing lookup of post_uuid [%s]', post_uuid)
         post_obj = Post.objects.get(id=post_uuid)
-        logger.info(post_obj.content[:10])
 
-        # imageData = base64.b64encode(post_obj.content.split(',')[1].encode('utf-8'))
-        
-        imageData = post_obj.content
+        # https://stackoverflow.com/questions/43207978/python-converting-from-base64-to-binary
+
+        postcontent = post_obj.content.split(',')[1]
+        bytesarr = bytes(postcontent, 'UTF-8')
+        decoded = base64.decodebytes(bytesarr)
+        # decoded = base64.decodebytes(post_obj.content.split(',')[1].encode('ascii'))
+        # imageBinary = ''.join(format(byte, '08b') for byte in decoded)
+        contentType = 'application/octet-stream'
+
+        logger.info(postcontent[:10])
         if post_obj and 'text' not in post_obj.content_type:
-            return Response(status=status.HTTP_200_OK, content_type=post_obj.content_type, data=imageData)
+            return HttpResponse(decoded, content_type='application/octet-stream')
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
   

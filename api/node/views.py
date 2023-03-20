@@ -1,14 +1,11 @@
 # 2023-02-13
 # node/views.py
 
-import json
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from author.models import Author
-from author.serializers import ExistingAuthorSerializer
 from .models import Node
 from .serializers import NodeRetrieveSerializer, NodeSendSerializer
 from utils.node_comm import NodeComm
@@ -61,28 +58,13 @@ class NodeView(GenericAPIView):
         '''
         logger.info(rev)
 
-        # Create & validate the inbox object to be sent from request data
-        request.data['author'] = request.user.get_node_id()
-        if not request.data.get('summary'): 
-            requester_name = request.user.display_name if request.user.display_name else request.user.username
-            req_type = request.data.get('type')
-            request.data['summary'] = f'{requester_name} sent a {req_type}'
-
-        serializer_class = self.get_serializer_class()
-        serializer = serializer_class(data=request.data)
-        if not serializer.is_valid():
-            logger.error('Request data is bad [%s]', serializer.errors)
-            return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
-        data_to_send = serializer.data
-
-        # Append the JSON representation of the requester
-        data_to_send['author'] = ExistingAuthorSerializer(request.user).data
-
-        # Send the inbox object to the requested inbox_url & return the response
         inbox_url = request.GET.get('url', '')
         if not inbox_url:
             logger.error('Could not determine inbox_url from query params')
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        data_to_send = NodeComm.create_inbox_obj_data(author_uuid=request.user.id, data_to_serialize=request.data)
+
         response_data, response_status = NodeComm.send_object(inbox_url=inbox_url, data=data_to_send)
         if response_status == 201:
             return Response(status=status.HTTP_201_CREATED, data=response_data)

@@ -10,6 +10,7 @@ from urllib.parse import urlsplit
 from author.models import Author
 from author.serializers import ExistingAuthorSerializer
 from node.models import Node
+from node.serializers import NodeSendSerializer
 from post.models import Post
 from post.serializers import PostSerializer
 from inbox.serializer import InboxSerializer
@@ -125,6 +126,16 @@ class NodeComm():
         return ret, ret_status
 
     # Helper functions
+    def create_inbox_obj_data(self, author_uuid, data_to_serialize):
+        ret = None
+        serializer = NodeSendSerializer(data=data_to_serialize)
+        if serializer.is_valid():
+            ret = serializer.data
+            ret['author'] = ExistingAuthorSerializer(Author.objects.get(id=author_uuid)).data
+        else:
+            logger.info('Could not create inbox object e %s', serializer.errors)
+        return ret
+
     def get_node_auth(self, node_host):
         ret = None
         try:

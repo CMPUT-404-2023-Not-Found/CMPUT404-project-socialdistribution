@@ -35,14 +35,10 @@ class NodeComm():
         '''
         Do a lookup of the url and retrieve the object
         '''
-        ret = None
-        urlparse = urlsplit(url)
-        host_url = urlparse.scheme + '://' + urlparse.netloc
-        if host_url == self.APP_URL:
-            ret = self.get_internal_object(type, url)
+        if self.is_host_internal(url):
+            return self.get_internal_object(type, url)
         else:
-            ret = self.get_external_object(host_url, url)
-        return ret
+            return self.get_external_object(url)
 
     def get_internal_object(self, type, url):
         '''
@@ -62,18 +58,21 @@ class NodeComm():
             return ret
         return ret
 
-    def get_external_object(self, host_url, object_url):
+    def get_external_object(self, object_url):
         '''
         URL matches a known node object, thus query that node for data
         '''
         ret = None
+        host_url = self.parse_host_url(object_url)
         node_data = self.get_node_auth(host_url)
         if node_data:
             r = requests.get(object_url, auth=(node_data.username, node_data.password))
             try:
                 ret = json.loads(r.content.decode('utf-8'))
             except Exception as e:
-                logger.error('Not JSON-parsable in response from [%s]. e [%s]', object_url, e)
+                logger.error('Not JSON-parsable in response from [%s]. e [%s] ret status [%s] ret body [%s]', 
+                            object_url, e, 
+                            r.status_code, repr(r.content.decode('utf-8')[0:255]))
         return ret
     
     # Send objects to other nodes
@@ -108,7 +107,7 @@ class NodeComm():
     def send_external_object(self, inbox_url, data):
         ret = None
         ret_status = 500
-        host_url = self.get_host_url(inbox_url)
+        host_url = self.parse_host_url(inbox_url)
         node_data = self.get_node_auth(host_url)
         if node_data:
             r = requests.post(url=inbox_url, json=data, auth=(node_data.username, node_data.password))
@@ -135,10 +134,6 @@ class NodeComm():
         else:
             logger.info('Could not create inbox object e %s', serializer.errors)
         return ret
-
-    def get_host_url(self, url):
-        urlparse = urlsplit(url)
-        return urlparse.scheme + '://' + urlparse.netloc
 
     def get_node_auth(self, node_host):
         ret = None
@@ -175,3 +170,7 @@ class NodeComm():
         else:
             short_url = url[:-5]
         return self.parse_object_uuid(short_url)
+
+    def parse_host_url(self, url):
+        urlparse = urlsplit(url)
+        return urlparse.scheme + '://' + urlparse.netloc

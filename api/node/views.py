@@ -60,8 +60,9 @@ class NodeView(GenericAPIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         num_receiving_inbox = len(inbox_urls)
-        if num_receiving_inbox > 8:
-            logger.error('Too many receiving inboxes [%s], denying request', num_receiving_inbox)
+        max_receiving_inbox = 8
+        if num_receiving_inbox > max_receiving_inbox:
+            logger.error('Too many receiving inboxes [%s] > [%s], denying request', num_receiving_inbox, max_receiving_inbox)
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
         data_to_send = NodeComm.create_inbox_obj_data(author=request.user, request_data=request.data)
@@ -69,11 +70,11 @@ class NodeView(GenericAPIView):
         # This code is modified from a tutorial on Python threads from Lu Zou, on 2019-01-16, retrieved 2023-03-19 from medium.com
         # tutorial here
         # https://medium.com/python-experiments/parallelising-in-python-mutithreading-and-mutiprocessing-with-practical-templates-c81d593c1c49
+        # TODO Move this threading to node_comm send_object() for use in other views
         thread_list = []
         for inbox_url in inbox_urls:
             thread = Thread(target=NodeComm.send_object, args=(inbox_url, data_to_send))
             thread_list.append(thread)
-        for thread in thread_list:
             thread.start()
         for thread in thread_list:
             thread.join()

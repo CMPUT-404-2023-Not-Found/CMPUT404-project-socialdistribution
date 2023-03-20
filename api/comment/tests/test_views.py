@@ -30,14 +30,6 @@ class CommentListCreateViewTest(Base):
         response = self.admin_client.get(self.get_comment_url(self.author_uuid, self.post_uuid))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
     
-    # Test Comment view GET /api/authors/<author_uuid>/posts/<post_uuid>/comments/<comment_uuid>
-    def test_get_single_comment(self):
-        '''
-        Test getting a single comment
-        '''
-        response = self.admin_client.get(self.get_comment_detail_url(self.author_uuid, self.post_uuid, self.comment_uuid))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-    
     # Test Comment View POST authors/<author_uuid>/posts/<post_uuid>/comments/
     def test_post_comment(self):
         '''
@@ -52,3 +44,14 @@ class CommentListCreateViewTest(Base):
         response = self.author_client.post(self.get_comment_url(self.author_uuid, self.post_uuid), body, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
     
+    # Test Comment View pagination
+    def test_pagination(self):
+        '''
+        Test getting a comment from a paginated list
+        '''
+        comment_url = self.get_comment_url(self.author_uuid, self.post_uuid)
+        paginated_url = comment_url + '?page=3&size=1'
+        response = self.admin_client.get(paginated_url)
+        # get the only comment on the third page, must be the oldest comment
+        self.assertEqual(response.json()['comments'][0]['comment'], 'hello')
+        self.assertEqual(len(response.json()['comments']), 1)

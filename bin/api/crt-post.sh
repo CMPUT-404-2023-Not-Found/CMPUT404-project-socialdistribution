@@ -7,21 +7,8 @@
 if [ "#$APP_URL" = "#" ]; then echo "ERR Could could not find $APP_URL in env, is your env setup?"; exit 1; fi
 if [ "#$1" = "#" ]; then echo "Usage $0 [author_uuid]"; exit 1; fi
 author_uuid="$1"
-if [ ! -r .access_token ]
-then
-    echo "ERR Could not find a .access_token file, try using ./get-token.sh [username] [password]"
-    exit 1
-fi
-access_token=`cat .access_token`
-auth_hdr="Authorization: Bearer $access_token"
 
-if [ ! -r .access_token ]
-then
-    echo "ERR Could not find a .access_token file, try using ./get-token.sh [username] [password]"
-    exit 1
-fi
-access_token=`cat .access_token`
-auth_hdr="Authorization: Bearer $access_token"
+auth_hdr=$(./get-auth.sh 'bearer' $(cat .username) $(cat .password))
 
 crt_post_url=`printf "${POST_API}/" $author_uuid`
 rand=`apg -n 1 -m 8 -x 8 -M NC 2`
@@ -40,7 +27,9 @@ EOF`
 echo "$crt_body" | jq 2>&1 >/dev/null
 e=$?; if [ $e -ne 0 ]; then echo "ERR Invalid POST body"; exit 1; fi
 
+hdr_dump=`mktemp`
 rsp=`curl -sX POST \
+     -D "$hdr_dump" \
      -d "$crt_body" \
      -H "Content-Type: application/json" \
      -H "$auth_hdr" \
@@ -51,8 +40,8 @@ echo "$rsp" | grep -q "$rand"
 e=$?
 if [ $e -ne 0 ]
 then
-    echo "ERR Failed POST request"
-    echo "$rsp"
+    cat $hdr_dump >&2
+    echo "$rsp" >&2
 else
     echo "$rsp" | jq 2>/dev/null
     e=$?; if [ $e -ne 0 ]; then echo "$rsp"; exit $e; fi

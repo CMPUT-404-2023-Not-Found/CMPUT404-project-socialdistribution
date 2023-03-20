@@ -2,6 +2,10 @@
 *.uuid
 *.access_token
 *.password
+*.node-password
 *.refresh_token
 *.username
-.env
+*.node-username
+*.node-password
+*.env
+*.env-*

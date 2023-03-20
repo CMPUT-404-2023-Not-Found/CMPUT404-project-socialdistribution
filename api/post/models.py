@@ -48,10 +48,12 @@ class Post(Model):
     # Content fields
     # categories ... this will be tricky because we need to have multiple string values ... thus another model will link to post
     #   ignore categories for now
-    content             = models.TextField(blank=False, null=False)
+    content             = models.TextField(blank=False, null=False, max_length=100000)
     content_type        = models.CharField(choices=CONTENT_TYPE_OPTIONS, max_length=32, verbose_name='Content Type')
     description         = models.TextField(blank=True, default='')
     title               = models.CharField(blank=False, null=False, max_length=128)
-
     def __str__(self):
         return f'{self.author} {self.title}'
+
+    def get_node_id(self):
+        return f'{self.author.get_node_id()}/posts/{self.id}'

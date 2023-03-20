@@ -41,7 +41,12 @@ Contributors:
 
 For more information about required dependencies, setting up and environment to run the project, or the specification and requirements of the project refer to this [repo's wiki](https://github.com/CMPUT-404-2023-Not-Found/CMPUT404-project-socialdistribution/wiki).
 
-# References
-Rahiman M. 2020. Deploying React-Django App using Heroku. Retrieved from https://dev.to/mdrhmn/deploying-react-django-app-using-heroku-2gfa
-Ruscica T. 2020. Django & React - Full Stack Web App Tutorial. Retrieved from https://www.youtube.com/playlist?list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j
-Stearman B. 2022. Django REST Framework Course – Build Web APIs with Python. Retrieved from https://youtu.be/tujhGdn1EMI
+# Integration & Collaboration
+
+## TLDR
+
+- Basic Auth Creds are `node01:P*ssw0rd!` to `https://sd7-api.herokuapp.com/api`
+- API https://sd7-api.herokuapp.com/api/
+- OpenAPI link https://sd7-api.herokuapp.com/api/schema/docs/
+
+Trying to integrate with us? Great! Go to our [integration wiki](https://github.com/CMPUT-404-2023-Not-Found/CMPUT404-project-socialdistribution/wiki/OpenAPI-and-Integration) to get started.

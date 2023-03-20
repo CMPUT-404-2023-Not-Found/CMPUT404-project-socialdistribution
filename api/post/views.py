@@ -46,11 +46,11 @@ class PostListCreateView(ListCreateAPIView):
             inbox_obj = nc.create_inbox_obj_data(author_obj, inbox_obj_raw)
             followers = Follower.objects.filter(followee=author_obj)
             logger.info('Sending new post [%s] to inboxes of followers [%s] of author_uuid [%s]', post.id, len(followers), author_uuid)
+            follower_inboxs = []
             for follower in followers:
                 follower_inbox = nc.get_author_inbox(follower.follower)
-                ret_body, ret_status = nc.send_object(follower_inbox, inbox_obj)
-                if ret_status not in [200, 201, 204]:
-                    logger.error('Failed to share post [%s] to inbox [%s]. Response status [%s]', post.id, follower_inbox,ret_status)
+                follower_inboxs.append(follower_inbox)
+            nc.send_object(follower_inboxs, inbox_obj)
         return post
     
     def get_queryset(self):

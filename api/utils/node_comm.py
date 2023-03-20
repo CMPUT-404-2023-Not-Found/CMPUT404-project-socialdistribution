@@ -5,6 +5,7 @@ from django.conf import settings
 import json
 import logging
 import requests
+from threading import Thread
 from urllib.parse import urlsplit
 
 from author.models import Author
@@ -79,14 +80,23 @@ class NodeComm():
         return ret
     
     # Send objects to other nodes
-    def send_object(self, inbox_url, data):
+    def send_object(self, inbox_urls, data):
         '''
         Send a object to a node url inbox
         '''
-        if self.is_host_internal(inbox_url):
-            return self.send_internal_object(inbox_url, data)
-        else:
-            return self.send_external_object(inbox_url, data)
+        # This code is modified from a tutorial on Python threads from Lu Zou, on 2019-01-16, retrieved 2023-03-19 from medium.com
+        # tutorial here
+        # https://medium.com/python-experiments/parallelising-in-python-mutithreading-and-mutiprocessing-with-practical-templates-c81d593c1c49
+        thread_list = []
+        for inbox_url in inbox_urls:
+            if self.is_host_internal(inbox_url):
+                thread = Thread(target=self.send_internal_object, args=(inbox_url, data))
+            else:
+                thread = Thread(target=self.send_external_object, args=(inbox_url, data))
+            thread_list.append(thread)
+            thread.start()
+        for thread in thread_list:
+            thread.join()
 
     def send_internal_object(self, inbox_url, data):
         ret = None

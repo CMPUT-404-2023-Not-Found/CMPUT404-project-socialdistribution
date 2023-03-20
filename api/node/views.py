@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from threading import Thread
 
 from .models import Node
 from .serializers import NodeRetrieveSerializer
@@ -65,8 +66,16 @@ class NodeView(GenericAPIView):
         
         data_to_send = NodeComm.create_inbox_obj_data(author=request.user, request_data=request.data)
         logger.info('Sending object [%s] [%s] to [%s] inboxes', data_to_send['type'], data_to_send['object'], num_receiving_inbox)
+        # This code is modified from a tutorial on Python threads from Lu Zou, on 2019-01-16, retrieved 2023-03-19 from medium.com
+        # tutorial here
+        # https://medium.com/python-experiments/parallelising-in-python-mutithreading-and-mutiprocessing-with-practical-templates-c81d593c1c49
+        thread_list = []
         for inbox_url in inbox_urls:
-            response_data, response_status = NodeComm.send_object(inbox_url=inbox_url, data=data_to_send)
-            if response_status not in [200, 201, 204]:
-                logger.error('Failed to send object to inbox [%s]', inbox_url)
+            thread = Thread(target=NodeComm.send_object, args=(inbox_url, data_to_send))
+            thread_list.append(thread)
+        for thread in thread_list:
+            thread.start()
+        for thread in thread_list:
+            thread.join()
+
         return Response(status=status.HTTP_201_CREATED, data=data_to_send)

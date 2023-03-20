@@ -13,25 +13,21 @@ shift; shift; shift
 
 auth_hdr=$(./get-auth.sh 'bearer' $(cat .username) $(cat .password))
 
-# This code is modified from a forum answer from nisetama, last edited on 2022-10-07, retrieved on 2023-03-18, from stackoverflow.com
-# forum answer here:
-# https://stackoverflow.com/questions/296536/how-to-urlencode-data-for-curl-command
+inbox_urls=''
 for inbox_url in "$@"
 do
-    query_param="${query_param}url=$(echo -n "$inbox_url" | jq -sRr '@uri')&"
+    inbox_urls="${inbox_urls}\"${inbox_url}\","
 done
+inbox_urls="[$(echo "${inbox_urls}" | rev | cut -c2- | rev)]"
 
-# This code is modified from a tutorial on cut from @Pushpender007, last updated 2021-06-29, retrieved on 2023-03-19, from geeksforgeeks.org
-# tutorial here:
-# https://www.geeksforgeeks.org/remove-last-character-from-string-in-linux/
-query_param=$(echo "$query_param" | rev | cut -c 2- | rev)
 
-send_node_url="${NODE_API}/?${query_param}"
+send_node_url="${NODE_API}/"
 cnt_body=`cat <<EOF
 {
   "summary": "$summary",
   "object": "$object_url",
-  "type": "$object_type"
+  "type": "$object_type",
+  "inbox_urls": $inbox_urls
 }
 EOF`
 

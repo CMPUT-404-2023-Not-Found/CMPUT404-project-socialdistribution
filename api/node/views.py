@@ -52,16 +52,11 @@ class NodeView(GenericAPIView):
         Post an object to a node's author's inboxes
         '''
         logger.info(rev)
-
-        inbox_urls = request.GET.getlist('url', '')
-        if not inbox_urls or len(inbox_urls) == 0:
-            logger.error('Missing url query params')
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
+        inbox_urls = request.data.get('inbox_urls', [])
         num_receiving_inbox = len(inbox_urls)
-        max_receiving_inbox = 8
-        if num_receiving_inbox > max_receiving_inbox:
-            logger.error('Too many receiving inboxes [%s] > [%s], denying request', num_receiving_inbox, max_receiving_inbox)
+        max_receiving_inbox = 32
+        if not num_receiving_inbox or num_receiving_inbox > max_receiving_inbox:
+            logger.error('Invalid number of inboxes [%s] supported [%s], denying request', num_receiving_inbox, max_receiving_inbox)
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
         data_to_send = NodeComm.create_inbox_obj_data(author=request.user, request_data=request.data)

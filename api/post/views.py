@@ -5,15 +5,30 @@ from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
+from uuid import UUID
 
 from .serializers import PostSerializer
 from .models import Author
 from .models import Post
 from utils.permissions import IsAuthenticatedWithJWT, NodeReadOnly, OwnerCanWrite
+from follower.models import Follower
+from utils.node_comm import NodeComm
 
 import logging
 logger = logging.getLogger('django')
 rev = 'rev: $xujSyn7$x'
+
+NodeComm = NodeComm()
+
+def isFriend(follower_url, author_uuid):
+    if NodeComm.parse_object_uuid(follower_url) == author_uuid:
+        return True
+
+    # inefficient? probably not in our case, even if there are like 10000 followers but idk
+    for obj in Follower.objects.filter(followee=author_uuid, follower=follower_url).count() == 1:
+        return True
+
+    return False
 
 # This code is modifed from a video tutorial from Cryce Truly on 2020-06-19 retrieved on 2023-02-16, to Youtube crycetruly
 # video here:
@@ -41,7 +56,13 @@ class PostListCreateView(ListCreateAPIView):
             logger.info('Get recent posts for author_uuid: [%s] with query_params [%s]', author_uuid, str(self.request.query_params)) # type: ignore
         else:
             logger.info('Get recent posts for author_uuid: [%s]', author_uuid)
-        return self.queryset.filter(author_id=author_uuid).order_by('-published')
+        
+        follower_url = self.request.user.id
+        # if isFriend(follower_url, author_uuid):
+        #     logger.info('Get public and private posts for author_uuid: [%s]', author_uuid)      
+        #     return self.queryset.filter(author_id=author_uuid).order_by('-published')
+        # if Follower.objects.filter()
+        return self.queryset.filter(author_id=author_uuid, visibility="PUBLIC").order_by('-published')
 
 class PostDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer

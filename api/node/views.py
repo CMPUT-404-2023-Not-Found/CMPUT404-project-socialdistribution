@@ -64,6 +64,7 @@ class NodeView(GenericAPIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
         data_to_send = NodeComm.create_inbox_obj_data(author=request.user, request_data=request.data)
+        logger.info('Sending object [%s] [%s] to [%s] inboxes', data_to_send['type'], data_to_send['object'], num_receiving_inbox)
         for inbox_url in inbox_urls:
             response_data, response_status = NodeComm.send_object(inbox_url=inbox_url, data=data_to_send)
             if response_status not in [200, 201, 204]:

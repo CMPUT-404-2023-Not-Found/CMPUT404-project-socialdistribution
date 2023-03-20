@@ -53,7 +53,6 @@ class NodeView(GenericAPIView):
         '''
         logger.info(rev)
 
-        # inbox_url = request.GET.get('url', '')
         inbox_urls = request.GET.getlist('url', '')
         if not inbox_urls or len(inbox_urls) == 0:
             logger.error('Missing url query params')

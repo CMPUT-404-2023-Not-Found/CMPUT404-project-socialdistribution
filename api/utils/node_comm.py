@@ -81,18 +81,14 @@ class NodeComm():
         '''
         Send a object to a node url inbox
         '''
-        urlparse = urlsplit(inbox_url)
-        host_url = urlparse.scheme + '://' + urlparse.netloc
-        if host_url == self.APP_URL:
+        if self.is_host_internal(inbox_url):
             return self.send_internal_object(inbox_url, data)
         else:
-            return self.send_external_object(host_url, inbox_url, data)
+            return self.send_external_object(inbox_url, data)
 
     def send_internal_object(self, inbox_url, data):
         ret = None
         ret_status = 400
-        sender_author_info = data.pop('author', {})
-        data['author'] = sender_author_info.get('url', '') if sender_author_info else ''
         serializer = InboxSerializer(data=data)
         if serializer.is_valid():
             author_uuid = self.parse_author_uuid_from_inbox(inbox_url)
@@ -109,9 +105,10 @@ class NodeComm():
             ret = serializer.errors
         return ret, ret_status
     
-    def send_external_object(self, host_url, inbox_url, data):
+    def send_external_object(self, inbox_url, data):
         ret = None
         ret_status = 500
+        host_url = self.get_host_url(inbox_url)
         node_data = self.get_node_auth(host_url)
         if node_data:
             r = requests.post(url=inbox_url, json=data, auth=(node_data.username, node_data.password))
@@ -139,6 +136,10 @@ class NodeComm():
             logger.info('Could not create inbox object e %s', serializer.errors)
         return ret
 
+    def get_host_url(self, url):
+        urlparse = urlsplit(url)
+        return urlparse.scheme + '://' + urlparse.netloc
+
     def get_node_auth(self, node_host):
         ret = None
         try:
@@ -147,6 +148,11 @@ class NodeComm():
             logger.error('Failed to get node model for host [%s] e [%s]', node_host, e)
         return ret
     
+    def is_host_internal(self, url):
+        urlparse = urlsplit(url)
+        host_url = urlparse.scheme + '://' + urlparse.netloc
+        return True if host_url == self.APP_URL else False
+
     def parse_object_uuid(self, url):
         '''
         Return an objects UUID

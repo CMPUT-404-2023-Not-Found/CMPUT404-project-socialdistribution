@@ -8,14 +8,14 @@ const SelectInput = ({register, obj, onChange}) => {
     return (
         <FormControl style={{ display: "block", marginTop: 15}} size="small">
             <InputLabel
-            style={{ backgroundColor: '#eaeff1' }}
+            style={{ backgroundColor: '#eaeff1',fontWeight: 'bold'  }}
             htmlFor={obj.name}
             >
             {/* {obj.help_text ? obj.help_text : obj.label} */}
             {obj.label}
         </InputLabel>
           <Select  {...register(obj.name)}
-          style={{ width: '13%',marginBottom:20 }}
+          style={{ width: '15%',marginBottom:20 }}
           onChange={onChange}
           >
             <MenuItem >None</MenuItem>

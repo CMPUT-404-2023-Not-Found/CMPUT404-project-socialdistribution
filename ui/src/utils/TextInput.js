@@ -1,82 +1,69 @@
-import { color } from '@mui/system';
-import React from 'react'
-import { useState } from 'react';
+
+import React, { useState } from 'react';
+import { TextField, IconButton, InputAdornment } from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
+const TextInput = ({ register, obj }) => {
+  const [inputValue, setInputValue] = useState('');
+  const handleDeleteClick = () => {
+    setInputValue('');
+  };
 
-const TextInput = ({register, obj}) => {
-    
-        const [inputValue, setInputValue] = useState('');
-        const handleDeleteClick = () => {
-          setInputValue('');
-        };
-      
-        if (obj.max_length && obj.max_length < 200) {
-          return (
-            <>
-              <label  htmlFor={obj.name} style={{
-                    cursor: 'pointer',
-                    color: '#517377',
-                    fontFamily: 'Arial, sans-serif',
-                    fontWeight: 'bold',
-                    fontSize: '18px'
-                }}>{obj.label} </label>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <input
-                  required
-                  {...register(obj.name)}
-                  style={{
-                    display: 'block',
-                    marginBottom: 15,
-                    height: 30,
-                  }}
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                />
-               
-                {inputValue && (
-                  <HighlightOffIcon
-                    style={{ cursor: 'pointer' , marginLeft:-25,marginBottom:15,backgroundColor:'white',color:'#517377'}}
-                    onClick={handleDeleteClick}
-                  />
-                )}
-              </div>
-              
-            </>
-          );
-        } 
-        else {
-            return (
-                <>
-                  <label htmlFor={obj.name} style={{
-                        cursor: 'pointer',
-                        color: '#517377',
-                        fontFamily: 'Arial, sans-serif',
-                        fontWeight: 'bold',
-                        fontSize: '18px'
-                    }}>{obj.label}</label>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <textarea
-                      {...register(obj.name)}
-                      style={{
-                        display: 'block',
-                        verticalAlign: 'top',
-                        marginBottom: 15,
-                      }}
-                      value={inputValue}
-                      onChange={(e) => setInputValue(e.target.value)}
-                    />
-                    {inputValue && (
-                      <HighlightOffIcon
-                        style={{ cursor: 'pointer', marginLeft: -25, marginBottom: 15, backgroundColor: 'white', color: '#517377' }}
-                        onClick={handleDeleteClick}
-                      />
-                    )}
-                  </div>
-                </>
-              );
-            }
-          };
+  const inputProps = {
+    endAdornment: (
+      <InputAdornment position="end">
+        {inputValue && (
+          <IconButton edge="end" onClick={handleDeleteClick}>
+            <HighlightOffIcon />
+          </IconButton>
+        )}
+      </InputAdornment>
+    ),
+  };
+
+  if (obj.max_length && obj.max_length < 200) {
+    return (
+      <TextField
+        label={obj.label}
+        required
+        {...register(obj.name)}
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        InputProps={inputProps}
+        fullWidth
+        variant="outlined"
+        style={{ marginBottom: 15,width:"45%" }}
+        InputLabelProps={{
+                style: {
+                fontSize: '18px', // Set the desired font size
+                fontWeight: 'bold',
+            },
+        }}
+      />
+    );
+  } else {
+    return (
+      <TextField
+        label={obj.label}
+        {...register(obj.name)}
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        InputProps={inputProps}
+        fullWidth
+        multiline
+        rows={4}
+        variant="outlined"
+        style={{ marginBottom: 15 }}
+        InputLabelProps={{
+                style: {
+                fontSize: '18px', // Set the desired font size
+                fontWeight: 'bold',
+            },
+        }}
+      />
+    );
+  }
+};
 
 export default TextInput;
 

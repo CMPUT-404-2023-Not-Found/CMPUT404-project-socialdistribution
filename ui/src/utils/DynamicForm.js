@@ -104,12 +104,7 @@ const DynamicForm = ({options, formSubmitFunction}) => {
             }
           })}
       
-          {checkboxInputs.map((checkboxInput, i) => {
-            return (
-              <CheckboxInput key={i} register={register} obj={checkboxInput} />
-            ); 
-          })}
-           
+        
           {selectInputs.map((selectInput, i) => {
             if (i === 1) {
               return (
@@ -117,10 +112,12 @@ const DynamicForm = ({options, formSubmitFunction}) => {
               );
             }
           })}
-      
-          {/* <button type="submit" style={{ marginTop: 15 }}>
-            Post
-          </button> */}
+        {checkboxInputs.map((checkboxInput, i) => {
+        return (
+            <CheckboxInput key={i} register={register} obj={checkboxInput} />
+        ); 
+        })}
+        
           <br />
           <Button  type="submit" variant="contained">Post</Button>
           

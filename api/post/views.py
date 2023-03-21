@@ -116,14 +116,11 @@ class PostImageView(GenericAPIView):
         logger.info('Doing lookup of post_uuid [%s]', post_uuid)
         post_obj = Post.objects.get(id=post_uuid)
 
-        # https://stackoverflow.com/questions/43207978/python-converting-from-base64-to-binary
-
+        # This code is modified from a post by sadashiv30 on StackOverflow on 2015-09-15, retrieved on 2023-03-20
+        # https://stackoverflow.com/questions/22276518/returning-binary-data-with-django-httpresponse
         postcontent = post_obj.content.split(',')[1]
         bytesarr = bytes(postcontent, 'UTF-8')
         decoded = base64.decodebytes(bytesarr)
-        # decoded = base64.decodebytes(post_obj.content.split(',')[1].encode('ascii'))
-        # imageBinary = ''.join(format(byte, '08b') for byte in decoded)
-        contentType = 'application/octet-stream'
 
         logger.info(postcontent[:10])
         if post_obj and 'text' not in post_obj.content_type:

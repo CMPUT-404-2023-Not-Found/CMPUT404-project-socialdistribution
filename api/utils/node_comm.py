@@ -66,17 +66,23 @@ class NodeComm():
         ret = None
         host_url = self.parse_host_url(object_url)
         node_data = self.get_node_auth(host_url)
-        if node_data:
+        if not node_data: return ret
+        try:
             r = requests.get(object_url, 
-                                auth=(node_data.username, node_data.password), 
-                                timeout=5, 
-                                allow_redirects=True)
-            try:
-                ret = json.loads(r.content.decode('utf-8'))
-            except Exception as e:
-                logger.error('Not JSON-parsable in response from [%s]. e [%s] ret status [%s] ret body [%s]', 
-                            object_url, e, 
-                            r.status_code, repr(r.content.decode('utf-8')[0:255]))
+                            auth=(node_data.username, node_data.password), 
+                            timeout=5, 
+                            allow_redirects=True)
+        except Exception as e:
+            logger.info('Failed requests.get to object [%s] e %s', object_url, e)
+            return ret
+        
+        ret_raw = r.content.decode('utf-8')
+        try:
+            ret = json.loads(ret_raw)
+        except Exception as e:
+            logger.error('Not JSON-parsable in response from [%s]. e [%s] ret status [%s] ret body [%s]', 
+                        object_url, e, 
+                        r.status_code, repr(ret_raw[0:255]))
         return ret
     
     # Send objects to other nodes

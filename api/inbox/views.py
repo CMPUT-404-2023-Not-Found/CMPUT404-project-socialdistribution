@@ -34,7 +34,7 @@ class InboxListCreateDeleteView(DestroyAPIView, ListCreateAPIView):
         '''
         logger.info(rev)
         author_uuid = self.kwargs.get(self.lookup_url_kwarg)
-        if 'count' in request.query_params:
+        if 'count' in request.query_params and request.query_params.get('count') == 'true':
             logger.info('Getting count of objects in author [%s] inbox', author_uuid)
             queryset_count = self.get_queryset().count()
             return Response(status=status.HTTP_200_OK, data={'count': queryset_count})

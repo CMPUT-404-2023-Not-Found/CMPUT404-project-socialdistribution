@@ -1,6 +1,8 @@
 # 2023-02-18
 # inbox/views.py
 
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+from drf_spectacular.types import OpenApiTypes
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, DestroyAPIView
 from rest_framework.response import Response
@@ -22,6 +24,10 @@ class InboxListCreateDeleteView(DestroyAPIView, ListCreateAPIView):
     permission_classes = [IsOwner|NodesCanPost|NonOwnerCanPost]
     pagination_class = InboxPagination
 
+    @extend_schema(
+            parameters=[
+                OpenApiParameter('count', OpenApiTypes.BOOL, OpenApiParameter.QUERY)
+            ])
     def get(self, request, *args, **kwargs):
         '''
         GET Paginated list of recent author_uuid's inbox things

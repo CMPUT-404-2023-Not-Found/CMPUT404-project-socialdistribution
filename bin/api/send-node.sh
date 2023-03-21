@@ -5,12 +5,12 @@
 
 # set -x
 usage () {
-    echo "Usage $0 <summary> <object_type> <object_url> <inbox_url> [, more_inbox_urls...]"
+    echo "Usage $0 <summary> <object_type> <object_url> <inbox_url> [more_inbox_urls...]"
     echo "summary: I Liked Your Post"
     echo "object_type: like"
     echo "object_url: http://somesite/api/authors/<owner_of_post_i_liked>/posts/<post_i_liked>/"
     echo "inbox_url: http://somesite/api/authors/<owner_of_post_i_liked>/inbox/"
-    echo "more_inbox_urls: a comma seperated list of more inboxes"
+    echo "more_inbox_urls: space seperated additional inbox urls"
 }
 if [ "#$APP_URL" = "#" ]; then echo "ERR Could could not find $APP_URL in env, is your env setup?"; exit 1; fi
 if [ $# -lt 4 ]; then usage; exit 1; fi

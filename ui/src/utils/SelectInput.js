@@ -6,7 +6,7 @@ import Select from '@mui/material/Select';
 
 const SelectInput = ({register, obj, onChange}) => {
     return (
-        <FormControl style={{ display: "block", marginTop: 15}}>
+        <FormControl style={{ display: "block", marginTop: 15}} size="small">
             <InputLabel
             style={{ backgroundColor: '#eaeff1' }}
             htmlFor={obj.name}
@@ -15,7 +15,7 @@ const SelectInput = ({register, obj, onChange}) => {
             {obj.label}
         </InputLabel>
           <Select  {...register(obj.name)}
-          style={{ width: '10%',marginBottom:20 }}
+          style={{ width: '13%',marginBottom:20 }}
           onChange={onChange}
           >
             <MenuItem >None</MenuItem>

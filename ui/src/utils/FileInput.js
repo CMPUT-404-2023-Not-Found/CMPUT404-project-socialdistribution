@@ -99,7 +99,7 @@ const FileInput = ({ register, obj }) => {
   };
 
   return (
-    <div style={{ marginTop: 15 }}>
+    <div style={{ marginTop: 10 }}>
       <label htmlFor={obj.name}>Upload File  </label>
       <input
         type="file"

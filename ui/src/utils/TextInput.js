@@ -14,9 +14,16 @@ const TextInput = ({register, obj}) => {
         if (obj.max_length && obj.max_length < 200) {
           return (
             <>
-              <label htmlFor={obj.name}>{obj.label} </label>
+              <label  htmlFor={obj.name} style={{
+                    cursor: 'pointer',
+                    color: '#517377',
+                    fontFamily: 'Arial, sans-serif',
+                    fontWeight: 'bold',
+                    fontSize: '18px'
+                }}>{obj.label} </label>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <input
+                  required
                   {...register(obj.name)}
                   style={{
                     display: 'block',
@@ -26,6 +33,7 @@ const TextInput = ({register, obj}) => {
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                 />
+               
                 {inputValue && (
                   <HighlightOffIcon
                     style={{ cursor: 'pointer' , marginLeft:-25,marginBottom:15,backgroundColor:'white',color:'#517377'}}
@@ -40,7 +48,13 @@ const TextInput = ({register, obj}) => {
         else {
             return (
                 <>
-                  <label htmlFor={obj.name}>{obj.label}</label>
+                  <label htmlFor={obj.name} style={{
+                        cursor: 'pointer',
+                        color: '#517377',
+                        fontFamily: 'Arial, sans-serif',
+                        fontWeight: 'bold',
+                        fontSize: '18px'
+                    }}>{obj.label}</label>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <textarea
                       {...register(obj.name)}

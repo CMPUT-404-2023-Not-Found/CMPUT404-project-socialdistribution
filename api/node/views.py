@@ -1,11 +1,14 @@
 # 2023-02-13
 # node/views.py
 
+import json
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from author.models import Author
+from author.serializers import ExistingAuthorSerializer
 from .models import Node
 from .serializers import NodeRetrieveSerializer, NodeSendSerializer
 from utils.node_comm import NodeComm
@@ -57,6 +60,8 @@ class NodeView(GenericAPIView):
         Post an object to a node's author's inboxes
         '''
         logger.info(rev)
+
+        # Create & validate the inbox object to be sent from request data
         request.data['author'] = request.user.get_node_id()
         if not request.data.get('summary'): 
             requester_name = request.user.display_name if request.user.display_name else request.user.username
@@ -70,6 +75,10 @@ class NodeView(GenericAPIView):
             return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
         data_to_send = serializer.data
 
+        # Append the JSON representation of the requester
+        data_to_send['author'] = ExistingAuthorSerializer(request.user).data
+
+        # Send the inbox object to the requested inbox_url & return the response
         inbox_url = request.GET.get('url', '')
         if not inbox_url:
             logger.error('Could not determine inbox_url from query params')

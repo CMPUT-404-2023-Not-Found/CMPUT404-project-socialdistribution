@@ -1,7 +1,7 @@
 import React from 'react'
 
 const TextInput = ({register, obj}) => {
-    if (obj.max_length) {
+    if (obj.max_length && obj.max_length < 200) {
         return (
             <>
                 <label htmlFor={obj.name}>{obj.label}</label>

@@ -8,6 +8,7 @@ from django.utils.crypto import get_random_string
 from rest_framework.test import APIClient, APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from author.serializers import ExistingAuthorSerializer
 Author = get_user_model()
 
 class Base(APITestCase):
@@ -44,3 +45,6 @@ class Base(APITestCase):
         Return string http://sitename/authors/<author_uuid>/inbox/
         '''
         return reverse('inbox', kwargs={'author_uuid': str(uuid)})
+
+    def serialize_author(self, data):
+        return ExistingAuthorSerializer(data).data

@@ -91,6 +91,8 @@ class NodeComm():
     def send_internal_object(self, inbox_url, data):
         ret = None
         ret_status = 400
+        sender_author_info = data.pop('author', {})
+        data['author'] = sender_author_info.get('url', '') if sender_author_info else ''
         serializer = InboxSerializer(data=data)
         if serializer.is_valid():
             author_uuid = self.parse_author_uuid_from_inbox(inbox_url)
@@ -116,7 +118,9 @@ class NodeComm():
             try:
                 ret = json.loads(r.content.decode('utf-8'))
             except Exception as e:
-                logger.error('Not JSON-parsable in response from [%s]. e [%s]', inbox_url, e)
+                logger.error('Not JSON-parsable in response from [%s]. e [%s] ret status [%s] ret body [%s]', 
+                            inbox_url, e, 
+                            r.status_code, repr(r.content.decode('utf-8')[0:255]))
             ret_status = r.status_code
         return ret, ret_status
 

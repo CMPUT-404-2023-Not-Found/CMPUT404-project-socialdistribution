@@ -23,6 +23,7 @@ const BasicMenu = ({ anchorEl, handleClose, open, menuItems }) => {
         >
         {menuItems.map((item) => (
           <MenuItem
+            key={item.id}
             onClick={() => { navigate(item.route); handleClose() }}
           >
             {item.label}

@@ -81,7 +81,7 @@ const Inbox = () => {
 
     return (
         <>
-            <PageHeader title='Inbox'></PageHeader>
+            <PageHeader title='Inbox' disableNotification></PageHeader>
             <GridWrapper>
             {renderInbox(inbox.items)}
             </GridWrapper>

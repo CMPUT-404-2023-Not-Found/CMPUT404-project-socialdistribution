@@ -58,11 +58,11 @@ class PostListCreateView(ListCreateAPIView):
             logger.info('Get recent posts for author_uuid: [%s]', author_uuid)
         
         follower_url = self.request.user.id
-        # if isFriend(follower_url, author_uuid):
-        #     logger.info('Get public and private posts for author_uuid: [%s]', author_uuid)      
-        #     return self.queryset.filter(author_id=author_uuid).order_by('-published')
-        # if Follower.objects.filter()
-        return self.queryset.filter(author_id=author_uuid, visibility="PUBLIC").order_by('-published')
+        if isFriend(follower_url, author_uuid) or request.user.groups.filter(name='node').exists():
+            logger.info('Get public and private posts for author_uuid: [%s]', author_uuid)      
+            return self.queryset.filter(author_id=author_uuid, unlisted=False).order_by('-published')
+
+        return self.queryset.filter(author_id=author_uuid, visibility="PUBLIC", unlisted=False).order_by('-published')
 
 class PostDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer

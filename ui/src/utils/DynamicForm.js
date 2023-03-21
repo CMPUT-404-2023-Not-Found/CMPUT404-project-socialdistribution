@@ -1,10 +1,12 @@
 import React from 'react'
-
+import { useState } from 'react';
 import { useForm } from 'react-hook-form'
 import CheckboxInput from './CheckboxInput';
 import FileInput from './FileInput';
 import SelectInput from './SelectInput';
 import TextInput from './TextInput';
+import Button from '@mui/material/Button';
+
 
 /*
     This code was adapted from a video posted by Ian Lenehan on 2022-10-26, retreived on 2023-02-28,
@@ -33,6 +35,11 @@ const DynamicForm = ({options, formSubmitFunction}) => {
     const selectInputs = [];
     const checkboxInputs = [];
     const fileInputs = [];
+    const [contentType, setContentType] = useState('');
+
+    const handleContentTypeChange = (event) => {
+        setContentType(event.target.value);
+    };
 
     if (!options.actions || !options.actions.POST) {
         return (
@@ -56,38 +63,69 @@ const DynamicForm = ({options, formSubmitFunction}) => {
             }
         }
     }
-
+    console.log(contentType);
     return (
         <form onSubmit={handleSubmit(formSubmitFunction)}>
-            {textInputs.map((textInput, i) => {
-                return (
-                    <TextInput key={i} register={register} obj={textInput}></TextInput>
-                )
-            })}
-
-            {selectInputs.map((selectInput, i) => {
-                return (
-                    <SelectInput key={i} register={register} obj={selectInput}></SelectInput>
-                )
-            })}
-
-            {checkboxInputs.map((checkboxInput, i) => {
-                return (
-                    <CheckboxInput key={i} register={register} obj={checkboxInput}></CheckboxInput>
-                )
-            })}
-
-            {fileInputs.map((fileInput, i) => {
-                return (
-                    <FileInput key={i} register={register} obj={fileInput}></FileInput>
-                )
-            })}
-
-            <button type="submit" style={{
-                marginTop: 15
-            }}>Post</button>
+          {textInputs.map((textInput, i) => {
+            if (i === 1) {
+              return (
+                <>
+                  <TextInput key={i} register={register} obj={textInput} />
+                  {selectInputs.map((selectInput, j) => {
+                    if (j === 0) {
+                      return (
+                        <SelectInput
+                          key={j}
+                          register={register}
+                          obj={selectInput}
+                          onChange={handleContentTypeChange}
+                        />
+                      );
+                    }
+                  })}
+                </>
+              );
+            } else if (i === 2) {
+              return (
+                <>
+                  {contentType === "image/png;base64" || contentType === "image/jpeg;base64" ? (
+                    fileInputs.map((fileInput, i) => {
+                      return (
+                        <FileInput key={i} register={register} obj={fileInput} />
+                      );
+                    })
+                  ) : (
+                    <TextInput key={i} register={register} obj={textInput} />
+                  )}
+                </>
+              );
+            } else {
+              return <TextInput key={i} register={register} obj={textInput} />;
+            }
+          })}
+      
+          {checkboxInputs.map((checkboxInput, i) => {
+            return (
+              <CheckboxInput key={i} register={register} obj={checkboxInput} />
+            );
+          })}
+      
+          {selectInputs.map((selectInput, i) => {
+            if (i === 1) {
+              return (
+                <SelectInput key={i} register={register} obj={selectInput} />
+              );
+            }
+          })}
+      
+          {/* <button type="submit" style={{ marginTop: 15 }}>
+            Post
+          </button> */}
+          <Button  type="submit" variant="contained">Post</Button>
         </form>
-    )
+      );
+      
+      
 }
 
 export default DynamicForm

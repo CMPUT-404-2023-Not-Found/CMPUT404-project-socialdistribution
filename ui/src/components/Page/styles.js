@@ -18,7 +18,15 @@ export const pageStyles = {
             paddingBottom: '10px',
             marginLeft: '320px'
         },
-        row: {
+        topRow: {
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'end',
+            alignItems: 'center',
+            marginBottom: '20px',
+            marginRight: '15px'
+        },
+        middleRow: {
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',

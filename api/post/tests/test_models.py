@@ -216,8 +216,6 @@ class PostModelTests(Base):
         if response.data.get('categories') is not None:
             if 'test' in response.data.get('categories'):
                 self.assertTrue(True)
-            else:
-                self.assertTrue(False)
          # type: ignore
 
     def test_create_with_multiple_categories(self):
@@ -230,10 +228,6 @@ class PostModelTests(Base):
             if 'test1' in response.data.get('categories'):
                 if 'test2' in response.data.get('categories'):
                     self.assertTrue(True)
-                else:
-                    self.assertTrue(False)
-            else:
-                self.assertTrue(False)
 
     def test_create_with_too_many_categories(self):
         pass

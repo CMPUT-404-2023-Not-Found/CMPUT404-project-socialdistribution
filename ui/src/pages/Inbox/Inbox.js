@@ -43,9 +43,28 @@ const Inbox = () => {
         if (!items || items.length <= 0) return (<Typography paragraph >No Posts</Typography>);
         let itemsRender = [];
         items.forEach((item, idx) => {
+            console.log(item);
+            if (item['@context']) {
+                itemsRender.push(
+                    <BasicCard 
+                        key={idx}
+                        header = {
+                            <PostHeader 
+                                author={{ displayName: item.author }}
+                                title={item.summary}
+                            />
+                        }
+                        content = {
+                            <PostContent 
+                                description='Got an activitystream'
+                                content={item.object}
+                            />
+                        }
+                    />
+                );
+            } else {
             switch(item.type) {
                 case 'post':
-                    console.log(item);
                     itemsRender.push(
                         <BasicCard 
                             key={idx}
@@ -74,6 +93,7 @@ const Inbox = () => {
                     break;
                 default:
                     console.error('Unknown inbox type: ' + item.type);
+            }
             }
         });
         return (<>{itemsRender}</>)

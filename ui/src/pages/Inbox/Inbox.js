@@ -77,6 +77,7 @@ const Inbox = () => {
                             content={
                                 <PostContent 
                                     description={item.description}
+                                    contentType={item.contentType}
                                     content={item.content}
                                 />}
                         />
@@ -94,7 +95,7 @@ const Inbox = () => {
                 default:
                     console.error('Unknown inbox type: ' + item.type);
             }
-            itemsRender.push(<br></br>);
+            itemsRender.push(<br key={items.length + idx}></br>);
             }
         });
         return (<>{itemsRender}</>)

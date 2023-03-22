@@ -43,12 +43,14 @@ const PostContent = ({ description, contentType, content }) => {
     const renderContentBody = (contentType, content) => {
         let contentBodyRender = <Typography>Unable to render</Typography>;
         switch (contentType) {
-            case 'text/plain': 
+            case 'text/plain': case 'application/base64': 
                 contentBodyRender = <Typography variant='body1' color='text.primary'>{content}</Typography>
                 break;
             case 'text/markdown':
                 contentBodyRender = <ReactMarkdown variant='body1' color='text.primary'>{content}</ReactMarkdown>
                 break;
+            case 'image/png;base64': case 'image/jpeg;base64': case 'image/link':
+                contentBodyRender = <img src={content}></img>
             default:
                 console.error('Got unknown contentType: ', contentType);
                 break;

@@ -31,6 +31,7 @@ const PageHeader = ({ title, disableNotification=false }) => {
                 console.log('Failed to get notifications');
             }
         }
+        getNotifications();
         const fifthteenMinutes = 15 * 60 * 1000;
         let interval = setInterval(() => {
             getNotifications();

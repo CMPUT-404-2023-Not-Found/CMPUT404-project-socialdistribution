@@ -14,6 +14,7 @@ rev = 'rev: $xnAN8asd2$x'
 class InboxSerializer(serializers.ModelSerializer):
     object          = URLField(source='object_id', required=True)
     author          = URLField(source='sender_author_id', required=True)
+    context         = ChoiceField(choices=Inbox.W3ContextChoices.choices, default=Inbox.W3ContextChoices.W3_AS)
 
     class Meta:
         model = Inbox
@@ -21,12 +22,12 @@ class InboxSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data):
         new_data = {
-            'context': data.get('@context', ''),
             'summary': data.get('summary', ''),
             'type': data.get('type', ''),
             'author': data.get('author', {}).get('url', ''),
             'object': data.get('object', '')
         }
+        if data.get('@context'): new_data['context'] = data.get('@context')
         return super().to_internal_value(new_data)
 
     def to_representation(self, instance):

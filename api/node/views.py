@@ -1,16 +1,14 @@
 # 2023-02-13
 # node/views.py
 
-import json
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from threading import Thread
 
-from author.models import Author
-from author.serializers import ExistingAuthorSerializer
 from .models import Node
-from .serializers import NodeRetrieveSerializer, NodeSendSerializer
+from .serializers import NodeRetrieveSerializer
 from utils.node_comm import NodeComm
 
 NodeComm = NodeComm()
@@ -24,13 +22,8 @@ class NodeView(GenericAPIView):
     Node view for node-to-node communication
     '''
     queryset = Node.objects.all()
+    serializer_class = NodeRetrieveSerializer
     permission_classes = [IsAuthenticated]
-
-    def get_serializer_class(self):
-        if (self.request.method == 'POST'):
-            return NodeSendSerializer
-        else:
-            return NodeRetrieveSerializer
 
     def get(self, request, *args, **kwargs):
         '''
@@ -60,31 +53,15 @@ class NodeView(GenericAPIView):
         Post an object to a node's author's inboxes
         '''
         logger.info(rev)
-
-        # Create & validate the inbox object to be sent from request data
-        request.data['author'] = request.user.get_node_id()
-        if not request.data.get('summary'): 
-            requester_name = request.user.display_name if request.user.display_name else request.user.username
-            req_type = request.data.get('type')
-            request.data['summary'] = f'{requester_name} sent a {req_type}'
-
-        serializer_class = self.get_serializer_class()
-        serializer = serializer_class(data=request.data)
-        if not serializer.is_valid():
-            logger.error('Request data is bad [%s]', serializer.errors)
-            return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
-        data_to_send = serializer.data
-
-        # Append the JSON representation of the requester
-        data_to_send['author'] = ExistingAuthorSerializer(request.user).data
-
-        # Send the inbox object to the requested inbox_url & return the response
-        inbox_url = request.GET.get('url', '')
-        if not inbox_url:
-            logger.error('Could not determine inbox_url from query params')
+        inbox_urls = request.data.get('inbox_urls', [])
+        num_receiving_inbox = len(inbox_urls)
+        max_receiving_inbox = 32
+        if not num_receiving_inbox or num_receiving_inbox > max_receiving_inbox:
+            logger.error('Invalid number of inboxes [%s] supported [%s], denying request', num_receiving_inbox, max_receiving_inbox)
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        response_data, response_status = NodeComm.send_object(inbox_url=inbox_url, data=data_to_send)
-        if response_status == 201:
-            return Response(status=status.HTTP_201_CREATED, data=response_data)
-        else:
-            return Response(status=response_status)
+        
+        data_to_send = NodeComm.create_inbox_obj_data(author=request.user, request_data=request.data)
+        logger.info('Sending object [%s] [%s] to [%s] inboxes', data_to_send['type'], data_to_send['object'], num_receiving_inbox)
+        thread = Thread(target=NodeComm.send_object, args=(inbox_urls, data_to_send))
+        thread.start()
+        return Response(status=status.HTTP_201_CREATED, data=data_to_send)

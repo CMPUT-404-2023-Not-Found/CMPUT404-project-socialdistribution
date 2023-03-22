@@ -6,10 +6,14 @@ from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
 
+
+from author.models import Author
+from follower.models import Follower
 from .serializers import PostSerializer
-from .models import Author
 from .models import Post
 from utils.permissions import IsAuthenticatedWithJWT, NodeReadOnly, OwnerCanWrite
+from utils.node_comm import NodeComm
+nc = NodeComm()
 
 import logging
 logger = logging.getLogger('django')
@@ -31,8 +35,23 @@ class PostListCreateView(ListCreateAPIView):
         logger.info(rev)
         author_uuid = self.kwargs.get(self.lookup_url_kwarg)
         author_obj = Author.objects.get(id=author_uuid)
-        logger.info('Creating new post for author_uuid: [%s]', author_uuid)
-        return serializer.save(author=author_obj)
+        logger.info('Creating new post for author_uuid [%s]', author_uuid)
+        post = serializer.save(author=author_obj)
+        if post and not post.unlisted:
+            inbox_obj_raw = {
+                'summary': post.title,
+                'type': 'post',
+                'object': post.get_node_id()
+            }
+            inbox_obj = nc.create_inbox_obj_data(author_obj, inbox_obj_raw)
+            followers = Follower.objects.filter(followee=author_obj)
+            logger.info('Sending new post [%s] to inboxes of followers [%s] of author_uuid [%s]', post.id, len(followers), author_uuid)
+            follower_inboxs = []
+            for follower in followers:
+                follower_inbox = nc.get_author_inbox(follower.follower)
+                follower_inboxs.append(follower_inbox)
+            nc.send_object(follower_inboxs, inbox_obj)
+        return post
     
     def get_queryset(self):
         logger.info(rev)

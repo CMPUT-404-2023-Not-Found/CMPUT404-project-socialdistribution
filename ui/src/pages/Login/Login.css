@@ -47,8 +47,9 @@ pages/Login.css
     border: 1px solid #ccc;
 }
 
+
 .show-password-icon {
-    margin-left: -30px;
+    margin-left: -20px;
     cursor: pointer;
 }
   

@@ -36,7 +36,7 @@ const PageHeader = ({ title, disableNotification=false }) => {
             getNotifications();
         }, fifthteenMinutes);
         return () => clearInterval(interval);
-    }, [notification])
+    }, [notification, user, authTokens, logoutUser])
 
     // RENDER APP =================================================
     return (

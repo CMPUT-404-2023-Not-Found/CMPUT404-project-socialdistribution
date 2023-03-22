@@ -6,5 +6,5 @@ from django.urls import path
 from .views import NodeView
 
 urlpatterns = [
-    path('', NodeView.as_view(), name="node")
+    path('object/', NodeView.as_view(), name="node")
 ]

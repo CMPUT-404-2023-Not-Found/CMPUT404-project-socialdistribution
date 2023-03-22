@@ -12,8 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 from datetime import datetime, timedelta
-import django_on_heroku, dj_database_url, dotenv, os, pytz
-
+import django_on_heroku, dj_database_url, dotenv, os, pytz, logging.config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -158,6 +157,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # This code is modified from a documentation page from Django Software Foundation retrieved on 2023-02-16, to docs.djangoproject.com
 # documentation page here:
 # https://docs.djangoproject.com/en/3.2/topics/logging/
+LOGGING_CONFIG = None
 LOGGING = {
     'version': 1,
     'loggers': {
@@ -194,6 +194,7 @@ LOGGING = {
         }
     }
 }
+logging.config.dictConfig(LOGGING)
 
 # Settings for authentication & rest_framework_simplejwt
 # https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html

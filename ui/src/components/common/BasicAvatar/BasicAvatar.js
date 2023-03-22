@@ -21,7 +21,9 @@ const BasicAvatar = ({ profile, size }) => {
         );
     } else {
         return (
-        <Avatar sx={avatarStyles[avatarSize]}>{authorNameShort}</Avatar>
+            <Tooltip title={authorName && authorName}>
+                <Avatar sx={avatarStyles[avatarSize]}>{authorNameShort}</Avatar>
+            </Tooltip>
         );
     }
 }

@@ -72,3 +72,6 @@ class Author(AbstractBaseUser, PermissionsMixin):
     
     def get_node_id(self):
         return f'{self.host}/api/authors/{self.id}'
+    
+    def get_name(self):
+        return self.display_name if self.display_name else self.username

@@ -1,6 +1,6 @@
 /*
 2023-03-13
-ui/src/pages/Stream/Stream.js
+ui/src/pages/Inbox/Inbox.js
 
 */
 
@@ -15,29 +15,30 @@ import PostHeader from '../../components/Post/PostHeader';
 import PostContent from '../../components/Post/PostContent';
 import PageHeader from '../../components/Page/PageHeader';
 
-const Stream = () => {
+const Inbox = () => {
     //  variable declarations -------------------------------------
-    const [ nodePosts, setNodePosts ] = useState({});
-    const { authTokens, logoutUser } = useContext(AuthContext);
-
+    const [ inbox, setInbox ] = useState({});
+    const { user, authTokens, logoutUser } = useContext(AuthContext);
+    
     //  event listners --------------------------------------------
     useEffect(() => {
-        const getNodePosts = async () => {
-            const [response, data] = await Backend.get(`/api/posts/`, authTokens.access);
+        const getInbox = async () => {
+            const [response, data] = await Backend.get(`/api/authors/${user.user_id}/inbox/`, authTokens.access);
             if (response.status && response.status === 200) {
-                console.log(data)
-                setNodePosts(data);
+                setInbox(data);
             } else if (response.statusText === 'Unauthorized'){
                 logoutUser();
             } else {
                 console.log('Failed to get posts');
             }
         };
-        getNodePosts();
-    }, [authTokens, logoutUser]);
+        getInbox();
+    }, [user, authTokens, logoutUser]);
+
+    //  async functions -------------------------------------------
 
     // RENDER APP =================================================
-    const renderNodePosts = (items) => {
+    const renderInbox = (items) => {
         // console.log(items);
         if (!items || items.length <= 0) return (<Typography paragraph >No Posts</Typography>);
         let itemsRender = [];
@@ -62,36 +63,51 @@ const Stream = () => {
                     />
                 );
             } else {
-                itemsRender.push(
-                    <BasicCard 
-                        key={idx}
-                        header={
-                            <PostHeader 
-                                author={item.author} 
-                                title={item.title} 
-                                time={(item.updated_at ? item.updated_at : item.published)} 
-                            />}
-                        content={
-                            <PostContent 
-                                description={item.description}
-                                content={item.content}
-                            />}
-                    />
-                );
+            switch(item.type) {
+                case 'post':
+                    itemsRender.push(
+                        <BasicCard 
+                            key={idx}
+                            header={
+                                <PostHeader 
+                                    author={item.author} 
+                                    title={item.title} 
+                                    time={(item.updated_at ? item.updated_at : item.published)} 
+                                />}
+                            content={
+                                <PostContent 
+                                    description={item.description}
+                                    content={item.content}
+                                />}
+                        />
+                    );
+                    break;
+                case 'comment':
+                    // TODO render
+                    break;
+                case 'like':
+                    // TODO render
+                    break;
+                case 'follow_request':
+                    // TODO Render
+                    break;
+                default:
+                    console.error('Unknown inbox type: ' + item.type);
             }
             itemsRender.push(<br></br>);
+            }
         });
         return (<>{itemsRender}</>)
     };
 
     return (
         <>
-            <PageHeader title='Stream'></PageHeader>
+            <PageHeader title='Inbox' disableNotification></PageHeader>
             <GridWrapper>
-            {renderNodePosts(nodePosts.items)}
+            {renderInbox(inbox.items)}
             </GridWrapper>
         </>
     );
 }
 
-export default Stream;
+export default Inbox;

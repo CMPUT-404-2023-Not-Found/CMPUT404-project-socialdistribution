@@ -15,6 +15,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import IconButton from '@mui/material/IconButton';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ReactMarkdown from 'react-markdown'
 
 /*
 This code is modified from a documentation guide on Material UI Card components from Material UI SAS 2023, retrieved 2023-03-13 from mui.com
@@ -32,21 +33,36 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-const PostContent = ({ description, content }) => {
+const PostContent = ({ description, contentType, content }) => {
     const [expanded, setExpanded] = React.useState(false);
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
+
+    const renderContentBody = (contentType, content) => {
+        let contentBodyRender = <Typography>Unable to render</Typography>;
+        switch (contentType) {
+            case 'text/plain': 
+                contentBodyRender = <Typography variant='body1' color='text.primary'>{content}</Typography>
+                break;
+            case 'text/markdown':
+                contentBodyRender = <ReactMarkdown variant='body1' color='text.primary'>{content}</ReactMarkdown>
+                break;
+            default:
+                console.error('Got unknown contentType: ', contentType);
+                break;
+        }
+        return contentBodyRender;
+    };
+
     return (<>
     <CardContent>
         <Typography variant="body2" color="text.secondary">
             {description}
         </Typography>
         <Divider light></Divider>
-        <Typography variant="body1" color="text.primary">
-            {content}
-        </Typography>
+            {renderContentBody(contentType, content)}
     </CardContent>
     <CardActions disableSpacing>
         <IconButton aria-label="like">

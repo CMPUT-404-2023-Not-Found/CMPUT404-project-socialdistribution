@@ -1,0 +1,8 @@
+# This is a blank environment variables file
+# 2023-02-20
+# *** UI ENV FILE ***
+# You must:
+#   1. Fill this out with appropriate values
+#   2. Copy this file to: .env.local
+
+REACT_APP_API_URL=http://localhost:8000

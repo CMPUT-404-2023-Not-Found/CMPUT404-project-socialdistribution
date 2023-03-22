@@ -8,6 +8,7 @@ import React from 'react'
 import { styled } from '@mui/material/styles';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
 import Collapse from '@mui/material/Collapse';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
@@ -17,6 +18,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ReactMarkdown from 'react-markdown'
 
+import { PostContentStyles } from './styles';
 /*
 This code is modified from a documentation guide on Material UI Card components from Material UI SAS 2023, retrieved 2023-03-13 from mui.com
 guide here
@@ -40,19 +42,36 @@ const PostContent = ({ description, contentType, content }) => {
         setExpanded(!expanded);
     };
 
-    const renderContentBody = (contentType, content) => {
-        let contentBodyRender = <Typography>Unable to render</Typography>;
+    const renderContentBody = (description, contentType, content) => {
+        let contentBodyRender = [];
         switch (contentType) {
             case 'text/plain': case 'application/base64': 
-                contentBodyRender = <Typography variant='body1' color='text.primary'>{content}</Typography>
+                contentBodyRender = 
+                    <CardContent>
+                        <Typography variant='body1' color='text.primary'>{content}</Typography>
+                    </CardContent>
                 break;
             case 'text/markdown':
-                contentBodyRender = <ReactMarkdown variant='body1' color='text.primary'>{content}</ReactMarkdown>
+                contentBodyRender = 
+                    <CardContent>
+                        <ReactMarkdown>{content}</ReactMarkdown>
+                    </CardContent>
                 break;
             case 'image/png;base64': case 'image/jpeg;base64': case 'image/link':
-                contentBodyRender = <img src={content}></img>
+                contentBodyRender = 
+                    <CardMedia 
+                        component='img' 
+                        height={PostContentStyles.cardMedia.height} 
+                        sx={PostContentStyles.cardMedia.sx}
+                        src={content} alt={description} 
+                        />
+                break;
             default:
                 console.error('Got unknown contentType: ', contentType);
+                contentBodyRender = 
+                    <CardContent>
+                        <Typography>Unable to render</Typography>
+                    </CardContent>
                 break;
         }
         return contentBodyRender;
@@ -64,8 +83,8 @@ const PostContent = ({ description, contentType, content }) => {
             {description}
         </Typography>
         <Divider light></Divider>
-            {renderContentBody(contentType, content)}
     </CardContent>
+    {renderContentBody(description, contentType, content)}
     <CardActions disableSpacing>
         <IconButton aria-label="like">
         <FavoriteIcon />

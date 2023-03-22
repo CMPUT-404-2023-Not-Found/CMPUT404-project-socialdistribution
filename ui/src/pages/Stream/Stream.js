@@ -79,6 +79,7 @@ const Stream = () => {
                     />
                 );
             }
+            itemsRender.push(<br></br>);
         });
         return (<>{itemsRender}</>)
     };

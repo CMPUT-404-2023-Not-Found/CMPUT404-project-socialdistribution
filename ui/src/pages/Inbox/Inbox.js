@@ -94,6 +94,7 @@ const Inbox = () => {
                 default:
                     console.error('Unknown inbox type: ' + item.type);
             }
+            itemsRender.push(<br></br>);
             }
         });
         return (<>{itemsRender}</>)

@@ -43,7 +43,7 @@ const PageHeader = ({ title, disableNotification=false }) => {
     return (
     <Box sx={pageStyles.PageHeader.wrapper}>
         <Box sx={pageStyles.PageHeader.topRow}>
-        { !disableNotification && <NotificationBell iconColor='secondary' badgeContent={notification} menuItems={menuItems}/> }
+        { !disableNotification && <NotificationBell iconColor='white' badgeContent={notification} menuItems={menuItems}/> }
         </Box>
         <Box sx={pageStyles.PageHeader.middleRow}>
             <Typography variant='h4' color='white'>{title}</Typography>

@@ -30,6 +30,7 @@ const NotificationBell = ({ iconColor, badgeContent, menuItems }) => {
     };
 
     const handleClose = () => {
+        setAnchorEl(null);
         setOpen(false);
     };
 
@@ -37,7 +38,7 @@ const NotificationBell = ({ iconColor, badgeContent, menuItems }) => {
             <>
             <Tooltip title={badgeContent ? newNotification : noNewNotification}>
                 <IconButton 
-                    color={iconColor}
+                    sx={{color: iconColor}}
                     onClick={badgeContent ? handleOpen : null}
                     anchorEl={anchorEl}
                 >

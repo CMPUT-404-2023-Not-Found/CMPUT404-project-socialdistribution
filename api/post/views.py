@@ -3,8 +3,9 @@
 
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 
 from author.models import Author
@@ -114,3 +115,28 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
         post_id = self.kwargs.get(self.lookup_field)
         logger.info('Deleting post id: [%s]', post_id)
         return super().perform_destroy(instance)
+
+class PostListAllView(ListAPIView):
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        '''
+        GET a paginated list of all PUBLIC posts
+        '''
+        return super().get(request, *args, **kwargs)
+    
+    @extend_schema(
+        operation_id='post_list_all'
+    )
+    def get_queryset(self):
+        '''
+        Utilized by self.get
+        '''
+        logger.info(rev)
+        if (self.request.query_params): # type: ignore
+            logger.info('Get recent posts on system: with query_params [%s]', str(self.request.query_params)) # type: ignore
+        else:
+            logger.info('Get recent posts on system')
+        return self.queryset.filter(visibility='PUBLIC').filter(unlisted=False).order_by('-published')

@@ -19,8 +19,9 @@ urlpatterns = [
     path('api/authors/<uuid:author_uuid>/posts/<uuid:post_uuid>/comments/', include('comment.urls')),
     path('api/authors/<uuid:author_uuid>/posts/<uuid:post_uuid>/', include('like.urls')),
     path('api/authors/<uuid:author_uuid>/followers/', include('follower.urls')),
+    path('api/node/', include('node.urls')),
+    path('api/posts/', include('post.urls_extra')),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/docs/', SpectacularSwaggerView.as_view(url_name='schema')),
     path('api/token/', include('authentication.urls')),
-    path('api/node/', include('node.urls')),
 ]

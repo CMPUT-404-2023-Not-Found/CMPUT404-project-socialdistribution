@@ -14,18 +14,17 @@ logger = logging.getLogger('django')
 rev = 'rev: $xFgLu67$x'
 class FollowerPagination(CustomPagination):
 
-    def get_paginated_response(self, data):
-        new_data = []
-        for item in data:
-            item_data = NodeComm.get_object('author', item['follower'])
-            if item_data:
-                new_data.append(item_data)
-            else:
-                logger.warning('Failed lookup on item type [%s] url [%s]', 'author', item['follower'])
-                new_data.append(item)
+    def get_paginated_response(self, follower_list):
+        logger.info(follower_list)
+        lookup_list = []
+        for follower in follower_list:
+            lookup_list.append({
+                'type': 'author',
+                'object': follower['follower']
+            })
+        lookup_results = NodeComm.get_objects(lookup_list)
         
         return Response(OrderedDict([
             ('type', 'followers'),
-            ('items', new_data)
+            ('items', lookup_results)
         ]))
-

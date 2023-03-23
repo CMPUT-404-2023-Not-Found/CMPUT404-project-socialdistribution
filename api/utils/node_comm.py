@@ -65,7 +65,7 @@ class NodeComm():
                 serializer = self.lookup_config[source_item['type']]['serializer'](db_data)
                 lookup_response = serializer.data
             except Exception as e:
-                logger.error('Failed internal lookup on type [%s] url [%s]. e [%s]', source_item.type, source_item_url, e)
+                logger.error('Failed internal lookup on type [%s] url [%s]. e [%s]', source_item['type'], source_item_url, e)
         else:
             logger.error('Could not determine object uuid from url [%s]', source_item_url)
         results[idx] = lookup_response if lookup_response else source_item

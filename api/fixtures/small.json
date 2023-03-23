@@ -434,7 +434,7 @@
     "model": "follower.follower",
     "pk": 2,
     "fields": {
-      "follower": "http://localhost:8000/api/authors/12fae447-fb43-4cbc-84f9-8965aab66926",
+      "follower_node_id": "http://localhost:8000/api/authors/12fae447-fb43-4cbc-84f9-8965aab66926",
       "followee": "80e83b86-0d26-4189-b68a-bf57e8c87af1",
       "followed_at": "2023-03-19T05:29:49.414Z"
     }
@@ -443,7 +443,7 @@
     "model": "follower.follower",
     "pk": 3,
     "fields": {
-      "follower": "http://localhost:8000/api/authors/80e83b86-0d26-4189-b68a-bf57e8c87af1",
+      "follower_node_id": "http://localhost:8000/api/authors/80e83b86-0d26-4189-b68a-bf57e8c87af1",
       "followee": "d3bb924f-f37b-4d14-8d8e-f38b09703bab",
       "followed_at": "2023-03-19T05:28:32.518Z"
     }
@@ -452,7 +452,7 @@
     "model": "follower.follower",
     "pk": 4,
     "fields": {
-      "follower": "http://localhost:8000/api/authors/d3bb924f-f37b-4d14-8d8e-f38b09703bab",
+      "follower_node_id": "http://localhost:8000/api/authors/d3bb924f-f37b-4d14-8d8e-f38b09703bab",
       "followee": "80e83b86-0d26-4189-b68a-bf57e8c87af1",
       "followed_at": "2023-03-19T05:29:31.092Z"
     }

@@ -37,7 +37,7 @@ class FollowerDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Follower.objects.all()
     permission_classes = [IsAuthenticatedWithJWT|NodeReadOnly|IsOwner]
     http_method_names = ['get', 'put', 'delete', 'head', 'options']
-    lookup_field = 'follower'
+    lookup_field = 'follower_node_id'
     error = {
             "404_error":{
                 "Error": "Author not found",
@@ -55,13 +55,13 @@ class FollowerDetailView(RetrieveUpdateDestroyAPIView):
     
     def put(self, request, *args, **kwargs):
         followee = Author.objects.get(id=kwargs['author_uuid'])
-        follower_url = kwargs['follower']
-        exists = Follower.objects.filter(followee=followee, follower=follower_url)
+        follower_url = kwargs.get(self.lookup_field)
+        exists = Follower.objects.filter(followee=followee, follower_node_id=follower_url)
         if exists:
             logger.error('Follower [%s] already exists for author_uuid [%s]', follower_url, str(followee.id))
             return Response(self.error["400_error"],status=status.HTTP_400_BAD_REQUEST)
         else:
-            created = Follower.objects.create(followee=followee, follower=follower_url)
+            created = Follower.objects.create(followee=followee, follower_node_id=follower_url)
             serializer = FollowerSerializer(created)
             if created:
                 return Response(serializer.data, status=status.HTTP_201_CREATED)

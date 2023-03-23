@@ -20,7 +20,7 @@ class FollowerPagination(CustomPagination):
         for follower in follower_list:
             lookup_list.append({
                 'type': 'author',
-                'object': follower['follower']
+                'object': follower['follower_node_id']
             })
         lookup_results = NodeComm.get_objects(lookup_list)
         

@@ -16,9 +16,9 @@ class FollowerAdmin(admin.ModelAdmin):
     followee_node_id.short_description = 'Followee Node Id'
 
     date_hierarchy = 'followed_at'
-    list_display = ('follower', 'followee_name', 'followee_node_id', 'followed_at')
-    list_filter = ('followee', 'follower')
-    search_fields = ('follower', 'followee__display_name', 'followee__username')
+    list_display = ('follower_node_id', 'followee_name', 'followee_node_id', 'followed_at')
+    list_filter = ('followee', 'follower_node_id')
+    search_fields = ('follower_node_id', 'followee__display_name', 'followee__username')
     ordering = ('followee',)
 
 admin.site.register(Follower, FollowerAdmin)

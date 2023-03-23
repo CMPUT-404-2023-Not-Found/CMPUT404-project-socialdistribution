@@ -2,21 +2,17 @@
 2023-03-22
 pages/Followers/Followers.js
 */
-import React, { useContext, useState, useEffect } from 'react';
-
-import Backend from '../../utils/Backend';
-import BasicCard from '../../components/common/BasicCard/BasicCard';
-import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
-import PageHeader from '../../components/Page/PageHeader';
-import Card from '@mui/material/Card';
-import AuthContext from '../../context/AuthContext';
-import PostContent from '../../components/Post/PostContent';
+import React, { useContext, useEffect, useState } from 'react';
 import { CardContent, CardHeader, IconButton, Typography } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import ToolTip from '@mui/material/Tooltip';
+
 import BasicAvatar from '../../components/common/BasicAvatar/BasicAvatar';
-
-
+import BasicCard from '../../components/common/BasicCard/BasicCard';
+import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
+import AuthContext from '../../context/AuthContext';
+import Backend from '../../utils/Backend';
+import PageHeader from '../../components/Page/PageHeader';
 
 const Followers = () => {
     //  variable declarations -------------------------------------

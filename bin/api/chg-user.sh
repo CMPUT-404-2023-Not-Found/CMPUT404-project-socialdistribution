@@ -4,7 +4,7 @@
 # Symlink some user files to their generic counterpart
 
 # set -x
-if [ "#$1" = "#" ]; then echo "Usage $0 <user>"; exit 1; fi
+if [ "#$1" = "#" ]; then echo "Usage $0 <user>"; echo "current: $(basename $(readlink -f .username))"; exit 1; fi
 user="$1"
 files=".username .password .uuid"
 for file in `echo "$files"`

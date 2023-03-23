@@ -18,15 +18,15 @@ import PeopleIcon from '@mui/icons-material/People';
 export const mainNavbarItems = [
     {
         id: 0,
-        icon: <InboxIcon />,
+        icon: <AllInboxIcon />,
         label: 'Stream',
         route: '',
     },
     {
         id: 1,
-        icon: <AllInboxIcon />,
-        label: 'Browse Posts',
-        route: 'all',
+        icon: <InboxIcon />,
+        label: 'Inbox',
+        route: 'inbox',
     },
     {
         id: 2,

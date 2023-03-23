@@ -18,11 +18,13 @@ import { AuthProvider } from './context/AuthContext';
 import PrivateRoutes from './utils/PrivateRoutes'
 import Login from './pages/Login/Login';
 import Profile from './pages/Profile/Profile';
+import Inbox from './pages/Inbox/Inbox';
 import Stream from './pages/Stream/Stream';
 import YourPosts from './pages/YourPosts/YourPosts';
 import PostDetail from './components/PostDetail';
 import NotFound from './components/NotFound';
 import CreatePost from './pages/CreatePost';
+import Followers from './pages/Followers/Followers'
 
 import './index.css';
 
@@ -35,10 +37,12 @@ root.render(
                <Route path='/' element={<App />}>
                   <Route element={<PrivateRoutes />}>
                      <Route path="/" element={<Stream/>} exact/>
+                     <Route path="/inbox" element={<Inbox />} />
                      <Route path="/posts" element={<YourPosts />} />
                      <Route path="/posts/:postid" element={<PostDetail />} />
                      <Route path="/profile" element={<Profile />} />
                      <Route path="/createpost" element={<CreatePost />} />
+                     <Route path="/followers" element={ <Followers/>} />
                   </Route>
                   <Route path="/login" element={<Login />} />
                   <Route path="*" element={<NotFound />} />

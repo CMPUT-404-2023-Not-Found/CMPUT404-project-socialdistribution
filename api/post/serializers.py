@@ -31,7 +31,8 @@ class PostSerializer(serializers.ModelSerializer):
 
     categories      = serializers.SerializerMethodField('get_categories')
     @extend_schema_field(ListField)
-    def get_categories(self, obj): return ['this', 'is', 'a', 'hack']
+    # def get_categories(self, obj): return ['this', 'is', 'a', 'hack']
+    def get_categories(self, obj): return obj.get_category_item_list()
     contentType     = ChoiceField(choices=Post.CONTENT_TYPE_OPTIONS, source='content_type', required=True)
     type            = serializers.SerializerMethodField('get_type')
     @extend_schema_field(CharField)

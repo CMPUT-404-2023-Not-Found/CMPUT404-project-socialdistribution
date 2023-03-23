@@ -93,6 +93,18 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
         logger.info('Getting content for post id: [%s]', post_id)
         return super().get_object()
 
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        if serializer.data['visibility'] == "PUBLIC":
+            return Response(serializer.data)
+
+        if isFriend(follower_url, author_uuid) or request.user.groups.filter(name='node').exists():
+            logger.info('Get public and private posts for author_uuid: [%s]', author_uuid)      
+            return Response(serializer.data)
+        
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
     @extend_schema(
         operation_id='post_post_update'
     )

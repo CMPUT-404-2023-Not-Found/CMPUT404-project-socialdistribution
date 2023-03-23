@@ -96,8 +96,9 @@
     },
     {
         "model": "follower.follower",
-        "pk": "http://localhost:8000/api/authors/de52020f-f5df-4361-b771-2829a99f16a2",
+        "pk": 1,
         "fields": {
+            "follower": "http://localhost:8000/api/authors/de52020f-f5df-4361-b771-2829a99f16a2",
             "followee": "398113ca-ce82-420a-b1e8-e8de260d3a64",
             "followed_at": "2023-03-16T23:14:58.870Z"
         }

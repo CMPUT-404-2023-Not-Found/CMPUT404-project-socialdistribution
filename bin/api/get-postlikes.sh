@@ -1,0 +1,6 @@
+#!/bin/bash
+# 2023-03-18
+# get-postlikes.sh
+# Get a list of likes for a post
+
+curl -s -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjc5MTI2MTEzLCJpYXQiOjE2NzkxMjI1MTMsImp0aSI6IjQyYzhhYzcxNzNkZDRmYzg4ODA1YTIwZDZlNmVjZmYwIiwidXNlcl9pZCI6IjM5ODExM2NhLWNlODItNDIwYS1iMWU4LWU4ZGUyNjBkM2E2NCIsInVzZXJuYW1lIjoiZ2VvcmdlcnJtYXJ0aW4iLCJkaXNwbGF5TmFtZSI6IkJsdWUgU2t5IFdhbGtlciJ9.DXBWhVfJ80ouMaYm7t4I4mWiYCgAm9WApD0MFzfQVp0" http://localhost:8000/api/authors/d3bb924f-f37b-4d14-8d8e-f38b09703bab/posts/1629b94f-04cc-459e-880e-44ebe979fb7e/likes/

@@ -30,7 +30,7 @@ cnt_body=`cat <<EOF
   "@context": "https://www.w3.org/ns/activitystreams",
   "summary": "$object_summary",
   "type": "$object_type",
-  "author": "$object_author_node_id",
+  "author": { "url": "$object_author_node_id" },
   "object": "$object_url"
 }
 EOF`

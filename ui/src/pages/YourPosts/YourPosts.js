@@ -62,6 +62,7 @@ const YourPosts = () => {
                         />}
                 />
             );
+            itemsRender.push(<br></br>);
         });
         return (<>{itemsRender}</>)
     }

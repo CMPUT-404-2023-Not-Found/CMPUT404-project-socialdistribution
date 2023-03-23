@@ -8,16 +8,14 @@ https://www.youtube.com/watch?v=2k8NleFjG7I
 */
 
 import React, { useContext, useEffect, useState } from 'react';
-import { CardContent, CardHeader, IconButton, Typography } from '@mui/material';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import ToolTip from '@mui/material/Tooltip';
+import { CardContent, CardHeader } from '@mui/material';
 
-import BasicAvatar from '../../components/common/BasicAvatar/BasicAvatar';
 import BasicCard from '../../components/common/BasicCard/BasicCard';
 import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
 import AuthContext from '../../context/AuthContext';
 import Backend from '../../utils/Backend';
 import PageHeader from '../../components/Page/PageHeader';
+import AuthorCard from '../../components/common/AuthorCard/AuthorCard';
 
 const Profile = () => {
     //  variable declarations -------------------------------------
@@ -70,30 +68,12 @@ const Profile = () => {
                 </BasicCard>
             )
         }
-        let profileTitle = (profile.displayName ? profile.displayName : user.username)
+        // let profileTitle = (profile.displayName ? profile.displayName : user.username)
         return (
-            <BasicCard>
-                <CardHeader
-                    avatar={
-                        <BasicAvatar profile={profile} size='large'></BasicAvatar>
-                    }
-                    title={profileTitle}
-                    titleTypographyProps={{ variant: 'h3' }}
-                    subheader={profile.host}
-                    subheaderTypographyProps={{ variant: 'h4' }}
-                    action={
-                    <ToolTip title={(profile.github && profile.github)}>
-                    <IconButton size='large' aria-label="github" onClick={() => { console.log(profile.github) }}>
-                        <GitHubIcon fontSize='large'/>
-                    </IconButton>
-                    </ToolTip>
-                    }
-                />
-                <CardContent>
-                    <Typography variant='h5'>ID</Typography>
-                    <Typography variant='body1'>{profile.url}</Typography>
-                </CardContent>
-            </BasicCard>
+            <AuthorCard
+                author = {profile} 
+                size = "large" 
+            />
         )
     }
 

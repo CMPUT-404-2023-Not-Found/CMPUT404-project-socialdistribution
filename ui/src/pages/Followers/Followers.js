@@ -3,16 +3,13 @@
 pages/Followers/Followers.js
 */
 import React, { useContext, useEffect, useState } from 'react';
-import { CardContent, CardHeader, IconButton, Typography } from '@mui/material';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import ToolTip from '@mui/material/Tooltip';
+import { Typography } from '@mui/material';
 
-import BasicAvatar from '../../components/common/BasicAvatar/BasicAvatar';
-import BasicCard from '../../components/common/BasicCard/BasicCard';
 import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
 import AuthContext from '../../context/AuthContext';
 import Backend from '../../utils/Backend';
 import PageHeader from '../../components/Page/PageHeader';
+import AuthorCard from '../../components/common/AuthorCard/AuthorCard';
 
 const Followers = () => {
     //  variable declarations -------------------------------------
@@ -43,28 +40,10 @@ const Followers = () => {
         items.forEach((item, idx) => {
             console.log(item);
             itemsRender.push(
-                <BasicCard key ={idx}>
-                <CardHeader
-                    avatar={
-                        <BasicAvatar profile={item} size='large'></BasicAvatar>
-                    }
-                    title={item.displayName}
-                    titleTypographyProps={{ variant: 'h3' }}
-                    subheader={item.host}
-                    subheaderTypographyProps={{ variant: 'h4' }}
-                    action={
-                    <ToolTip title={(item.github && item.github)}>
-                    <IconButton size='large' aria-label="github" onClick={() => { console.log(item.github) }}>
-                        <GitHubIcon fontSize='large'/>
-                    </IconButton>
-                    </ToolTip>
-                    }
+                <AuthorCard
+                    author = {item} 
+                    size = "small" 
                 />
-                <CardContent>
-                    <Typography variant='h5'>ID</Typography>
-                    <Typography variant='body1'>{item.url}</Typography>
-                </CardContent>
-            </BasicCard>
             );
             itemsRender.push(<br key={idx + items.length}></br>);
         });

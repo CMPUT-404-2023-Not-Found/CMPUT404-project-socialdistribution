@@ -79,7 +79,7 @@ class NodeComm():
         host_url = self.parse_host_url(source_item_url)
         node_data = self.get_node_auth(host_url)
         if not node_data:
-            requests[idx] = source_item
+            results[idx] = source_item
             return
         try:
             r = requests.get(source_item_url, 

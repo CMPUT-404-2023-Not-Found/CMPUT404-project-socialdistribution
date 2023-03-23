@@ -74,7 +74,7 @@ class PostListCreateView(ListCreateAPIView):
         else:
             logger.info('Get recent posts for author_uuid: [%s]', author_uuid)
         
-        follower_url = self.request.user.id
+        follower_url = self.request.user.get_node_id()
         if isFriend(follower_url, author_uuid) or request.user.groups.filter(name='node').exists():
             logger.info('Get public and private posts for author_uuid: [%s]', author_uuid)      
             return self.queryset.filter(author_id=author_uuid, unlisted=False).order_by('-published')

@@ -13,9 +13,9 @@ const AuthorCard = ({ author, size }) => {
         <CardHeader
           avatar={<BasicAvatar profile={author} size={size}></BasicAvatar>}
           title={author.displayName}
-          titleTypographyProps={size === 'small' ? { variant: "body1" } : {variant: "h3"}}
+          titleTypographyProps={size === 'medium' ? { variant: "body1" } : {variant: "h3"}}
           subheader={author.host}
-          subheaderTypographyProps={size === 'small' ? { variant: "body1" } : {variant: "h4"}}
+          subheaderTypographyProps={size === 'medium' ? { variant: "body1" } : {variant: "h4"}}
           action={
             <ToolTip title={author.github && author.github}>
               <IconButton
@@ -31,7 +31,7 @@ const AuthorCard = ({ author, size }) => {
           }
         />
         <CardContent>
-          <Typography variant={size === 'small' ? 'body1' : 'h5'}>ID</Typography>
+          <Typography variant={size === 'medium' ? 'body1' : 'h5'}>ID</Typography>
           <Typography variant="body1">{author.url}</Typography>
         </CardContent>
       </BasicCard>

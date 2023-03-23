@@ -42,7 +42,7 @@ const Followers = () => {
             itemsRender.push(
                 <AuthorCard
                     author = {item} 
-                    size = "small" 
+                    size = "medium" 
                 />
             );
             itemsRender.push(<br key={idx + items.length}></br>);

@@ -39,7 +39,7 @@ class PostListCreateView(ListCreateAPIView):
         author_uuid = self.kwargs.get(self.lookup_url_kwarg)
         author_obj = Author.objects.get(id=author_uuid)
         logger.info('Creating new post for author_uuid [%s]', author_uuid)
-        post = serializer.save(author=author_obj)
+        post = serializer.save(author=author_obj, content=self.request.data['content'])
         if post and not post.unlisted:
             inbox_obj_raw = {
                 'summary': post.title,

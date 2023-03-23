@@ -99,7 +99,6 @@ class NodeComm():
                         source_item_url, e, 
                         r.status_code, repr(lookup_response_raw[0:255]))
             requests[idx] = source_item
-        logger.info('xx assigning results[%s]', idx)
         results[idx] = lookup_response if lookup_response else source_item
     
     # Send objects to other nodes

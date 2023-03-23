@@ -26,7 +26,7 @@ const Profile = () => {
     const [ update, setUpdate ] = useState(false);
     const { user, authTokens, logoutUser } = useContext(AuthContext);
     
-    //  event listners --------------------------------------------
+    //  event listeners --------------------------------------------
     useEffect(() => {
         const getProfile = async () => {
             const [response, data] = await Backend.get(`/api/authors/${user.user_id}/`, authTokens.access);
@@ -65,7 +65,7 @@ const Profile = () => {
         if (!profile) {
             return (
                 <BasicCard>
-                    <CardHeader title='Opps' subheader="Couldn't Find Profile"></CardHeader>
+                    <CardHeader title='Oops' subheader="Couldn't Find Profile"></CardHeader>
                     <CardContent></CardContent>
                 </BasicCard>
             )

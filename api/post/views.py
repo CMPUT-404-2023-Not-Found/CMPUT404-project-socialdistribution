@@ -3,8 +3,9 @@
 
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 
 from author.models import Author
@@ -46,11 +47,11 @@ class PostListCreateView(ListCreateAPIView):
             inbox_obj = nc.create_inbox_obj_data(author_obj, inbox_obj_raw)
             followers = Follower.objects.filter(followee=author_obj)
             logger.info('Sending new post [%s] to inboxes of followers [%s] of author_uuid [%s]', post.id, len(followers), author_uuid)
+            follower_inboxs = []
             for follower in followers:
                 follower_inbox = nc.get_author_inbox(follower.follower)
-                ret_body, ret_status = nc.send_object(follower_inbox, inbox_obj)
-                if ret_status not in [200, 201, 204]:
-                    logger.error('Failed to share post [%s] to inbox [%s]. Response status [%s]', post.id, follower_inbox,ret_status)
+                follower_inboxs.append(follower_inbox)
+            nc.send_object(follower_inboxs, inbox_obj)
         return post
     
     def get_queryset(self):
@@ -114,3 +115,28 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
         post_id = self.kwargs.get(self.lookup_field)
         logger.info('Deleting post id: [%s]', post_id)
         return super().perform_destroy(instance)
+
+class PostListAllView(ListAPIView):
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        '''
+        GET a paginated list of all PUBLIC posts
+        '''
+        return super().get(request, *args, **kwargs)
+    
+    @extend_schema(
+        operation_id='post_list_all'
+    )
+    def get_queryset(self):
+        '''
+        Utilized by self.get
+        '''
+        logger.info(rev)
+        if (self.request.query_params): # type: ignore
+            logger.info('Get recent posts on system: with query_params [%s]', str(self.request.query_params)) # type: ignore
+        else:
+            logger.info('Get recent posts on system')
+        return self.queryset.filter(visibility='PUBLIC').filter(unlisted=False).order_by('-published')

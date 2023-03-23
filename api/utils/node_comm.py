@@ -5,6 +5,7 @@ from django.conf import settings
 import json
 import logging
 import requests
+from threading import Thread
 from urllib.parse import urlsplit
 
 from author.models import Author
@@ -65,25 +66,43 @@ class NodeComm():
         ret = None
         host_url = self.parse_host_url(object_url)
         node_data = self.get_node_auth(host_url)
-        if node_data:
-            r = requests.get(object_url, auth=(node_data.username, node_data.password))
-            try:
-                ret = json.loads(r.content.decode('utf-8'))
-            except Exception as e:
-                logger.error('Not JSON-parsable in response from [%s]. e [%s] ret status [%s] ret body [%s]', 
-                            object_url, e, 
-                            r.status_code, repr(r.content.decode('utf-8')[0:255]))
+        if not node_data: return ret
+        try:
+            r = requests.get(object_url, 
+                            auth=(node_data.username, node_data.password), 
+                            timeout=5, 
+                            allow_redirects=True)
+        except Exception as e:
+            logger.info('Failed requests.get to object [%s] e %s', object_url, e)
+            return ret
+        
+        ret_raw = r.content.decode('utf-8')
+        try:
+            ret = json.loads(ret_raw)
+        except Exception as e:
+            logger.error('Not JSON-parsable in response from [%s]. e [%s] ret status [%s] ret body [%s]', 
+                        object_url, e, 
+                        r.status_code, repr(ret_raw[0:255]))
         return ret
     
     # Send objects to other nodes
-    def send_object(self, inbox_url, data):
+    def send_object(self, inbox_urls, data):
         '''
         Send a object to a node url inbox
         '''
-        if self.is_host_internal(inbox_url):
-            return self.send_internal_object(inbox_url, data)
-        else:
-            return self.send_external_object(inbox_url, data)
+        # This code is modified from a tutorial on Python threads from Lu Zou, on 2019-01-16, retrieved 2023-03-19 from medium.com
+        # tutorial here
+        # https://medium.com/python-experiments/parallelising-in-python-mutithreading-and-mutiprocessing-with-practical-templates-c81d593c1c49
+        thread_list = []
+        for inbox_url in inbox_urls:
+            if self.is_host_internal(inbox_url):
+                thread = Thread(target=self.send_internal_object, args=(inbox_url, data))
+            else:
+                thread = Thread(target=self.send_external_object, args=(inbox_url, data))
+            thread_list.append(thread)
+            thread.start()
+        for thread in thread_list:
+            thread.join()
 
     def send_internal_object(self, inbox_url, data):
         ret = None
@@ -109,15 +128,24 @@ class NodeComm():
         ret_status = 500
         host_url = self.parse_host_url(inbox_url)
         node_data = self.get_node_auth(host_url)
-        if node_data:
-            r = requests.post(url=inbox_url, json=data, auth=(node_data.username, node_data.password))
-            try:
-                ret = json.loads(r.content.decode('utf-8'))
-            except Exception as e:
-                logger.error('Not JSON-parsable in response from [%s]. e [%s] ret status [%s] ret body [%s]', 
-                            inbox_url, e, 
-                            r.status_code, repr(r.content.decode('utf-8')[0:255]))
-            ret_status = r.status_code
+        if not node_data: return ret, ret_status
+        try:
+            r = requests.post(url=inbox_url, 
+                            json=data, 
+                            auth=(node_data.username, node_data.password), 
+                            timeout=5)
+        except Exception as e:
+            logger.info('Failed requests.post to inbox [%s] e %s', inbox_url, e)
+            return ret, ret_status
+        
+        ret_raw = r.content.decode('utf-8')
+        try:
+            ret = json.loads(ret_raw)
+        except Exception as e:
+            logger.error('Not JSON-parsable in response from [%s]. e [%s] ret status [%s] ret body [%s]', 
+                        inbox_url, e, 
+                        r.status_code, repr(ret_raw[0:255]))
+
         return ret, ret_status
 
     # Helper functions

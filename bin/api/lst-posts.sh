@@ -5,7 +5,8 @@
 
 # set -x
 usage () {
-    echo "Usage $0 [author_uuid] <page_num> <page_size>" >&2
+    echo "Usage $0 <author_uuid|all> [page_num] [page_size]" >&2
+    echo "author_uuid: Either specify a specific author_uuid or use all to retrieve all PUBLIC posts on system"
 }
 if [ "#$APP_URL" = "#" ]; then echo "ERR Could could not find $APP_URL in env, is your env setup?"; exit 1; fi
 if [ "#$1" = "#" ]; then usage; exit 1; fi
@@ -21,16 +22,14 @@ else
     fi
 fi
 
-if [ ! -r .access_token ]
+auth_hdr=$(./get-auth.sh 'bearer' $(cat .username) $(cat .password))
+
+if [ "#$author_uuid" = "#all" ]
 then
-    echo "ERR Could not find a .access_token file, try using ./get-token.sh [username] [password]"
-    exit 1
+    list_post_url="${ALL_POST_API}/${page_query}"
+else
+    list_post_url=`printf "${POST_API}/${page_query}" $author_uuid`
 fi
-
-access_token=`cat .access_token`
-auth_hdr="Authorization: Bearer $access_token"
-
-list_post_url=`printf "${POST_API}/${page_query}" $author_uuid`
 
 rsp=`curl -s -H "$auth_hdr" "$list_post_url"`
 e=$?; if [ $e -ne 0 ]; then echo -n "ERR Could not GET to $list_post_url"; echo "$rsp"; exit $e; fi

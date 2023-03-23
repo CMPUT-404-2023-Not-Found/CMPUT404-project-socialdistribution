@@ -4,11 +4,13 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.permissions import IsAuthenticated
 
 from author.models import Author
 from .serializers import FollowerSerializer
 from .pagination import FollowerPagination
 from .models import Follower
+from utils.permissions import IsAuthenticatedWithJWT, NodeReadOnly, IsOwner
 
 import logging
 logger = logging.getLogger('django')
@@ -17,6 +19,7 @@ rev = 'rev: $jsadasd'
 class FollowerListView(ListAPIView):
     serializer_class = FollowerSerializer
     queryset = Follower.objects.all()
+    permission_classes = [IsAuthenticated]
     pagination_class = FollowerPagination
     lookup_url_kwarg = 'author_uuid'
     
@@ -32,6 +35,7 @@ class FollowerListView(ListAPIView):
 class FollowerDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = FollowerSerializer
     queryset = Follower.objects.all()
+    permission_classes = [IsAuthenticatedWithJWT|NodeReadOnly|IsOwner]
     lookup_field = 'follower'
     error = {
             "404_error":{

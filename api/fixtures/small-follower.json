@@ -1,0 +1,191 @@
+[
+  {
+    "model": "author.author",
+    "pk": "398113ca-ce82-420a-b1e8-e8de260d3a64",
+    "fields": {
+      "password": "pbkdf2_sha256$260000$LCh5qcm7A9ZOJma71geJhD$lQh7yhogQ9jURz11vFy+sLzZdz0/ZZV5ZL9MLUtkZJE=",
+      "last_login": "2023-03-23T20:11:48.958Z",
+      "is_superuser": false,
+      "host": "http://localhost:8000",
+      "username": "georgerrmartin",
+      "created_at": "2023-02-24T04:09:28.496Z",
+      "updated_at": "2023-02-24T04:10:04.763Z",
+      "rev": 0,
+      "display_name": "George R. R. Martin",
+      "github": "",
+      "profile_image": "",
+      "is_staff": false,
+      "is_active": true,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "author.author",
+    "pk": "664925be-f3ce-42b0-9d34-1659d078f840",
+    "fields": {
+      "password": "pbkdf2_sha256$260000$4X44ZiFGN7aaJ6yqrxDNUt$w18R+gY/F0wOXdC+U6oAX7+nrc5p08UHz13/yGiYZo4=",
+      "last_login": "2023-03-17T05:25:00.618Z",
+      "is_superuser": true,
+      "host": "http://localhost:8000",
+      "username": "stephenking",
+      "created_at": "2023-02-20T02:05:19.665Z",
+      "updated_at": "2023-02-20T02:05:19.665Z",
+      "rev": 0,
+      "display_name": "Stephen King",
+      "github": "",
+      "profile_image": "",
+      "is_staff": true,
+      "is_active": true,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "author.author",
+    "pk": "de52020f-f5df-4361-b771-2829a99f16a2",
+    "fields": {
+      "password": "pbkdf2_sha256$260000$O4i9RtDhIdTLouUQa9pRv6$dobzfo+HGdHjGE2VrlOsou9Bp2TiLx9A5ZX3JJntq5k=",
+      "last_login": "2023-02-24T04:09:57.873Z",
+      "is_superuser": false,
+      "host": "http://localhost:8000",
+      "username": "edgarallanpoe",
+      "created_at": "2023-02-20T02:04:06.320Z",
+      "updated_at": "2023-02-24T04:10:14.784Z",
+      "rev": 0,
+      "display_name": "Edgar Allan Poe",
+      "github": "",
+      "profile_image": "",
+      "is_staff": false,
+      "is_active": false,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "author.author",
+    "pk": "df396b9e-1815-4f89-9c9f-6e850e00f7c3",
+    "fields": {
+      "password": "pbkdf2_sha256$260000$rLvpUUTG7UlMAT1hTEKicF$gXwVmT2KhxwkI2Wvn/EiVakf4l/FNu+4EDcqcZcV27A=",
+      "last_login": "2023-03-17T15:38:58.212Z",
+      "is_superuser": false,
+      "host": "http://localhost:8000",
+      "username": "clarence0",
+      "created_at": "2023-03-17T15:33:09.898Z",
+      "updated_at": "2023-03-17T15:40:35.268Z",
+      "rev": 0,
+      "display_name": "clarence0",
+      "github": "http://github.com/gs_git",
+      "profile_image": "",
+      "is_staff": false,
+      "is_active": true,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "author.author",
+    "pk": "ec812fcd-1c90-4080-bf1c-45c3000fb19b",
+    "fields": {
+      "password": "pbkdf2_sha256$260000$aYALQUXG2pdB8z3mrHcJiz$zbZjGzFBhjH0utqBpiLkMBduFuU3dE47pxi8ya+f7oU=",
+      "last_login": "2023-03-17T16:05:40.189Z",
+      "is_superuser": false,
+      "host": "http://localhost:8000",
+      "username": "friendlybaker",
+      "created_at": "2023-03-17T15:37:02.010Z",
+      "updated_at": "2023-03-17T15:40:44.936Z",
+      "rev": 0,
+      "display_name": "friendlybaker",
+      "github": "http://github.com/gs_git",
+      "profile_image": "",
+      "is_staff": false,
+      "is_active": true,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "post.post",
+    "pk": "5baf49c4-a949-4add-84cf-a73f395cbc9d",
+    "fields": {
+      "author": "df396b9e-1815-4f89-9c9f-6e850e00f7c3",
+      "host": "http://localhost:8000",
+      "published": "2023-03-17T16:04:32.912Z",
+      "updated_at": "2023-03-17T16:04:32.912Z",
+      "rev": 0,
+      "comment_count": 0,
+      "like_count": 0,
+      "unlisted": false,
+      "visibility": "PUBLIC",
+      "origin": "http://localhost:8000",
+      "source": "http://localhost:8000",
+      "content": "hello, it is a post by me, clarence0 Content",
+      "content_type": "text/plain",
+      "description": "some Desc",
+      "title": "oh look a Title"
+    }
+  },
+  {
+    "model": "post.post",
+    "pk": "a0dfc41c-4d32-47d1-a567-aed24ae4736e",
+    "fields": {
+      "author": "398113ca-ce82-420a-b1e8-e8de260d3a64",
+      "host": "http://localhost:8000",
+      "published": "2023-03-01T06:34:39.154Z",
+      "updated_at": "2023-03-01T06:34:39.154Z",
+      "rev": 0,
+      "comment_count": 0,
+      "like_count": 0,
+      "unlisted": false,
+      "visibility": "PUBLIC",
+      "origin": "http://localhost:8000",
+      "source": "http://localhost:8000",
+      "content": "A default post from the fixture",
+      "content_type": "text/plain",
+      "description": "Some description",
+      "title": "Excited for this post!"
+    }
+  },
+  {
+    "model": "post.post",
+    "pk": "d65a8cdf-70a9-41f9-b71e-f3e6a7a7d55f",
+    "fields": {
+      "author": "ec812fcd-1c90-4080-bf1c-45c3000fb19b",
+      "host": "http://localhost:8000",
+      "published": "2023-03-17T16:07:32.385Z",
+      "updated_at": "2023-03-17T16:07:32.385Z",
+      "rev": 0,
+      "comment_count": 0,
+      "like_count": 0,
+      "unlisted": false,
+      "visibility": "PUBLIC",
+      "origin": "http://localhost:8000",
+      "source": "http://localhost:8000",
+      "content": "friendly postContent",
+      "content_type": "text/plain",
+      "description": "some Desc",
+      "title": "baker Title"
+    }
+  },
+  {
+    "model": "post.post",
+    "pk": "f1f6aefa-8032-41c9-933e-3b3db93d55f6",
+    "fields": {
+      "author": "398113ca-ce82-420a-b1e8-e8de260d3a64",
+      "host": "http://localhost:8000",
+      "published": "2023-03-23T20:11:49.099Z",
+      "updated_at": "2023-03-23T20:11:49.099Z",
+      "rev": 0,
+      "comment_count": 0,
+      "like_count": 0,
+      "unlisted": false,
+      "visibility": "FRIENDS",
+      "origin": "http://localhost:8000",
+      "source": "http://localhost:8000",
+      "content": "only visible to my dear friendlybaker Content",
+      "content_type": "text/plain",
+      "description": "Desc",
+      "title": "Title"
+    }
+  }
+]

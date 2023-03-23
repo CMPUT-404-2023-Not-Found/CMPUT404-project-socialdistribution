@@ -23,11 +23,11 @@ rev = 'rev: $xujSyn7$x'
 nc = NodeComm()
 
 def isFriend(follower_url, author_uuid):
-    if NodeComm.parse_object_uuid(follower_url) == author_uuid:
+    if nc.parse_object_uuid(follower_url) == str(author_uuid):
         return True
 
     # inefficient? probably not in our case, even if there are like 10000 followers but idk
-    for obj in Follower.objects.filter(followee=author_uuid, follower=follower_url).count() == 1:
+    if Follower.objects.filter(followee=author_uuid, follower_node_id=follower_url).count() == 1:
         return True
 
     return False
@@ -75,7 +75,7 @@ class PostListCreateView(ListCreateAPIView):
             logger.info('Get recent posts for author_uuid: [%s]', author_uuid)
         
         follower_url = self.request.user.get_node_id()
-        if isFriend(follower_url, author_uuid) or request.user.groups.filter(name='node').exists():
+        if isFriend(follower_url, author_uuid) or self.request.user.groups.filter(name='node').exists():
             logger.info('Get public and private posts for author_uuid: [%s]', author_uuid)      
             return self.queryset.filter(author_id=author_uuid, unlisted=False).order_by('-published')
 
@@ -99,8 +99,10 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
         if serializer.data['visibility'] == "PUBLIC":
             return Response(serializer.data)
 
-        if isFriend(follower_url, author_uuid) or request.user.groups.filter(name='node').exists():
-            logger.info('Get public and private posts for author_uuid: [%s]', author_uuid)      
+        author_uuid = self.kwargs.get('author_uuid')
+        follower_url = self.request.user.get_node_id()
+        if isFriend(follower_url, author_uuid) or self.request.user.groups.filter(name='node').exists():
+            logger.info('Get private post for author_uuid: [%s]', author_uuid)      
             return Response(serializer.data)
         
         return Response(status=status.HTTP_401_UNAUTHORIZED)

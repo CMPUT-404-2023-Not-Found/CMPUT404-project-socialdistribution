@@ -66,6 +66,13 @@ const PostContent = ({ description, contentType, content }) => {
                         src={content} alt={description} 
                         />
                 break;
+            case 'https://www.w3.org/ns/activitystreams':
+                console.error('Got a raw activitystream for content: ', content);
+                contentBodyRender =
+                    <CardContent>
+                        <Typography>Sorry, I wasn't able to get this notification.</Typography>
+                    </CardContent>
+                break;
             default:
                 console.error('Got unknown contentType: ', contentType);
                 contentBodyRender = 

@@ -49,7 +49,7 @@ class PostListCreateView(ListCreateAPIView):
             logger.info('Sending new post [%s] to inboxes of followers [%s] of author_uuid [%s]', post.id, len(followers), author_uuid)
             follower_inboxs = []
             for follower in followers:
-                follower_inbox = nc.get_author_inbox(follower.follower)
+                follower_inbox = nc.get_author_inbox(follower.follower_node_id)
                 follower_inboxs.append(follower_inbox)
             nc.send_object(follower_inboxs, inbox_obj)
         return post

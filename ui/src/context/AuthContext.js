@@ -40,15 +40,21 @@ export const AuthProvider = ({children}) => {
     //  async functions -------------------------------------------
     const loginUser = async (e) =>  {
         e.preventDefault();
-        let response = await fetch(`${API_URL}/api/token/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({'username': e.target.username.value, 'password': e.target.password.value})
-        });
-        let data = await response.json()
-        if (response.status && response.status === 200) {
+        let response = null;
+        try {
+            response = await fetch(`${API_URL}/api/token/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({'username': e.target.username.value, 'password': e.target.password.value})
+            });
+        } catch (error) {
+            console.error('Failed to call authentication. e ');
+            console.error(error);
+        }
+        let data = response ? await response.json() : null;
+        if (response && response.status && response.status === 200) {
             setAuthTokens(data);
             setUser(jwt_decode(data.access));
             localStorage.setItem('authTokens', JSON.stringify(data));
@@ -66,15 +72,21 @@ export const AuthProvider = ({children}) => {
     }
 
     const updateToken = async () => {
-        let response = await fetch(`${API_URL}/api/token/refresh/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({'refresh': authTokens?.refresh})
-        });
-        let data = await response.json();
-        if (response.status && response.status === 200) {
+        let response = null;
+        try {
+            response = await fetch(`${API_URL}/api/token/refresh/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({'refresh': authTokens?.refresh})
+            });
+        } catch (error) {
+            console.error('Failed to call authentication. e ');
+            console.error(error);
+        }
+        let data = response ? await response.json() : null;
+        if (response && response.status && response.status === 200) {
             setAuthTokens(data);
             setUser(jwt_decode(data.access));
             localStorage.setItem('authTokens', JSON.stringify(data));

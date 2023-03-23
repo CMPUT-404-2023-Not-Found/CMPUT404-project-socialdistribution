@@ -8,6 +8,7 @@ import React from 'react'
 import { styled } from '@mui/material/styles';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
 import Collapse from '@mui/material/Collapse';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
@@ -15,7 +16,9 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import IconButton from '@mui/material/IconButton';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ReactMarkdown from 'react-markdown'
 
+import { PostContentStyles } from './styles';
 /*
 This code is modified from a documentation guide on Material UI Card components from Material UI SAS 2023, retrieved 2023-03-13 from mui.com
 guide here
@@ -32,22 +35,63 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-const PostContent = ({ description, content }) => {
+const PostContent = ({ description, contentType, content }) => {
     const [expanded, setExpanded] = React.useState(false);
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
+
+    const renderContentBody = (description, contentType, content) => {
+        let contentBodyRender = [];
+        switch (contentType) {
+            case 'text/plain': case 'application/base64': 
+                contentBodyRender = 
+                    <CardContent>
+                        <Typography variant='body1' color='text.primary'>{content}</Typography>
+                    </CardContent>
+                break;
+            case 'text/markdown':
+                contentBodyRender = 
+                    <CardContent>
+                        <ReactMarkdown>{content}</ReactMarkdown>
+                    </CardContent>
+                break;
+            case 'image/png;base64': case 'image/jpeg;base64': case 'image/link':
+                contentBodyRender = 
+                    <CardMedia 
+                        component='img' 
+                        height={PostContentStyles.cardMedia.height} 
+                        sx={PostContentStyles.cardMedia.sx}
+                        src={content} alt={description} 
+                        />
+                break;
+            case 'https://www.w3.org/ns/activitystreams':
+                console.error('Got a raw activitystream for content: ', content);
+                contentBodyRender =
+                    <CardContent>
+                        <Typography>Sorry, I wasn't able to get this notification.</Typography>
+                    </CardContent>
+                break;
+            default:
+                console.error('Got unknown contentType: ', contentType);
+                contentBodyRender = 
+                    <CardContent>
+                        <Typography>Unable to render</Typography>
+                    </CardContent>
+                break;
+        }
+        return contentBodyRender;
+    };
+
     return (<>
     <CardContent>
         <Typography variant="body2" color="text.secondary">
             {description}
         </Typography>
         <Divider light></Divider>
-        <Typography variant="body1" color="text.primary">
-            {content}
-        </Typography>
     </CardContent>
+    {renderContentBody(description, contentType, content)}
     <CardActions disableSpacing>
         <IconButton aria-label="like">
         <FavoriteIcon />

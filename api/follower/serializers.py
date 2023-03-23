@@ -11,7 +11,7 @@ logger = logging.getLogger('django')
 rev = 'rev: $xani93n$x'
 
 class FollowerSerializer(serializers.ModelSerializer):
-    follower  = URLField(required = False)
+    follower_node_id  = URLField(required = False)
     class Meta:
         model = Follower
-        fields = ['follower']
+        fields = ['follower_node_id']

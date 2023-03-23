@@ -57,6 +57,7 @@ const YourPosts = () => {
                     content={
                         <PostContent 
                             description={item.description}
+                            contentType={item.contentType}
                             content={item.content}
                         />}
                 />

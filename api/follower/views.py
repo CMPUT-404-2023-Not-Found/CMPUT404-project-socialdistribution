@@ -36,6 +36,7 @@ class FollowerDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = FollowerSerializer
     queryset = Follower.objects.all()
     permission_classes = [IsAuthenticatedWithJWT|NodeReadOnly|IsOwner]
+    http_method_names = ['get', 'put', 'delete', 'head', 'options']
     lookup_field = 'follower'
     error = {
             "404_error":{

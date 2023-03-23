@@ -43,6 +43,6 @@ class Base(APITestCase):
         '''
         Return string http://sitename/authors/<author_uuid>/followers/<follower>/
         '''
-        return reverse('detailFollower', kwargs={'author_uuid': str(author_uuid),'follower': str(follower)})
+        return reverse('detailFollower', kwargs={'author_uuid': str(author_uuid),'follower_node_id': str(follower)})
 
 

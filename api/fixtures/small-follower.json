@@ -187,5 +187,14 @@
       "description": "Desc",
       "title": "Title"
     }
+  },
+  {
+    "model": "follower.follower",
+    "pk": 1,
+    "fields": {
+      "follower_node_id": "http://localhost:8000/api/authors/ec812fcd-1c90-4080-bf1c-45c3000fb19b",
+      "followee": "398113ca-ce82-420a-b1e8-e8de260d3a64",
+      "followed_at": "2023-03-23T20:18:28.005Z"
+    }
   }
 ]

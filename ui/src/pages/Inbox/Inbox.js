@@ -57,13 +57,14 @@ const Inbox = () => {
                         content = {
                             <PostContent 
                                 description='Got an activitystream'
+                                contentType={item['@context']}
                                 content={item.object}
                             />
                         }
                     />
                 );
             } else {
-            switch(item.type) {
+                switch(item.type) {
                 case 'post':
                     itemsRender.push(
                         <BasicCard 
@@ -94,9 +95,9 @@ const Inbox = () => {
                     break;
                 default:
                     console.error('Unknown inbox type: ' + item.type);
+                }
             }
             itemsRender.push(<br key={items.length + idx}></br>);
-            }
         });
         return (<>{itemsRender}</>)
     };

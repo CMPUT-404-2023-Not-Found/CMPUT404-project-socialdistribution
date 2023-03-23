@@ -32,7 +32,7 @@ const PageHeader = ({ title, disableNotification=false }) => {
             }
         }
         getNotifications();
-        const fifthteenMinutes = 15 * 60 * 1000;
+        const fifthteenMinutes = 5 * 60 * 1000;
         let interval = setInterval(() => {
             getNotifications();
         }, fifthteenMinutes);

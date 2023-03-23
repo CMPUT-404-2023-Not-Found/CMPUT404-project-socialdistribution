@@ -57,7 +57,9 @@ const YourPosts = () => {
                     content={
                         <PostContent 
                             description={item.description}
+                            contentType={item.contentType}
                             content={item.content}
+                            isImage={(item.contentType === 'text/plain' || item.contentType === 'text/markdown')}
                         />}
                 />
             );

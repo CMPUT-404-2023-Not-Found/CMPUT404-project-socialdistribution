@@ -54,7 +54,9 @@ const PostContent = ({ description, contentType, content }) => {
             case 'text/markdown':
                 contentBodyRender = 
                     <CardContent>
-                        <ReactMarkdown>{content}</ReactMarkdown>
+                        <ReactMarkdown  components={{
+                    img: ({node,...props})=><img style={{maxWidth:'400pt'}}{...props}/>}
+                }>{content}</ReactMarkdown>
                     </CardContent>
                 break;
             case 'image/png;base64': case 'image/jpeg;base64': case 'image/link':

@@ -88,7 +88,7 @@ class NodeComm():
                             allow_redirects=True)
         except Exception as e:
             logger.info('Failed requests.get to object from url [%s] e %s', source_item_url, e)
-            requests[idx] = source_item
+            results[idx] = source_item
             return
         
         lookup_response_raw = r.content.decode('utf-8')
@@ -98,7 +98,7 @@ class NodeComm():
             logger.error('Not JSON-parsable in response from [%s]. e [%s] ret status [%s] ret body [%s]', 
                         source_item_url, e, 
                         r.status_code, repr(lookup_response_raw[0:255]))
-            requests[idx] = source_item
+            results[idx] = source_item
         results[idx] = lookup_response if lookup_response else source_item
     
     # Send objects to other nodes
@@ -184,6 +184,7 @@ class NodeComm():
 
     def get_node_auth(self, node_host):
         ret = None
+        logger.info(node_host)
         try:
             ret = Node.objects.get(host=node_host)
         except Exception as e:

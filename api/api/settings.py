@@ -41,8 +41,6 @@ ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS").split(" ") # type: ignore
 CORS_ORIGIN_ALLOW_ALL = False
 
 CORS_ALLOWED_ORIGINS = [
-    "https://socialdistcmput404.herokuapp.com/",
-    "https://social-t30.herokuapp.com/",
     "https://socialdistcmput404.herokuapp.com",
     "https://social-t30.herokuapp.com",
 ]

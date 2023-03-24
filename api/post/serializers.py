@@ -38,6 +38,17 @@ class PostSerializer(serializers.ModelSerializer):
     @extend_schema_field(CharField)
     def get_type(self, obj): return 'post'
 
+    content         = serializers.SerializerMethodField('get_content')
+
+    # char or url?
+    @extend_schema_field(CharField)
+    def get_content(self, obj):
+        if 'text' in obj.content_type:
+            return obj.content
+        else:
+            return f'{obj.get_node_id()}/image'
+
+    
     comments        = serializers.SerializerMethodField('get_comments')
     @extend_schema_field(URLField)
     def get_comments(self, obj): 

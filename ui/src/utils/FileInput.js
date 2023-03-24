@@ -8,18 +8,19 @@ import Box from '@mui/material/Box';
 const FileInput = ({ register, obj }) => {
   const [previewSrc, setPreviewSrc] = useState(null);
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewSrc(reader.result);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setPreviewSrc(null);
-    }
-  };
+  // const handleFileChange = (event) => {
+  //   // deepcopy
+  //   const file = {... event.target.files[0]};
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setPreviewSrc(reader.result);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   } else {
+  //     setPreviewSrc(null);
+  //   }
+  // };
 
   const handleDelete = () => {
     setPreviewSrc(null);
@@ -31,8 +32,8 @@ const FileInput = ({ register, obj }) => {
       <input
         type="file"
         {...register(obj.name)}
-        onChange={handleFileChange}
-        style={{ display: 'none' }}
+        // onChange={handleFileChange}
+        // style={{ display: 'none' }}
         id={`upload-button-${obj.name}`}
       />
       <label htmlFor={`upload-button-${obj.name}`}>

@@ -9,18 +9,49 @@ import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import BasicAvatar from '../common/BasicAvatar/BasicAvatar';
+import BasicMenu from '../common/BasicMenu/BasicMenu';
 import { postHeaderStyles } from './styles';
 import { utcToLocal } from '../../utils/Utils';
 
+
+
 const PostHeader = ({ author, title, subheader, time }) => {
+    const [ open, setOpen ] = React.useState(false);
+    const [ anchorEl, setAnchorEl ] = React.useState(null);
+    const menuItems = ['Cancel', 'Delete', 'Edit'];
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+        setOpen(true);
+      }
+
+    const handleClose = () => {
+        setAnchorEl(null);
+        setOpen(false);
+    };
+
     // RENDER APP =================================================
     return (
         <CardHeader
             avatar={<BasicAvatar profile={author} size='medium'></BasicAvatar>}
             action={
-            <IconButton aria-label="settings">
-                <MoreVertIcon />
-            </IconButton>
+            <><IconButton aria-label="settings" onClick={handleClick}>
+                    <MoreVertIcon />
+                </IconButton>
+                <BasicMenu
+                    open={open}
+                    anchorEl={anchorEl}
+                    handleClose={handleClose}
+                    menuItems={menuItems}
+                    PaperProps={{
+                        style: {
+                          maxHeight: 48 * 4.5,
+                          width: '20ch',
+                        }
+                    }
+                }
+                />
+                </>
             }
             title={title}
             titleTypographyProps={postHeaderStyles.cardHeader.titleTypographyProps}

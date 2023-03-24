@@ -8,20 +8,6 @@ import Box from '@mui/material/Box';
 const FileInput = ({ register, obj }) => {
   const [previewSrc, setPreviewSrc] = useState(null);
 
-  // const handleFileChange = (event) => {
-  //   // deepcopy
-  //   const file = {... event.target.files[0]};
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => {
-  //       setPreviewSrc(reader.result);
-  //     };
-  //     reader.readAsDataURL(file);
-  //   } else {
-  //     setPreviewSrc(null);
-  //   }
-  // };
-
   const handleDelete = () => {
     setPreviewSrc(null);
   };
@@ -31,9 +17,25 @@ const FileInput = ({ register, obj }) => {
       <label htmlFor={obj.name}>Upload File  </label>
       <input
         type="file"
-        {...register(obj.name)}
-        // onChange={handleFileChange}
-        // style={{ display: 'none' }}
+        {...register(obj.name,{ onChange : (event) => {
+          const file = event.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              setPreviewSrc(reader.result);
+            };
+            reader.readAsDataURL(file);
+          } else {
+            setPreviewSrc(null);
+          }
+          // const file = event.target.files[0];
+          // if (file) {
+          //   setPreviewSrc(file.name)
+          // } else {
+          //   setPreviewSrc(null);
+          // }
+        }})}
+        style={{ display: 'none' }}
         id={`upload-button-${obj.name}`}
       />
       <label htmlFor={`upload-button-${obj.name}`}>
@@ -46,13 +48,14 @@ const FileInput = ({ register, obj }) => {
             <DeleteIcon />
           </IconButton>
           </Box>
-      {previewSrc && (
+      {previewSrc ? (
         <>
-          
-          <img src={previewSrc} alt="Preview" style={{display:'block', maxWidth: '100%', maxHeight: '200px', marginBottom: '10px' }} />
-          
+          <img src={previewSrc} alt="Preview" style={{display:'block', maxWidth: '100%', maxHeight: '200px', marginBottom: '10px' }} />  
         </>
-      )}
+      ):
+      (<>
+        <p>No File Selected</p>
+      </>)}
     </div>
   );
 };

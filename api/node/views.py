@@ -42,9 +42,13 @@ class NodeView(GenericAPIView):
             logger.error('Request query data is bad [%s]', serializer.error_messages)
             return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
         logger.info('Doing lookup of object_type [%s] object_url [%s]', object_type, object_url)
-        object_data = NodeComm.get_objects(type=object_type, url=object_url)
-        if object_data:
-            return Response(status=status.HTTP_200_OK, data=object_data)
+        object_data = {
+            'type': object_type,
+            'object': object_url
+        }
+        lookup_results = NodeComm.get_objects([object_data])
+        if lookup_results:
+            return Response(status=status.HTTP_200_OK, data=lookup_results)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 

@@ -62,19 +62,16 @@ const CreatePost = () => {
     const createPost = async (formData) => {
         let fileContentTypes = ['image/jpeg;base64', 'image/png;base64', 'application/base64']
         if (fileContentTypes.includes(formData.contentType)) {
+            console.log(formData);
             let fileList = formData.file;
     
             let fileBase64 = await getFileData(fileList[0]);
 
-            if (fileBase64.length > 100000) {
-                alert('Image is too large to upload. Max size: 50kb');
-                return;
-            }
             formData.content =  fileBase64;
         }
 
         delete formData.file;
-
+        
         const [response, data] = await Backend.post(`/api/authors/${user.user_id}/posts/`, authTokens.access, JSON.stringify(formData));
         if (response.status && response.status === 201) {
             navigate('/posts');

@@ -2,15 +2,10 @@
 # follower/tests/test_list_create_view.py
 
 from django.contrib.auth import get_user_model
-from django.urls import reverse
-from django.utils.crypto import get_random_string
 from rest_framework import status
-from rest_framework_simplejwt.tokens import RefreshToken
-from random import choices
 import logging
 
 from .base import Base
-from follower.serializers import FollowerSerializer
 
 Author = get_user_model()
 logger = logging.getLogger('django')
@@ -31,7 +26,7 @@ class FollowerListCreateViewTest(Base):
         '''
         response = self.author_client.put(self.get_follower_detail_url(self.author_uuid, self.follower))
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["id"], self.follower)
+        self.assertEqual(response.data["follower_node_id"], self.follower)
     
     # Test Follower view GET /api/authors/<author_uuid>/followers/
     def test_get_list_of_followers(self):

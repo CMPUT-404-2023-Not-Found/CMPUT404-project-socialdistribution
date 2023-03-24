@@ -17,64 +17,70 @@ import PageHeader from '../../components/Page/PageHeader';
 
 const Stream = () => {
     //  variable declarations -------------------------------------
-    const [ inbox, setInbox ] = useState({});
-    const { user, authTokens, logoutUser } = useContext(AuthContext);
-    
+    const [ nodePosts, setNodePosts ] = useState({});
+    const { authTokens, logoutUser } = useContext(AuthContext);
+
     //  event listners --------------------------------------------
     useEffect(() => {
-        const getInbox = async () => {
-            const [response, data] = await Backend.get(`/api/authors/${user.user_id}/inbox/`, authTokens.access);
+        const getNodePosts = async () => {
+            const [response, data] = await Backend.get(`/api/posts/`, authTokens.access);
             if (response.status && response.status === 200) {
-                setInbox(data);
+                console.log(data)
+                setNodePosts(data);
             } else if (response.statusText === 'Unauthorized'){
                 logoutUser();
             } else {
                 console.log('Failed to get posts');
             }
         };
-        getInbox();
-    }, [user, authTokens, logoutUser]);
-
-    //  async functions -------------------------------------------
+        getNodePosts();
+    }, [authTokens, logoutUser]);
 
     // RENDER APP =================================================
-    const renderInbox = (items) => {
+    const renderNodePosts = (items) => {
         // console.log(items);
         if (!items || items.length <= 0) return (<Typography paragraph >No Posts</Typography>);
         let itemsRender = [];
         items.forEach((item, idx) => {
-            switch(item.type) {
-                case 'post':
-                    console.log(item);
-                    itemsRender.push(
-                        <BasicCard 
-                            key={idx}
-                            header={
-                                <PostHeader 
-                                    author={item.author} 
-                                    title={item.title} 
-                                    time={(item.updated_at ? item.updated_at : item.published)} 
-                                />}
-                            content={
-                                <PostContent 
-                                    description={item.description}
-                                    content={item.content}
-                                />}
-                        />
-                    );
-                    break;
-                case 'comment':
-                    // TODO render
-                    break;
-                case 'like':
-                    // TODO render
-                    break;
-                case 'follow_request':
-                    // TODO Render
-                    break;
-                default:
-                    console.error('Unknown inbox type: ' + item.type);
+            console.log(item);
+            if (item['@context']) {
+                itemsRender.push(
+                    <BasicCard 
+                        key={idx}
+                        header = {
+                            <PostHeader 
+                                author={{ displayName: item.author }}
+                                title={item.summary}
+                            />
+                        }
+                        content = {
+                            <PostContent 
+                                description='Got an activitystream'
+                                content={item.object}
+                            />
+                        }
+                    />
+                );
+            } else {
+                itemsRender.push(
+                    <BasicCard 
+                        key={idx}
+                        header={
+                            <PostHeader 
+                                author={item.author} 
+                                title={item.title} 
+                                time={(item.updated_at ? item.updated_at : item.published)} 
+                            />}
+                        content={
+                            <PostContent 
+                                description={item.description}
+                                contentType={item.contentType}
+                                content={item.content}
+                            />}
+                    />
+                );
             }
+            itemsRender.push(<br></br>);
         });
         return (<>{itemsRender}</>)
     };
@@ -83,7 +89,7 @@ const Stream = () => {
         <>
             <PageHeader title='Stream'></PageHeader>
             <GridWrapper>
-            {renderInbox(inbox.items)}
+            {renderNodePosts(nodePosts.items)}
             </GridWrapper>
         </>
     );

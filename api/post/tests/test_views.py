@@ -32,8 +32,27 @@ class PostViewTests(Base):
         '''
         Test one post
         '''
-        create_post_url = self.get_create_post_url(self.author.id)
+        create_post_url = self.get_create_post_url(self.friendlybaker.id)
         list_response = self.author_client.get(create_post_url)
+        self.assertEqual(list_response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(list_response.data['items']), 1)
+
+    def test_list_post_as_friend(self):
+        '''
+        Test friend posts
+        '''
+        create_post_url = self.get_create_post_url(self.author.id)
+        list_response = self.friendlybaker_client.get(create_post_url)
+        self.assertEqual(list_response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(list_response.data['items']), 2)
+
+
+    def test_list_post_as_stranger(self):
+        '''
+        Test friend posts
+        '''
+        create_post_url = self.get_create_post_url(self.author.id)
+        list_response = self.clarence0_client.get(create_post_url)
         self.assertEqual(list_response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(list_response.data['items']), 1)
 
@@ -106,13 +125,19 @@ class PostViewTests(Base):
         self.assertEqual(detail_response.data['id'], expect_post_node_id)
     
     def test_get_public_post_as_stranger(self):
-        pass
+        detail_post_url = self.get_detail_post_url(self.author.id, self.author_post_uuid)     
+        detail_response = self.clarence0_client.get(detail_post_url)
+        self.assertEqual(detail_response.status_code, status.HTTP_200_OK)
 
     def test_get_friend_post_as_a_friend(self):
-        pass
+        friend_post_url = self.get_detail_post_url(self.author.id, self.friend_post_uuid) 
+        detail_response = self.friendlybaker_client.get(friend_post_url)
+        self.assertEqual(detail_response.status_code, status.HTTP_200_OK)
 
     def test_get_friend_post_as_a_stranger(self):
-        pass
+        friend_post_url = self.get_detail_post_url(self.author.id, self.friend_post_uuid) 
+        detail_response = self.clarence0_client.get(friend_post_url)
+        self.assertEqual(detail_response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_unlisted_post(self):
         pass

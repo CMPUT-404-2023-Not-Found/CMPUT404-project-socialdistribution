@@ -23,7 +23,7 @@ class Post(Model):
         (FRI, 'Friends'),
         (PUB, 'Public')
     ]
-
+    
     # Identification fields
     author              = models.ForeignKey(to=Author, on_delete=models.CASCADE, verbose_name="Owner's Author Id")
     host                = models.URLField(default=settings.APP_URL, max_length=128, help_text='The node that created the post')
@@ -48,7 +48,7 @@ class Post(Model):
     # Content fields
     # categories ... this will be tricky because we need to have multiple string values ... thus another model will link to post
     #   ignore categories for now
-    content             = models.TextField(blank=False, null=False, max_length=100000)
+    content             = models.TextField(blank=False, null=False)
     content_type        = models.CharField(choices=CONTENT_TYPE_OPTIONS, max_length=32, verbose_name='Content Type')
     description         = models.TextField(blank=True, default='')
     title               = models.CharField(blank=False, null=False, max_length=128)
@@ -57,3 +57,18 @@ class Post(Model):
 
     def get_node_id(self):
         return f'{self.author.get_node_id()}/posts/{self.id}'
+
+    def get_category_item_list(self):
+        return self.category_set.values_list('category', flat=True)
+
+class Category(models.Model):
+    id                 = models.AutoField(primary_key=True)
+    category           = models.CharField(max_length=128, null=True, blank=True, default="post")
+    post               = models.ForeignKey(to=Post, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return f'{self.category}'
+    
+    class Meta:
+        verbose_name_plural = 'Categories'
+    

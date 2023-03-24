@@ -5,6 +5,7 @@ from django.conf import settings
 import json
 import logging
 import requests
+from threading import Thread
 from urllib.parse import urlsplit
 
 from author.models import Author
@@ -31,59 +32,93 @@ class NodeComm():
     }
 
     # Retrieve objects from other nodes
-    def get_object(self, type, url):
+    def get_objects(self, item_list):
         '''
-        Do a lookup of the url and retrieve the object
+        Do a lookup of the data_list urls and retrieve the object
         '''
-        if self.is_host_internal(url):
-            return self.get_internal_object(type, url)
-        else:
-            return self.get_external_object(url)
+        num_threads = len(item_list)
+        thread_list = [None] * num_threads
+        logger.info('created %s threads', num_threads)
+        results = [None] * num_threads
+        for i in range(num_threads):
+            source_item = item_list[i]
+            source_item_url = source_item['object']
+            if self.is_host_internal(source_item_url):
+                thread_list[i] = Thread(target=self.get_internal_object, args=(source_item, results, i))
+            else:
+                thread_list[i] = Thread(target=self.get_external_object, args=(source_item, results, i))
+            thread_list[i].start()
+        for thread in thread_list:
+            thread.join()
+        return results
 
-    def get_internal_object(self, type, url):
+    def get_internal_object(self, source_item, results, idx):
         '''
-        URL matches own self thus query database for data
+        URL matches own self thus query database for data else return original object_data
         '''
-        ret = None
-        object_uuid = self.parse_object_uuid(url)
-        if object_uuid:
+        lookup_response = None
+        source_item_url = source_item['object']
+        source_item_uuid = self.parse_object_uuid(source_item_url)
+        if source_item_uuid:
             try:
-                object_data = self.lookup_config[type]['model'].objects.get(id=object_uuid)
-                serializer = self.lookup_config[type]['serializer'](object_data)
-                ret = serializer.data
+                db_data = self.lookup_config[source_item['type']]['model'].objects.get(id=source_item_uuid)
+                serializer = self.lookup_config[source_item['type']]['serializer'](db_data)
+                lookup_response = serializer.data
             except Exception as e:
-                logger.error('Failed internal lookup on type [%s] url [%s]. e [%s]', type, url, e)
+                logger.error('Failed internal lookup on type [%s] url [%s]. e [%s]', source_item['type'], source_item_url, e)
         else:
-            logger.error('Could not determine object uuid from url [%s]', url)
-            return ret
-        return ret
+            logger.error('Could not determine object uuid from url [%s]', source_item_url)
+        results[idx] = lookup_response if lookup_response else source_item
 
-    def get_external_object(self, object_url):
+    def get_external_object(self, source_item, results, idx):
         '''
         URL matches a known node object, thus query that node for data
         '''
-        ret = None
-        host_url = self.parse_host_url(object_url)
+        lookup_response = None
+        source_item_url = source_item['object']
+        host_url = self.parse_host_url(source_item_url)
         node_data = self.get_node_auth(host_url)
-        if node_data:
-            r = requests.get(object_url, auth=(node_data.username, node_data.password))
-            try:
-                ret = json.loads(r.content.decode('utf-8'))
-            except Exception as e:
-                logger.error('Not JSON-parsable in response from [%s]. e [%s] ret status [%s] ret body [%s]', 
-                            object_url, e, 
-                            r.status_code, repr(r.content.decode('utf-8')[0:255]))
-        return ret
+        if not node_data:
+            results[idx] = source_item
+            return
+        try:
+            r = requests.get(source_item_url, 
+                            auth=(node_data.username, node_data.password), 
+                            timeout=5, 
+                            allow_redirects=True)
+        except Exception as e:
+            logger.info('Failed requests.get to object from url [%s] e %s', source_item_url, e)
+            results[idx] = source_item
+            return
+        
+        lookup_response_raw = r.content.decode('utf-8')
+        try:
+            lookup_response = json.loads(lookup_response_raw)
+        except Exception as e:
+            logger.error('Not JSON-parsable in response from [%s]. e [%s] ret status [%s] ret body [%s]', 
+                        source_item_url, e, 
+                        r.status_code, repr(lookup_response_raw[0:255]))
+            results[idx] = source_item
+        results[idx] = lookup_response if lookup_response else source_item
     
     # Send objects to other nodes
-    def send_object(self, inbox_url, data):
+    def send_object(self, inbox_urls, data):
         '''
         Send a object to a node url inbox
         '''
-        if self.is_host_internal(inbox_url):
-            return self.send_internal_object(inbox_url, data)
-        else:
-            return self.send_external_object(inbox_url, data)
+        # This code is modified from a tutorial on Python threads from Lu Zou, on 2019-01-16, retrieved 2023-03-19 from medium.com
+        # tutorial here
+        # https://medium.com/python-experiments/parallelising-in-python-mutithreading-and-mutiprocessing-with-practical-templates-c81d593c1c49
+        thread_list = []
+        for inbox_url in inbox_urls:
+            if self.is_host_internal(inbox_url):
+                thread = Thread(target=self.send_internal_object, args=(inbox_url, data))
+            else:
+                thread = Thread(target=self.send_external_object, args=(inbox_url, data))
+            thread_list.append(thread)
+            thread.start()
+        for thread in thread_list:
+            thread.join()
 
     def send_internal_object(self, inbox_url, data):
         ret = None
@@ -109,15 +144,24 @@ class NodeComm():
         ret_status = 500
         host_url = self.parse_host_url(inbox_url)
         node_data = self.get_node_auth(host_url)
-        if node_data:
-            r = requests.post(url=inbox_url, json=data, auth=(node_data.username, node_data.password))
-            try:
-                ret = json.loads(r.content.decode('utf-8'))
-            except Exception as e:
-                logger.error('Not JSON-parsable in response from [%s]. e [%s] ret status [%s] ret body [%s]', 
-                            inbox_url, e, 
-                            r.status_code, repr(r.content.decode('utf-8')[0:255]))
-            ret_status = r.status_code
+        if not node_data: return ret, ret_status
+        try:
+            r = requests.post(url=inbox_url, 
+                            json=data, 
+                            auth=(node_data.username, node_data.password), 
+                            timeout=5)
+        except Exception as e:
+            logger.info('Failed requests.post to inbox [%s] e %s', inbox_url, e)
+            return ret, ret_status
+        
+        ret_raw = r.content.decode('utf-8')
+        try:
+            ret = json.loads(ret_raw)
+        except Exception as e:
+            logger.error('Not JSON-parsable in response from [%s]. e [%s] ret status [%s] ret body [%s]', 
+                        inbox_url, e, 
+                        r.status_code, repr(ret_raw[0:255]))
+
         return ret, ret_status
 
     # Helper functions
@@ -140,6 +184,7 @@ class NodeComm():
 
     def get_node_auth(self, node_host):
         ret = None
+        logger.info(node_host)
         try:
             ret = Node.objects.get(host=node_host)
         except Exception as e:

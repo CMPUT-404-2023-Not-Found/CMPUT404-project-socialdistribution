@@ -184,6 +184,7 @@ class NodeComm():
 
     def get_node_auth(self, node_host):
         ret = None
+        logger.info(node_host)
         try:
             ret = Node.objects.get(host=node_host)
         except Exception as e:

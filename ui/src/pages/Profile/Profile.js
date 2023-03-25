@@ -8,9 +8,8 @@ https://www.youtube.com/watch?v=2k8NleFjG7I
 */
 
 import React, { useContext, useEffect, useState } from 'react';
-import { CardContent, CardHeader, IconButton, Typography, Box, Button, TextField, FormControl } from '@mui/material';
+import { CardContent, CardHeader, IconButton, Typography, Box, Button, TextField, FormControl,InputAdornment ,Tooltip} from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import ToolTip from '@mui/material/Tooltip';
 
 import BasicAvatar from '../../components/common/BasicAvatar/BasicAvatar';
 import BasicCard from '../../components/common/BasicCard/BasicCard';
@@ -21,17 +20,20 @@ import PageHeader from '../../components/Page/PageHeader';
 
 import { Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+
 
 
 
 const Profile = () => {
     //  variable declarations -------------------------------------
-    const [ displayName, setDisplayName ] = useState('');
+    const [inputs, setInputs] = useState({});
     const [ profile, setProfile ] = useState({});
     const [ update, setUpdate ] = useState(false);
     const { user, authTokens, logoutUser } = useContext(AuthContext);
     // Add a new state variable for the GitHub URL
-    const [githubUrl, setGithubUrl] = useState('');
+    // const [githubUrl, setGithubUrl] = useState('');
+    // const [ displayName, setDisplayName ] = useState('');
     // Snackbar state
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -39,7 +41,11 @@ const Profile = () => {
     const Alert = React.forwardRef(function Alert(props, ref) {
         return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
       });
-      
+
+    const handleClear = (inputName) => {
+    setInputs((values) => ({ ...values, [inputName]: '' }));
+    };
+        
       
     //  event listners --------------------------------------------
     useEffect(() => {
@@ -49,6 +55,7 @@ const Profile = () => {
                 console.log('Got profile');
                 console.log(data);
                 setProfile(data);
+                setInputs({ displayName: data.displayName || '', githubUrl: data.github || '' , profileImage: data.profileImage || ''});
             } else if (response.statusText === 'Unauthorized'){
                 logoutUser();
             } else {
@@ -58,21 +65,54 @@ const Profile = () => {
         getProfile();
     }, [ user, authTokens, logoutUser ]);
 
+    const handleChange = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        setInputs((values) => ({ ...values, [name]: value }));
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        updateProfile(event); // Call the updateProfile function here
+      };
+
     //  async functions -------------------------------------------
-    console.log(user.profileImage)
-    console.log(user.github)
+    console.log(profile.profileImage)
+    console.log(profile.github)
     const updateProfile = async (e) => {
         e.preventDefault();
         const postData = JSON.stringify({
-            displayName: displayName,
-            github: githubUrl // Add the GitHub URL to the post data
+            // displayName: displayName,
+            // github: githubUrl // Add the GitHub URL to the post data
+            displayName: inputs.displayName,
+            github: inputs.githubUrl,
+            profileImage: inputs.profileImage 
         })
         const [response, responseData] = await Backend.post(`/api/authors/${user.user_id}/`, authTokens.access, postData);
+        const changes = {};
 
+        // Add displayName to the changes if it has a value
+        if (inputs.displayName) {
+            changes.displayName = inputs.displayName;
+        }
+
+        // Add githubUrl to the changes if it has a value
+        if (inputs.githubUrl) {
+            changes.github = inputs.githubUrl;
+        }
+
+        if (inputs.profileImage) {
+            changes.profileImage = inputs.profileImage;
+        }
+        // Check if there are any changes before sending the request
+        if (Object.keys(changes).length === 0) {
+            console.log('No changes to submit');
+            return;
+        }
 
         if (response.status && response.status === 200) {
             setProfile(responseData);
-            setDisplayName('');
+            // setDisplayName('');
             setUpdate(false);
             setSnackbarMessage("Successfully updated the profile information!");
             setSnackbarSeverity("success");
@@ -93,7 +133,7 @@ const Profile = () => {
         if (!profile) {
             return (
                 <BasicCard>
-                    <CardHeader title='Opps' subheader="Couldn't Find Profile"></CardHeader>
+                    <CardHeader title='Oops' subheader="Couldn't Find Profile"></CardHeader>
                     <CardContent></CardContent>
                 </BasicCard>
             )
@@ -102,30 +142,45 @@ const Profile = () => {
         return (
             <BasicCard>
                 <CardHeader
-                    avatar={
-                        <BasicAvatar profile={profile} size='large'></BasicAvatar>
-                    }
+                    titleTypographyProps={{ variant: 'h3', textAlign: 'center', mt: 2 }}
                     title={profileTitle}
-                    titleTypographyProps={{ variant: 'h3' }}
-                    // subheader={profile.host}
-                    // subheaderTypographyProps={{ variant: 'h4' }}
-                    action={
-                    <ToolTip title={(profile.github && profile.github)}>
-                    <IconButton size='large' aria-label="github" onClick={() => { console.log(profile.github) }}>
-                        <GitHubIcon fontSize='large'/>
-                    </IconButton>
-                    </ToolTip>
-                    }
                 />
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', pb: 3 }}>
+                    <BasicAvatar key={profile.profileImage} profile={profile} size='large' />
+                    <Box mt={2}>
+                        <Tooltip title={profile.github ? profile.github : ''}>
+                            <IconButton
+                                size='large'
+                                aria-label="github"
+                                component="a"
+                                href={profile.github ? profile.github : '#'}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <GitHubIcon fontSize='large' />
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
+                </Box>
                 <CardContent>
-                    <Typography variant='h5'>Host</Typography>
-                    <Typography variant='body1'>{profile.host}</Typography>
-                    <Typography variant='h5'>ID</Typography>
-                    <Typography variant='body1'>{profile.url}</Typography>
-                </CardContent>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginRight: 4 }}>
+                            <Typography variant='h6'>Username</Typography>
+                            <Typography variant='h6'>Host</Typography>
+                            <Typography variant='h6'>ID</Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                            <Typography variant='body1'>{user.username}</Typography>
+                            <Typography variant='body1'>{profile.host}</Typography>
+                            <Typography variant='body1'>{profile.url}</Typography>
+                        </Box>
+                    </Box>
+            </CardContent>
             </BasicCard>
         )
     }
+    
+    
     
 
     const renderUpdateForm = () => {
@@ -140,26 +195,74 @@ const Profile = () => {
         } else {
             return (
                 <Box sx={{ mt: 3 }}>
-                    <form onSubmit={updateProfile}>
+                    <form onSubmit={handleSubmit}>
                         <FormControl fullWidth>
                             <TextField
                                 label="Display Name"
-                                id="username"
-                                name="username"
-                                placeholder="Type your username"
-                                defaultValue={profile.displayName || user.username}
-                                onChange={(e) => setDisplayName(e.target.value)}
+                                id="displayName"
+                                name="displayName"
+                                placeholder={profile.displayName || "Type your display name"}
+                                value={inputs.displayName || ''}
+                                required
+                                onChange={handleChange}
                                 sx={{ mb: 2 }}
+                                InputProps={{
+                                    endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                        edge="end"
+                                        onClick={() => handleClear('displayName')}
+                                        >
+                                        < HighlightOffIcon />
+                                        </IconButton>
+                                    </InputAdornment>
+                                    ),
+                                }}
                             />
                             <TextField
                                 label="GitHub URL"
-                                id="github-url"
-                                name="github-url"
-                                placeholder="Type your GitHub URL"
-                                defaultValue={profile.github}
-                                onChange={(e) => setGithubUrl(e.target.value)}
+                                id="githubUrl"
+                                name="githubUrl"
+                                placeholder={profile.github || "Type your GitHub URL"}
+                                value={inputs.githubUrl || ''}
+                                required
+                                onChange={handleChange}
                                 sx={{ mb: 2 }}
-                            />
+                                InputProps={{
+                                    endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                        edge="end"
+                                        onClick={() => handleClear('githubUrl')}
+                                        >
+                                        < HighlightOffIcon />
+                                        </IconButton>
+                                    </InputAdornment>
+                                    ),
+                                }}
+                             />
+                             <TextField
+                                label="Profile Image URL"
+                                id="profileImage"
+                                name="profileImage"
+                                placeholder={profile.profileImage || "Type your profile image URL"}
+                                value={inputs.profileImage || ''}
+                                required
+                                onChange={handleChange}
+                                sx={{ mb: 2 }}
+                                InputProps={{
+                                    endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                        edge="end"
+                                        onClick={() => handleClear('profileImage')}
+                                        >
+                                        < HighlightOffIcon />
+                                        </IconButton>
+                                    </InputAdornment>
+                                    ),
+                                }}
+                             />
                             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Button type="submit" variant="contained" color="primary">
                                     Update
@@ -172,9 +275,9 @@ const Profile = () => {
                     </form>
                 </Box>
             );
-        }
-    };
+        };
 
+    };
     // RENDER APP =================================================
     return (
         <>

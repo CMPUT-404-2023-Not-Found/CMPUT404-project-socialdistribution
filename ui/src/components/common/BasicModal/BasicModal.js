@@ -13,9 +13,8 @@ import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 
 import { modalStyles } from './styles';
-import CommonButton from '../CommonButton/CommonButton';
 
-const BasicModal = ({ title, subTitle, content, open, onClose, validate }) => {
+const BasicModal = ({ title, subTitle, content, open, onClose }) => {
 
     return (
         <Modal aria-labelledby={title} aria-describedby={subTitle} open={open} onClose={onClose}>
@@ -27,10 +26,6 @@ const BasicModal = ({ title, subTitle, content, open, onClose, validate }) => {
                     {subTitle}
                 </Typography>
                 {content}
-                <Box sx={modalStyles.buttons}>
-                    <CommonButton variant='contained' onClick={validate}>Submit</CommonButton>
-                    <CommonButton onClick={onClose}>Cancel</CommonButton>
-                </Box>
             </Box>
         </Modal>
     );

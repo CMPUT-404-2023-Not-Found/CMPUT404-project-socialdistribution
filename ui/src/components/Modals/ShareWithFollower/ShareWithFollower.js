@@ -7,22 +7,45 @@ youtube video here:
 https://youtu.be/4h-VWmlfJh4
 */
 
-import React from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Input from '@mui/material/Input';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 import BasicModal from '../../common/BasicModal/BasicModal';
+import CommonButton from '../../common/CommonButton/CommonButton';
 import { modalStyles } from './styles';
 
 const ShareWithFollower = ({ open, onClose }) => {
+    const [ followerList, setFollowerList ] = useState([]);
+    const [ sendList, setSendList ] = useState({});
+    
+    const handleChange = (e) => {
+        const follower_id = e.target.value;
+        const send_to_follower = e.target.checked;
+        setSendList(values => ({ ...values, [follower_id]: send_to_follower}));
+    }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log('xxx submit! sending to: ');
+        console.log(sendList);
+        setSendList({});
+        onClose();
+    };
+
     const renderContent = () => {
         return (
+        <form>
         <Box sx={modalStyles.inputFields}>
-            <Input placeholder='Follower 1'></Input>
-            <Input placeholder='Follower 2'></Input>
-            <Input placeholder='Follower 3'></Input>
+            <FormControlLabel label='follower 1' control={<Checkbox value='follower_1' onChange={handleChange}/>} />
+            <FormControlLabel label='follower 2' control={<Checkbox value='follower_2' onChange={handleChange}/>} />
+            <FormControlLabel label='follower 3' control={<Checkbox value='follower_3' onChange={handleChange}/>} />
         </Box>
+        <Box sx={modalStyles.buttons}>
+            <CommonButton variant='contained' onClick={handleSubmit}>Submit</CommonButton>
+            <CommonButton onClick={onClose}>Cancel</CommonButton>
+        </Box>
+        </form>
         );
     };
 

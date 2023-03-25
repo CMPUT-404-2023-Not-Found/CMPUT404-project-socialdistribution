@@ -10,17 +10,12 @@ https://youtu.be/4h-VWmlfJh4
 import React from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import Button from '@mui/material/Button';
-import Input from '@mui/material/Input';
 import Typography from '@mui/material/Typography';
 
 import { modalStyles } from './styles';
 import CommonButton from '../CommonButton/CommonButton';
 
-const BasicModal = ({ title, subTitle, open, onClose }) => {
-    const validate = () => {
-
-    };
+const BasicModal = ({ title, subTitle, content, open, onClose, validate }) => {
 
     return (
         <Modal open={open} onClose={onClose}>
@@ -31,11 +26,7 @@ const BasicModal = ({ title, subTitle, open, onClose }) => {
                 <Typography sx={{ mt: 2 }}>
                     {subTitle}
                 </Typography>
-                <Box sx={modalStyles.inputFields}>
-                    <Input placeholder='this is a placeholder'></Input>
-                    <Input placeholder='this is a placeholder'></Input>
-                    <Input placeholder='this is a placeholder'></Input>
-                </Box>
+                {content}
                 <Box sx={modalStyles.buttons}>
                     <CommonButton variant='contained' onClick={validate}>Submit</CommonButton>
                     <CommonButton onClick={onClose}>Cancel</CommonButton>

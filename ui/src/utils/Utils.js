@@ -4,6 +4,26 @@ ui/src/utils/Utils.js
 
 */
 
+/**
+ * 
+ * @param {string} myString
+ * @returns Append '/inbox/' to myString
+ */
+export function getInboxUrl(myString) {
+    let inboxUrl;
+    inboxUrl = myString.endsWith('/') ? myString + 'inbox/' : myString + '/inbox/';
+    return inboxUrl;
+}
+
+/**
+ * 
+ * @param {Object} myObject 
+ * @returns True if myObject is an empty Object
+ */
+export function isObjectEmpty(myObject) {
+    return (Object.keys(myObject).length <= 0 && myObject.constructor === Object);
+}
+
 /*
 This code is from a forum question and answer post from Pavlo on 2017-04-18, retrieved on 2023-03-25 from stackoverflow.com
 forum question and answer here:
@@ -19,7 +39,7 @@ export function isValidHttpUrl(myString) {
     try {
         url = new URL(myString);
     } catch(e) {
-        logger.error('Invalid url for ' + string);
+        console.error('Invalid url for ' + myString);
         return false;
     }
     return url.protocol === 'http:' || url.protocol === 'https:';
@@ -32,13 +52,4 @@ export function isValidHttpUrl(myString) {
  */
 export function utcToLocal(utcDatetimeString) {
     return new Date(utcDatetimeString).toDateString();
-}
-
-/**
- * 
- * @param {Object} myObject 
- * @returns True if myObject is an empty Object
- */
-export function isObjectEmpty(myObject) {
-    return (Object.keys(myObject).length <= 0 && myObject.constructor === Object);
 }

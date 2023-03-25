@@ -9,7 +9,6 @@ import { Typography } from '@mui/material';
 
 import Backend from '../../utils/Backend';
 import AuthContext from '../../context/AuthContext';
-import BasicCard from '../../components/common/BasicCard/BasicCard';
 import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
 import PostCard from '../../components/Post/PostCard';
 import PageHeader from '../../components/Page/PageHeader';

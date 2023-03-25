@@ -18,6 +18,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ReactMarkdown from 'react-markdown'
 
+import PostActions from './PostActions';
 import ShareWithFollower from '../Modals/ShareWithFollower/ShareWithFollower';
 import { PostContentStyles } from './styles';
 
@@ -38,16 +39,6 @@ const ExpandMore = styled((props) => {
 }));
 
 const PostContent = ({ description, contentType, content, postNodeId }) => {
-    const [ open, setOpen ] = useState(false);
-    const [expanded, setExpanded] = React.useState(false);
-
-    const onClickShare = () => {
-        setOpen(true);
-    };
-
-    const handleExpandClick = () => {
-        setExpanded(!expanded);
-    };
 
     const renderContentBody = (description, contentType, content) => {
         let contentBodyRender = [];
@@ -101,30 +92,7 @@ const PostContent = ({ description, contentType, content, postNodeId }) => {
         <Divider light></Divider>
     </CardContent>
     {renderContentBody(description, contentType, content)}
-    <CardActions disableSpacing>
-        <IconButton aria-label="like">
-        <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="share" onClick={onClickShare}>
-            <ShareIcon />
-        </IconButton>
-        <ShareWithFollower open={open} onClose={() => setOpen(false)} postNodeId={postNodeId} />
-        <ExpandMore
-        expand={expanded}
-        onClick={handleExpandClick}
-        aria-expanded={expanded}
-        aria-label="show more"
-        >
-        <ExpandMoreIcon />
-        </ExpandMore>
-    </CardActions>
-    <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-        <Typography paragraph>
-            Comments Go Here
-        </Typography>
-        </CardContent>
-    </Collapse>
+    <PostActions postNodeId={postNodeId}/>
     </>);
 }
 

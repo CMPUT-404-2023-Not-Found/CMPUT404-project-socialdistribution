@@ -18,7 +18,21 @@ import { utcToLocal } from '../../utils/Utils';
 const PostHeader = ({ author, title, subheader, time }) => {
     const [ open, setOpen ] = React.useState(false);
     const [ anchorEl, setAnchorEl ] = React.useState(null);
-    const menuItems = ['Cancel', 'Delete', 'Edit'];
+    // const menuItems = ['Cancel', 'Delete', 'Edit'];
+    const menuItems = [
+        // {
+        //     id: 1,
+        //     label: 'Cancel',
+        // }, 
+        {
+            id: 1,
+            label: 'Edit',
+        }, 
+        {
+            id: 2,
+            label: 'Delete',
+        }
+    ];
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -43,13 +57,6 @@ const PostHeader = ({ author, title, subheader, time }) => {
                     anchorEl={anchorEl}
                     handleClose={handleClose}
                     menuItems={menuItems}
-                    PaperProps={{
-                        style: {
-                          maxHeight: 48 * 4.5,
-                          width: '20ch',
-                        }
-                    }
-                }
                 />
                 </>
             }

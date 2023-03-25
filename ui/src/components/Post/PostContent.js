@@ -4,7 +4,7 @@ ui/src/components/Post/PostContent.js
 
 */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { styled } from '@mui/material/styles';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -18,7 +18,9 @@ import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ReactMarkdown from 'react-markdown'
 
+import BasicModal from '../../components/common/BasicModal/BasicModal';
 import { PostContentStyles } from './styles';
+
 /*
 This code is modified from a documentation guide on Material UI Card components from Material UI SAS 2023, retrieved 2023-03-13 from mui.com
 guide here
@@ -36,7 +38,12 @@ const ExpandMore = styled((props) => {
 }));
 
 const PostContent = ({ description, contentType, content }) => {
+    const [ open, setOpen ] = useState(false);
     const [expanded, setExpanded] = React.useState(false);
+
+    const onClickShare = () => {
+        setOpen(true);
+    };
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
@@ -98,9 +105,10 @@ const PostContent = ({ description, contentType, content }) => {
         <IconButton aria-label="like">
         <FavoriteIcon />
         </IconButton>
-        <IconButton aria-label="share">
-        <ShareIcon />
+        <IconButton aria-label="share" onClick={onClickShare}>
+            <ShareIcon />
         </IconButton>
+        <BasicModal open={open} onClose={() => setOpen(false)}></BasicModal>
         <ExpandMore
         expand={expanded}
         onClick={handleExpandClick}

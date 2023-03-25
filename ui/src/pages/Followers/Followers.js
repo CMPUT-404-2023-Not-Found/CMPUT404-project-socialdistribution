@@ -33,6 +33,8 @@ const Followers = () => {
         getFollowers();
     }, [ user, authTokens, logoutUser ]);
 
+    //const deleteFollower = () => {}
+
     // render functions ------------------------------------------
     const renderFollowers = (items) => {
         if (!items || items.length <= 0) return (<Typography paragraph >No Followers</Typography>);
@@ -42,7 +44,8 @@ const Followers = () => {
             itemsRender.push(
                 <AuthorCard
                     author = {item} 
-                    size = "medium" 
+                    size = "medium"
+                    deletable 
                 />
             );
             itemsRender.push(<br key={idx + items.length}></br>);

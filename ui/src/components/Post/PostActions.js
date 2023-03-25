@@ -4,7 +4,7 @@ ui/src/components/Post/PostActions.js
 
 */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { styled } from '@mui/material/styles';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -12,10 +12,9 @@ import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import IconButton from '@mui/material/IconButton';
-import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import ShareWithFollower from '../Modals/ShareWithFollower/ShareWithFollower';
+import ShareAction from '../Actions/ShareAction/ShareAction';
 
 /*
 This code is modified from a documentation guide on Material UI Card components from Material UI SAS 2023, retrieved 2023-03-13 from mui.com
@@ -33,13 +32,8 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-const PostActions = ({ disableLike=false, disableShare=false, disableComments=false, postNodeId }) => {
-    const [ open, setOpen ] = useState(false);
+const PostActions = ({ disableLike=false, disableShare=false, disableComments=false, postNodeId }) => {    
     const [expanded, setExpanded] = React.useState(false);
-
-    const onClickShare = () => {
-        setOpen(true);
-    };
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
@@ -52,14 +46,7 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
             <FavoriteIcon />
         </IconButton>
         }
-        {!disableShare && 
-        <>
-            <IconButton aria-label="share" onClick={onClickShare}>
-                <ShareIcon />
-            </IconButton>
-            <ShareWithFollower open={open} onClose={() => setOpen(false)} postNodeId={postNodeId} />
-        </>
-        }
+        {!disableShare && <ShareAction objectNodeId={postNodeId}/>}
         {!disableComments &&
         <ExpandMore
             expand={expanded}

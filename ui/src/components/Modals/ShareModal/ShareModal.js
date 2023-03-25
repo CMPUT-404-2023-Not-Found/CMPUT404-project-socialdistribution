@@ -19,7 +19,7 @@ import CommonButton from '../../common/CommonButton/CommonButton';
 import { getInboxUrl, isObjectEmpty, isValidHttpUrl } from '../../../utils/Utils';
 import { modalStyles } from './styles';
 
-const ShareWithFollower = ({ open, onClose, postNodeId }) => {
+const ShareWithFollower = ({ open, onClose, objectNodeId }) => {
     //  variable declarations -------------------------------------
     const [ followerList, setFollowerList ] = useState([]);
     const [ sendList, setSendList ] = useState({});
@@ -70,7 +70,7 @@ const ShareWithFollower = ({ open, onClose, postNodeId }) => {
         let inboxData = {
             summary: 'sharing a post',
             type: 'post',
-            object: postNodeId,
+            object: objectNodeId,
             inbox_urls: inboxUrls
         }
 

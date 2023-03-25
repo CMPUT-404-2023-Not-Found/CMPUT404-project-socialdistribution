@@ -41,8 +41,8 @@ const Stream = () => {
         let itemsRender = [];
         items.forEach((item, idx) => {
             console.log(item);
-            itemsRender.push(<PostCard key={idx} post={item} />);
-            itemsRender.push(<br key={idx + items.length}></br>);
+            itemsRender.push(<PostCard key={idx * 2} post={item} />);
+            itemsRender.push(<br key={idx * 2 + 1} />);
         });
         return (<>{itemsRender}</>)
     };

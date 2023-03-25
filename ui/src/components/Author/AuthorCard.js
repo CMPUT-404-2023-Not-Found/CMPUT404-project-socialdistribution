@@ -3,8 +3,8 @@ import { CardContent, CardHeader, IconButton, Typography } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import ToolTip from '@mui/material/Tooltip';
 
-import BasicCard from '../BasicCard/BasicCard';
-import BasicAvatar from '../BasicAvatar/BasicAvatar';
+import BasicCard from '../common/BasicCard/BasicCard';
+import BasicAvatar from '../common/BasicAvatar/BasicAvatar';
 
 const AuthorCard = ({ author, size }) => {
   return (

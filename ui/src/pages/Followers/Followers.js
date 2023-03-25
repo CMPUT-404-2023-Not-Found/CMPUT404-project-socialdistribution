@@ -9,7 +9,7 @@ import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
 import AuthContext from '../../context/AuthContext';
 import Backend from '../../utils/Backend';
 import PageHeader from '../../components/Page/PageHeader';
-import AuthorCard from '../../components/common/AuthorCard/AuthorCard';
+import AuthorCard from '../../components/Author/AuthorCard';
 
 const Followers = () => {
     //  variable declarations -------------------------------------

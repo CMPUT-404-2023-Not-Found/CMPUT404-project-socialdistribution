@@ -16,9 +16,10 @@ import AuthContext from '../../../context/AuthContext';
 import Backend from '../../../utils/Backend';
 import BasicModal from '../../common/BasicModal/BasicModal';
 import CommonButton from '../../common/CommonButton/CommonButton';
+import { getInboxUrl, isObjectEmpty, isValidHttpUrl } from '../../../utils/Utils';
 import { modalStyles } from './styles';
 
-const ShareWithFollower = ({ open, onClose }) => {
+const ShareWithFollower = ({ open, onClose, postNodeId }) => {
     //  variable declarations -------------------------------------
     const [ followerList, setFollowerList ] = useState([]);
     const [ sendList, setSendList ] = useState({});
@@ -50,10 +51,31 @@ const ShareWithFollower = ({ open, onClose }) => {
         const send_to_follower = e.target.checked;
         setSendList(values => ({ ...values, [follower_id]: send_to_follower}));
     }
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('xxx submit! sending to: ');
-        console.log(sendList);
+        if ( isObjectEmpty(sendList) ) { onClose(); return }
+        let inboxUrls = [];
+        for (const property in sendList) {
+            if (sendList[property]) {
+                let followerNodeId = property;
+                let followerInboxUrl = getInboxUrl(followerNodeId);
+                if (isValidHttpUrl(followerInboxUrl)) { 
+                    inboxUrls.push(followerInboxUrl); 
+                } else {
+                    console.error('Not valid url for ' + followerInboxUrl)
+                }
+            }
+        }
+        let inboxData = {
+            type: 'post',
+            object: postNodeId,
+            inbox_urls: inboxUrls
+        }
+
+        console.log('xxx submitting: ')
+        console.log(inboxData);
+    
         onClose();
     };
 
@@ -97,7 +119,6 @@ const ShareWithFollower = ({ open, onClose }) => {
         content={renderContent()}
         validate={() => {}}
     >
-        ShareWithFollower
     </BasicModal>
   );
 }

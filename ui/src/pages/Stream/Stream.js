@@ -43,44 +43,24 @@ const Stream = () => {
         let itemsRender = [];
         items.forEach((item, idx) => {
             console.log(item);
-            if (item['@context']) {
-                itemsRender.push(
-                    <BasicCard 
-                        key={idx}
-                        header = {
-                            <PostHeader 
-                                author={{ displayName: item.author }}
-                                title={item.summary}
-                            />
-                        }
-                        content = {
-                            <PostContent 
-                                description='Got an activitystream'
-                                content={item.object}
-                            />
-                        }
-                    />
-                );
-            } else {
-                itemsRender.push(
-                    <BasicCard 
-                        key={idx}
-                        header={
-                            <PostHeader 
-                                author={item.author} 
-                                title={item.title} 
-                                time={(item.updated_at ? item.updated_at : item.published)} 
-                            />}
-                        content={
-                            <PostContent 
-                                description={item.description}
-                                contentType={item.contentType}
-                                content={item.content}
-                            />}
-                    />
-                );
-            }
-            itemsRender.push(<br></br>);
+            itemsRender.push(
+                <BasicCard 
+                    key={idx}
+                    header={
+                        <PostHeader 
+                            author={item.author} 
+                            title={item.title} 
+                            time={(item.updated_at ? item.updated_at : item.published)} 
+                        />}
+                    content={
+                        <PostContent 
+                            description={item.description}
+                            contentType={item.contentType}
+                            content={item.content}
+                        />}
+                />
+            );
+            itemsRender.push(<br key={idx + items.length}></br>);
         });
         return (<>{itemsRender}</>)
     };

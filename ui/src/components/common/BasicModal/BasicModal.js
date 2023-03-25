@@ -17,7 +17,7 @@ import Typography from '@mui/material/Typography';
 import { modalStyles } from './styles';
 import CommonButton from '../CommonButton/CommonButton';
 
-const BasicModal = ({ open, onClose }) => {
+const BasicModal = ({ title, subTitle, open, onClose }) => {
     const validate = () => {
 
     };
@@ -26,10 +26,10 @@ const BasicModal = ({ open, onClose }) => {
         <Modal open={open} onClose={onClose}>
             <Box sx={modalStyles.wrapper}>
                 <Typography variant="h6" component="h2">
-                    Share with followers
+                    {title}
                 </Typography>
                 <Typography sx={{ mt: 2 }}>
-                    Choose which followers to share with
+                    {subTitle}
                 </Typography>
                 <Box sx={modalStyles.inputFields}>
                     <Input placeholder='this is a placeholder'></Input>

@@ -18,12 +18,12 @@ import CommonButton from '../CommonButton/CommonButton';
 const BasicModal = ({ title, subTitle, content, open, onClose, validate }) => {
 
     return (
-        <Modal open={open} onClose={onClose}>
+        <Modal aria-labelledby={title} aria-describedby={subTitle} open={open} onClose={onClose}>
             <Box sx={modalStyles.wrapper}>
-                <Typography variant="h6" component="h2">
+                <Typography id={title} variant="h6" component="h2">
                     {title}
                 </Typography>
-                <Typography sx={{ mt: 2 }}>
+                <Typography id={subTitle} sx={{ mt: 2 }}>
                     {subTitle}
                 </Typography>
                 {content}

@@ -4,6 +4,27 @@ ui/src/utils/Utils.js
 
 */
 
+/*
+This code is from a forum question and answer post from Pavlo on 2017-04-18, retrieved on 2023-03-25 from stackoverflow.com
+forum question and answer here:
+https://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url
+*/
+/**
+ * 
+ * @param {string} myString 
+ * @returns True if myString is a valid URL
+ */
+export function isValidHttpUrl(myString) {
+    let url;
+    try {
+        url = new URL(myString);
+    } catch(e) {
+        logger.error('Invalid url for ' + string);
+        return false;
+    }
+    return url.protocol === 'http:' || url.protocol === 'https:';
+}
+
 /**
  * Convert a UTC datetime string to local time
  * @param utcDateString A UTC ISO-8601 datetime string.

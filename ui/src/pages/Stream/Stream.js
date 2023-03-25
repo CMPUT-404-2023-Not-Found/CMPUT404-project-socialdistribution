@@ -57,6 +57,7 @@ const Stream = () => {
                             description={item.description}
                             contentType={item.contentType}
                             content={item.content}
+                            postNodeId={item.id}
                         />}
                 />
             );

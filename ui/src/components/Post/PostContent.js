@@ -18,7 +18,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ReactMarkdown from 'react-markdown'
 
-import BasicModal from '../../components/common/BasicModal/BasicModal';
+import ShareWithFollower from '../Modals/ShareWithFollower/ShareWithFollower';
 import { PostContentStyles } from './styles';
 
 /*
@@ -37,7 +37,7 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-const PostContent = ({ description, contentType, content }) => {
+const PostContent = ({ description, contentType, content, postNodeId }) => {
     const [ open, setOpen ] = useState(false);
     const [expanded, setExpanded] = React.useState(false);
 
@@ -108,7 +108,7 @@ const PostContent = ({ description, contentType, content }) => {
         <IconButton aria-label="share" onClick={onClickShare}>
             <ShareIcon />
         </IconButton>
-        <BasicModal open={open} onClose={() => setOpen(false)}></BasicModal>
+        <ShareWithFollower open={open} onClose={() => setOpen(false)} postNodeId={postNodeId} />
         <ExpandMore
         expand={expanded}
         onClick={handleExpandClick}

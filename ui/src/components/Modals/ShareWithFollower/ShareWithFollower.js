@@ -52,7 +52,7 @@ const ShareWithFollower = ({ open, onClose, postNodeId }) => {
         setSendList(values => ({ ...values, [follower_id]: send_to_follower}));
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if ( isObjectEmpty(sendList) ) { onClose(); return }
         let inboxUrls = [];
@@ -68,14 +68,25 @@ const ShareWithFollower = ({ open, onClose, postNodeId }) => {
             }
         }
         let inboxData = {
+            summary: 'sharing a post',
             type: 'post',
             object: postNodeId,
             inbox_urls: inboxUrls
         }
 
-        console.log('xxx submitting: ')
+        console.log('Sharing inboxData: ')
         console.log(inboxData);
-    
+        
+        const [ response, data ] = await Backend.post(`/api/node/object/`, authTokens.access, JSON.stringify(inboxData));
+        if (response.status && response.status === 201) {
+            console.log('Sent inbox data:');
+            console.log(data);
+            setFollowerList(data.items);
+        } else if (response.statusText === 'Unauthorized'){
+            logoutUser();
+        } else {
+            console.log('Failed to send inbox data');
+        }
         onClose();
     };
 

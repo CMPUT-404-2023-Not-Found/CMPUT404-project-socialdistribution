@@ -1,6 +1,6 @@
 /*
 2023-03-25
-ui/src/components/Modals/ShareWithFollower/ShareWithFollower.js
+ui/src/components/Modals/ShareModal/ShareModal.js
 
 This code is modified from a video tutorial of using MUI by theatypicaldeveloper, uploaded 2022-01-09, retrieved on 2023-03-25 from youtube.com
 youtube video here:
@@ -19,7 +19,7 @@ import CommonButton from '../../common/CommonButton/CommonButton';
 import { getInboxUrl, isObjectEmpty, isValidHttpUrl } from '../../../utils/Utils';
 import { modalStyles } from './styles';
 
-const ShareWithFollower = ({ open, onClose, objectNodeId }) => {
+const ShareModal = ({ open, onClose, objectNodeId }) => {
     //  variable declarations -------------------------------------
     const [ followerList, setFollowerList ] = useState([]);
     const [ sendList, setSendList ] = useState({});
@@ -134,4 +134,4 @@ const ShareWithFollower = ({ open, onClose, objectNodeId }) => {
   );
 }
 
-export default ShareWithFollower;
+export default ShareModal;

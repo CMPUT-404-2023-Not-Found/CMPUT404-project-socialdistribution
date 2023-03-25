@@ -1,6 +1,6 @@
 /*
 2023-03-25
-ui/src/components/Modals/ShareWithFollower/style.js
+ui/src/components/Modals/ShareModal/style.js
 
 This code is modified from a video tutorial of using MUI by theatypicaldeveloper, uploaded 2022-01-09, retrieved on 2023-03-25 from youtube.com
 youtube video here:

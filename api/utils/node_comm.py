@@ -10,6 +10,8 @@ from urllib.parse import urlsplit
 
 from author.models import Author
 from author.serializers import ExistingAuthorSerializer
+from comment.models import Comment
+from comment.serializers import CommentSerializer
 from node.models import Node
 from post.models import Post
 from post.serializers import PostSerializer
@@ -28,6 +30,10 @@ class NodeComm():
         'author': {
             'model': Author,
             'serializer': ExistingAuthorSerializer
+        },
+        'comment': {
+            'model': Comment,
+            'serializer': CommentSerializer
         }
     }
 

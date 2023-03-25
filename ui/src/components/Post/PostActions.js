@@ -33,7 +33,7 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-const PostActions = ({ postNodeId }) => {
+const PostActions = ({ disableLike=false, disableShare=false, disableComments=false, postNodeId }) => {
     const [ open, setOpen ] = useState(false);
     const [expanded, setExpanded] = React.useState(false);
 
@@ -47,13 +47,20 @@ const PostActions = ({ postNodeId }) => {
 
     return (<>
     <CardActions disableSpacing>
+        {!disableLike && 
         <IconButton aria-label="like">
             <FavoriteIcon />
         </IconButton>
-        <IconButton aria-label="share" onClick={onClickShare}>
-            <ShareIcon />
-        </IconButton>
-        <ShareWithFollower open={open} onClose={() => setOpen(false)} postNodeId={postNodeId} />
+        }
+        {!disableShare && 
+        <>
+            <IconButton aria-label="share" onClick={onClickShare}>
+                <ShareIcon />
+            </IconButton>
+            <ShareWithFollower open={open} onClose={() => setOpen(false)} postNodeId={postNodeId} />
+        </>
+        }
+        {!disableComments &&
         <ExpandMore
             expand={expanded}
             onClick={handleExpandClick}
@@ -62,7 +69,9 @@ const PostActions = ({ postNodeId }) => {
         >
             <ExpandMoreIcon />
         </ExpandMore>
+        }
     </CardActions>
+    {!disableComments && 
     <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
         <Typography paragraph>
@@ -70,6 +79,7 @@ const PostActions = ({ postNodeId }) => {
         </Typography>
         </CardContent>
     </Collapse>
+    }
     </>);
 }
 

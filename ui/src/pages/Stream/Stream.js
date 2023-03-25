@@ -41,7 +41,7 @@ const Stream = () => {
         let itemsRender = [];
         items.forEach((item, idx) => {
             console.log(item);
-            itemsRender.push(<PostCard key={idx} post={item} actions={{likeable: true, shareable: true}}/>);
+            itemsRender.push(<PostCard key={idx} post={item} />);
             itemsRender.push(<br key={idx + items.length}></br>);
         });
         return (<>{itemsRender}</>)

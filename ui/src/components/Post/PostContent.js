@@ -11,13 +11,12 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import ReactMarkdown from 'react-markdown'
 
-import PostActions from './PostActions';
 import { PostContentStyles } from './styles';
 
-const PostContent = ({ description, contentType, content, postNodeId }) => {
+const PostContent = ({ description, contentType, content }) => {
 
     const renderContentBody = (description, contentType, content) => {
-        let contentBodyRender = [];
+        let contentBodyRender;
         switch (contentType) {
             case 'text/plain': case 'application/base64': 
                 contentBodyRender = 
@@ -68,7 +67,6 @@ const PostContent = ({ description, contentType, content, postNodeId }) => {
         <Divider light></Divider>
     </CardContent>
     {renderContentBody(description, contentType, content)}
-    <PostActions postNodeId={postNodeId}/>
     </>);
 }
 

@@ -9,8 +9,9 @@ import React from 'react';
 import BasicCard from '../common/BasicCard/BasicCard';
 import PostHeader from './PostHeader';
 import PostContent from './PostContent';
+import PostActions from './PostActions';
 
-const PostCard = ({ post, actions }) => {
+const PostCard = ({ post, ...actions }) => {
     return (
         <BasicCard
             header={
@@ -26,6 +27,11 @@ const PostCard = ({ post, actions }) => {
                 content={post.content}
                 postNodeId={post.id}
             />}
+            actions={
+                <PostActions 
+                    {...actions}
+                    postNodeId={post.id}
+                />}
         />
     );
 }

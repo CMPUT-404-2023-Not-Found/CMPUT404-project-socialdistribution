@@ -7,7 +7,7 @@ youtube video here:
 https://youtu.be/4h-VWmlfJh4
 */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -29,9 +29,13 @@ const ShareWithFollower = ({ open, onClose }) => {
         e.preventDefault();
         console.log('xxx submit! sending to: ');
         console.log(sendList);
-        setSendList({});
         onClose();
     };
+
+    useEffect(() => {
+      if (open) setSendList({});
+    }, [open]);
+    
 
     const renderContent = () => {
         return (

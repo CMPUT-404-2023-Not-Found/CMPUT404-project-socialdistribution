@@ -59,12 +59,26 @@ const ShareWithFollower = ({ open, onClose }) => {
 
     // RENDER APP =================================================
     const renderContent = () => {
+        if (!followerList || followerList.length <= 0) {
+            return (
+                <Box>
+                    <CommonButton variant='contained' onClick={onClose}>Close</CommonButton>
+                </Box>
+            );
+        }
+        let followerListRender = [];
+        followerList.forEach((item, idx) => {
+            item.displayName && followerListRender.push(
+                <FormControlLabel
+                    key={idx} label={item.displayName ? item.displayName : item.url}
+                    control={<Checkbox value={item.url || item.id} onChange={handleChange}/>} 
+                />
+            );
+        });
         return (
         <form>
         <Box sx={modalStyles.inputFields}>
-            <FormControlLabel label='follower 1' control={<Checkbox value='follower_1' onChange={handleChange}/>} />
-            <FormControlLabel label='follower 2' control={<Checkbox value='follower_2' onChange={handleChange}/>} />
-            <FormControlLabel label='follower 3' control={<Checkbox value='follower_3' onChange={handleChange}/>} />
+            {followerListRender}
         </Box>
         <Box sx={modalStyles.buttons}>
             <CommonButton variant='contained' onClick={handleSubmit}>Submit</CommonButton>
@@ -76,8 +90,8 @@ const ShareWithFollower = ({ open, onClose }) => {
 
     return (
     <BasicModal
-        title='Share with followers?' 
-        subTitle='Choose which followers to share with' 
+        title={(followerList && followerList.length > 0) ? 'Share with followers?': 'Sorry, you have no followers'}
+        subTitle={(followerList && followerList.length > 0) ? 'Choose which followers to share with' : null}
         open={open}
         onClose={onClose}
         content={renderContent()}

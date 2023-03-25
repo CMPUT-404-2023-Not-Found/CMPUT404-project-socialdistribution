@@ -12,3 +12,12 @@ ui/src/utils/Utils.js
 export function utcToLocal(utcDatetimeString) {
     return new Date(utcDatetimeString).toDateString();
 }
+
+/**
+ * 
+ * @param {Object} myObject 
+ * @returns True if myObject is an empty Object
+ */
+export function isObjectEmpty(myObject) {
+    return (Object.keys(myObject).length <= 0 && myObject.constructor === Object);
+}

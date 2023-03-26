@@ -101,7 +101,7 @@ class NodeComm():
             return
 
         lookup_response = self.query_database(lookup_type, source_item_uuid)
-        if lookup_response and (lookup_target == 'author'):
+        if lookup_response and (lookup_target == 'author' or lookup_target == 'actor'):
             ret[lookup_target] = lookup_response
         elif lookup_response:
             ret = lookup_response
@@ -150,7 +150,7 @@ class NodeComm():
             results[idx] = ret
             return
         lookup_response = self.query_node(node_data, source_item_url)
-        if lookup_response and (lookup_target == 'author'):
+        if lookup_response and (lookup_target == 'author' or lookup_target == 'actor'):
             ret[lookup_target] = lookup_response
         elif lookup_response:
             ret = lookup_response

@@ -32,7 +32,7 @@ const BasicPagination = ({ itemEndpoint, itemResultsKey, setItems }) => {
             const [response, data] = await Backend.get(`${itemEndpoint}/?page=${pagination.page}&size=${pageSize}`, authTokens.access);
             if (response.status && response.status === 200) {
                 console.log(data)
-                setPagination({ ...pagination, count: data.count });
+                setPagination(pagination => ({...pagination, count: data.count}));
                 setItems(data[itemResultsKey]);
             } else if (response.statusText === 'Unauthorized'){
                 logoutUser();
@@ -45,8 +45,6 @@ const BasicPagination = ({ itemEndpoint, itemResultsKey, setItems }) => {
     
     //  functions -------------------------------------------------
     const handlePageChange = (e, page) => {
-        console.log('xxxx')
-        console.log(page)
         setPagination({ ...pagination, page: page});
     };
 

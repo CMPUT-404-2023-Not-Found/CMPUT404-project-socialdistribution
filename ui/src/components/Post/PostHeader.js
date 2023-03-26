@@ -20,10 +20,6 @@ const PostHeader = ({ author, title, subheader, time }) => {
     const [ anchorEl, setAnchorEl ] = React.useState(null);
     // const menuItems = ['Cancel', 'Delete', 'Edit'];
     const menuItems = [
-        // {
-        //     id: 1,
-        //     label: 'Cancel',
-        // }, 
         {
             id: 1,
             label: 'Edit',

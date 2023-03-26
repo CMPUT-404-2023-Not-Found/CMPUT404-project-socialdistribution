@@ -1,16 +1,14 @@
 # 2023-03-18
 # api/like/tests/test_view.py
 
-from django.contrib.auth import get_user_model
 from rest_framework import status
 
 from .base import Base
-
-Author = get_user_model()
+from like.models import Like
 
 class LikeListCreateViewTest(Base):
     '''
-    Test suite for Author views
+    Test suite for Like views
     '''
     # from fixtures
     author_uuid = '398113ca-ce82-420a-b1e8-e8de260d3a64'
@@ -24,16 +22,20 @@ class LikeListCreateViewTest(Base):
         '''
         Test getting list of likes on comment
         '''
+        like_count = Like.objects.filter(comment=self.comment_uuid).count()
         response = self.author_client.get(self.get_comment_like_url(self.author_uuid, self.post_uuid, self.comment_uuid))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], like_count)
 
     # Test Like view /api/authors/<author_uuid>/posts/<post_uuid>/likes
     def test_get_list_of_post_likes(self):
         '''
         Test getting list of likes on a post
         '''
+        like_count = Like.objects.filter(post=self.post_uuid).count()
         response = self.author_client.get(self.get_post_like_url(self.author_uuid, self.post_uuid))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], like_count)
 
     def test_like_your_own_post_again(self):
         '''

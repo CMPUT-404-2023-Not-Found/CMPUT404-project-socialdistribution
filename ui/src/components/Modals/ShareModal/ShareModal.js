@@ -39,11 +39,13 @@ const ShareModal = ({ open, onClose, objectNodeId }) => {
     const handleChange = (e) => {
         const follower_id = e.target.value;
         const send_to_follower = e.target.checked;
+        console.log(`setting ${follower_id} to ${send_to_follower}`)
         setSendList(values => ({ ...values, [follower_id]: send_to_follower}));
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // Don't attempt send request if no followers selected
         if ( isObjectEmpty(sendList) ) { onClose(); return }
         let inboxUrls = [];
         for (const property in sendList) {
@@ -57,6 +59,8 @@ const ShareModal = ({ open, onClose, objectNodeId }) => {
                 }
             }
         }
+        // Don't attempt send request if followers selected ended up as all false
+        if (inboxUrls.length <= 0 ) { onClose(); return}
         let inboxData = {
             summary: 'sharing a post',
             type: 'post',
@@ -71,7 +75,6 @@ const ShareModal = ({ open, onClose, objectNodeId }) => {
         if (response.status && response.status === 201) {
             console.log('Sent inbox data:');
             console.log(data);
-            setFollowerList(data.items);
         } else if (response.statusText === 'Unauthorized'){
             logoutUser();
         } else {
@@ -81,6 +84,20 @@ const ShareModal = ({ open, onClose, objectNodeId }) => {
     };
 
     // RENDER APP =================================================
+    const renderCheckbox = (item) => {
+        let inSendList = false;
+        let isChecked = false;
+        if (item.url in sendList) { inSendList = true; }
+        if (inSendList) { isChecked = sendList[item.url]}
+        return ( 
+            <Checkbox 
+                value={item.url || item.id}
+                checked={isChecked}
+                onChange={handleChange}
+            />
+        )
+    }
+
     const renderContent = () => {
         if (!followerList || followerList.length <= 0) {
             return (
@@ -94,7 +111,7 @@ const ShareModal = ({ open, onClose, objectNodeId }) => {
             item.displayName && followerListRender.push(
                 <FormControlLabel
                     key={idx} label={item.displayName ? item.displayName : item.url}
-                    control={<Checkbox value={item.url || item.id} onChange={handleChange}/>} 
+                    control={renderCheckbox(item)}
                 />
             );
         });

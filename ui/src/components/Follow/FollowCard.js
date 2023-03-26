@@ -13,17 +13,17 @@ import { followCardStyles } from './styles';
 
 const FollowCard = ({ follow }) => {
     const onClickAccept = () => {
-        console.log(`you accepted ${follow.author.url} request`);
+        console.log(`you accepted ${follow.actor.url} request`);
     };
     const onClickDecline = () => {
-        console.log(`you declined ${follow.author.url} request`);
+        console.log(`you declined ${follow.actor.url} request`);
     };
 
     return (
         <BasicCard>
             <CardHeader 
                 title={follow.summary} 
-                avatar={<BasicAvatar profile={follow.author} size='medium'/>}
+                avatar={<BasicAvatar profile={follow.actor} size='medium'/>}
                 titleTypographyProps={followCardStyles.cardHeader.titleTypographyProps}
             />
             <CardContent>

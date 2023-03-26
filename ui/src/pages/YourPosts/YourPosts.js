@@ -11,11 +11,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Typography } from '@mui/material';
 
 import Backend from '../../utils/Backend';
-import BasicCard from '../../components/common/BasicCard/BasicCard';
 import AuthContext from '../../context/AuthContext';
 import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
-import PostHeader from '../../components/Post/PostHeader';
-import PostContent from '../../components/Post/PostContent';
+import PostCard from '../../components/Post/PostCard';
 import PageHeader from '../../components/Page/PageHeader';
 
 const YourPosts = () => {
@@ -45,26 +43,10 @@ const YourPosts = () => {
         let itemsRender = [];
         items.forEach((item, idx) => {
             console.log(item);
-            itemsRender.push(
-                <BasicCard 
-                    key={idx}
-                    header={
-                        <PostHeader 
-                            author={item.author} 
-                            title={item.title} 
-                            time={(item.updated_at ? item.updated_at : item.published)} 
-                        />}
-                    content={
-                        <PostContent 
-                            description={item.description}
-                            contentType={item.contentType}
-                            content={item.content}
-                            isImage={(item.contentType === 'text/plain' || item.contentType === 'text/markdown')}
-                        />}
-                />
-            );
-            itemsRender.push(<br></br>);
+            itemsRender.push(<PostCard key={idx * 2} post={item} disableLike />);
+            itemsRender.push(<br key={idx * 2 + 1}/>);
         });
+        console.log(itemsRender)
         return (<>{itemsRender}</>)
     }
     // RENDER APP =================================================

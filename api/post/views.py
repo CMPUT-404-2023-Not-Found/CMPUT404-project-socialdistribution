@@ -15,12 +15,24 @@ from follower.models import Follower
 from .serializers import PostSerializer
 from .models import Post
 from utils.permissions import IsAuthenticatedWithJWT, NodeReadOnly, OwnerCanWrite
+from follower.models import Follower
 from utils.node_comm import NodeComm
-nc = NodeComm()
 
 import logging
 logger = logging.getLogger('django')
 rev = 'rev: $xujSyn7$x'
+
+nc = NodeComm()
+
+def isFriend(follower_url, author_uuid):
+    if nc.parse_object_uuid(follower_url) == str(author_uuid):
+        return True
+
+    # inefficient? probably not in our case, even if there are like 10000 followers but idk
+    if Follower.objects.filter(followee=author_uuid, follower_node_id=follower_url).count() == 1:
+        return True
+
+    return False
 
 # This code is modifed from a video tutorial from Cryce Truly on 2020-06-19 retrieved on 2023-02-16, to Youtube crycetruly
 # video here:
@@ -63,7 +75,13 @@ class PostListCreateView(ListCreateAPIView):
             logger.info('Get recent posts for author_uuid: [%s] with query_params [%s]', author_uuid, str(self.request.query_params)) # type: ignore
         else:
             logger.info('Get recent posts for author_uuid: [%s]', author_uuid)
-        return self.queryset.filter(author_id=author_uuid).order_by('-published')
+        
+        follower_url = self.request.user.get_node_id()
+        if isFriend(follower_url, author_uuid) or self.request.user.groups.filter(name='node').exists():
+            logger.info('Get public and private posts for author_uuid: [%s]', author_uuid)      
+            return self.queryset.filter(author_id=author_uuid, unlisted=False).order_by('-published')
+
+        return self.queryset.filter(author_id=author_uuid, visibility="PUBLIC", unlisted=False).order_by('-published')
 
 class PostDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
@@ -76,6 +94,20 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
         post_id = self.kwargs.get(self.lookup_field)
         logger.info('Getting content for post id: [%s]', post_id)
         return super().get_object()
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        if serializer.data['visibility'] == "PUBLIC":
+            return Response(serializer.data)
+
+        author_uuid = self.kwargs.get('author_uuid')
+        follower_url = self.request.user.get_node_id()
+        if isFriend(follower_url, author_uuid) or self.request.user.groups.filter(name='node').exists():
+            logger.info('Get private post for author_uuid: [%s]', author_uuid)      
+            return Response(serializer.data)
+        
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     @extend_schema(
         operation_id='post_post_update'

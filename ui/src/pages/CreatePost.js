@@ -62,6 +62,7 @@ const CreatePost = () => {
     const createPost = async (formData) => {
         let fileContentTypes = ['image/jpeg;base64', 'image/png;base64', 'application/base64']
         if (fileContentTypes.includes(formData.contentType)) {
+            console.log(formData);
             let fileList = formData.file;
     
             let fileBase64 = await getFileData(fileList[0]);

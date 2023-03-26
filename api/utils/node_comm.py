@@ -56,7 +56,7 @@ class NodeComm():
             if self.is_host_internal(source_item_url):
                 thread_list[i] = Thread(target=self.get_internal_object, args=(source_item, results, lookup_target, lookup_type, i))
             else:
-                thread_list[i] = Thread(target=self.get_external_object, args=(source_item, results, i))
+                thread_list[i] = Thread(target=self.get_external_object, args=(source_item, lookup_target, results, i))
             thread_list[i].start()
         for thread in thread_list:
             thread.join()
@@ -92,41 +92,43 @@ class NodeComm():
             logger.error('Failed internal lookup on type [%s] uuid [%s]. e [%s]', type, uuid, e)
         return ret
 
-    def get_external_object(self, source_item, results, idx):
+    def get_external_object(self, source_item, lookup_target, results, idx):
         '''
-        URL matches a known node object, thus query that node for data
+        URL is not host app, thus query nodes for data
         '''
+        ret = {**source_item}
         lookup_response = None
-        source_item_url = source_item['object']
-        if source_item['type'] is 'follow' or source_item['type'] is 'like':
-            results[idx] = source_item
-            return
-
+        source_item_url = source_item[lookup_target]
         host_url = self.parse_host_url(source_item_url)
         node_data = self.get_node_auth(host_url)
-        if not node_data:
-            results[idx] = source_item
+        if not node_data: 
+            results[idx] = ret
             return
+        lookup_response = self.query_node(node_data, source_item_url)
+        if lookup_response and (lookup_target == 'author'):
+            ret[lookup_target] = lookup_response
+        elif lookup_response:
+            ret = lookup_response
+        results[idx] = ret
+    
+    def query_node(self, node_data, url):
+        ret = None
+        r = None
+        raw_content = None
         try:
-            r = requests.get(source_item_url, 
-                            auth=(node_data.username, node_data.password), 
-                            timeout=5, 
-                            allow_redirects=True)
+            r = requests.get(url, auth=(node_data.username, node_data.password), timeout=5, allow_redirects=True)
+            raw_content = r.content.decode('utf-8')
         except Exception as e:
-            logger.info('Failed requests.get to object from url [%s] e %s', source_item_url, e)
-            results[idx] = source_item
-            return
-        
-        lookup_response_raw = r.content.decode('utf-8')
+            logger.error('Failed requests.get to object from url [%s] e %s', url, e)
+            return ret
         try:
-            lookup_response = json.loads(lookup_response_raw)
+            ret = json.loads(raw_content)
         except Exception as e:
             logger.error('Not JSON-parsable in response from [%s]. e [%s] ret status [%s] ret body [%s]', 
-                        source_item_url, e, 
-                        r.status_code, repr(lookup_response_raw[0:255]))
-            results[idx] = source_item
-        results[idx] = lookup_response if lookup_response else source_item
-    
+                        url, e, 
+                        r.status_code, repr(raw_content[0:255]))
+        return ret
+
     # Send objects to other nodes
     def send_object(self, inbox_urls, data):
         '''

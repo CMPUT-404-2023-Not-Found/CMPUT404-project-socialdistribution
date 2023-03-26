@@ -14,7 +14,7 @@ import AuthorCard from '../../components/Author/AuthorCard';
 
 const Followers = () => {
     //  variable declarations -------------------------------------
-    const [ followers, setFollowers ] = useState({});
+    const [ followers, setFollowers ] = useState({}); // TODO change this to an array
     const { user, authTokens, logoutUser } = useContext(AuthContext);
 
     //  event listeners --------------------------------------------
@@ -38,6 +38,7 @@ const Followers = () => {
         const response = await Backend.delete(`/api/authors/${user.user_id}/followers/${author.id}`, authTokens.access);
         if (response.status && response.status === 204) {
             console.log("Deleted Follower");
+            // TODO use an array to keep track of followers
         } else if (response.statusText === 'Unauthorized'){
             logoutUser();
         } else {

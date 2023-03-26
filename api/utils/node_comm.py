@@ -48,8 +48,10 @@ class NodeComm():
         results = [None] * num_threads
         for i in range(num_threads):
             source_item = item_list[i]
-            lookup_target = 'author' if (source_item['type'] in ['like', 'follow']) else 'object'
-            lookup_type = 'author' if (source_item['type'] in ['like', 'follow']) else source_item['type']
+            if (source_item['type'] in ['like', 'follow']):
+                lookup_target, lookup_type = ('author', 'author')
+            else: 
+                lookup_target, lookup_type = ('object', source_item['type']) 
             source_item_url = source_item[lookup_target]
             if self.is_host_internal(source_item_url):
                 thread_list[i] = Thread(target=self.get_internal_object, args=(source_item, results, lookup_target, lookup_type, i))

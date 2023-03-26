@@ -19,6 +19,7 @@ import PostHeader from '../../components/Post/PostHeader';
 import PostContent from '../../components/Post/PostContent';
 import PageHeader from '../../components/Page/PageHeader';
 import LikeCard from '../../components/Like/LikeCard';
+import FollowCard from '../../components/Follow/FollowCard';
 
 const Inbox = () => {
     //  variable declarations -------------------------------------
@@ -70,7 +71,7 @@ const Inbox = () => {
                     itemsRender.push(<LikeCard key={idx * 2} like={item}/>)
                     break;
                 case 'follow':
-                    // TODO Render
+                    itemsRender.push(<FollowCard key={idx * 2} follow={item}/>)
                     break;
                 default:
                     console.error('Unknown inbox type: ' + item.type);

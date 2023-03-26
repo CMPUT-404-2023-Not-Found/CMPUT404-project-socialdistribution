@@ -3,7 +3,8 @@
 pages/Followers/Followers.js
 */
 import React, { useContext, useEffect, useState } from 'react';
-import { Typography } from '@mui/material';
+import { Typography, IconButton } from '@mui/material';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 
 import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
 import AuthContext from '../../context/AuthContext';
@@ -33,20 +34,35 @@ const Followers = () => {
         getFollowers();
     }, [ user, authTokens, logoutUser ]);
 
-    //const deleteFollower = () => {}
+    const deleteFollower = async (author) => {
+        const response = await Backend.delete(`/api/authors/${user.user_id}/followers/${author.id}`, authTokens.access);
+        if (response.status && response.status === 204) {
+            console.log("Deleted Follower");
+        } else if (response.statusText === 'Unauthorized'){
+            logoutUser();
+        } else {
+            console.log('Failed to delete follower');
+        }
+        // reloads window using the cached version of the page
+        // seems sketch? better way to do this? 
+        window.location.reload(false);
+    }
 
     // render functions ------------------------------------------
     const renderFollowers = (items) => {
         if (!items || items.length <= 0) return (<Typography paragraph >No Followers</Typography>);
         let itemsRender = [];
         items.forEach((item, idx) => {
-            console.log(item);
             itemsRender.push(
-                <AuthorCard
-                    author = {item} 
-                    size = "medium"
-                    deletable 
-                />
+                <AuthorCard author = {item} size = "medium"> 
+                    <div>
+                        <IconButton 
+                            aria-label="delete-follower"
+                            onClick={()=> deleteFollower(item)}>
+                        <PersonRemoveIcon/>
+                        </IconButton>
+                    </div>
+                </AuthorCard>
             );
             itemsRender.push(<br key={idx + items.length}></br>);
         });

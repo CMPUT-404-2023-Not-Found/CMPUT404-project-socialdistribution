@@ -10,6 +10,7 @@ import { Typography } from '@mui/material';
 import Backend from '../../utils/Backend';
 import AuthContext from '../../context/AuthContext';
 import BasicCard from '../../components/common/BasicCard/BasicCard';
+import PostCard from '../../components/Post/PostCard';
 import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
 import PostHeader from '../../components/Post/PostHeader';
 import PostContent from '../../components/Post/PostContent';
@@ -47,7 +48,7 @@ const Inbox = () => {
             if (item['@context']) {
                 itemsRender.push(
                     <BasicCard 
-                        key={idx}
+                        key={idx * 2}
                         header = {
                             <PostHeader 
                                 author={{ displayName: item.author }}
@@ -66,23 +67,7 @@ const Inbox = () => {
             } else {
                 switch(item.type) {
                 case 'post':
-                    itemsRender.push(
-                        <BasicCard 
-                            key={idx}
-                            header={
-                                <PostHeader 
-                                    author={item.author} 
-                                    title={item.title} 
-                                    time={(item.updated_at ? item.updated_at : item.published)} 
-                                />}
-                            content={
-                                <PostContent 
-                                    description={item.description}
-                                    contentType={item.contentType}
-                                    content={item.content}
-                                />}
-                        />
-                    );
+                    itemsRender.push(<PostCard key={idx * 2} post={item} />);
                     break;
                 case 'comment':
                     // TODO render
@@ -97,7 +82,7 @@ const Inbox = () => {
                     console.error('Unknown inbox type: ' + item.type);
                 }
             }
-            itemsRender.push(<br key={items.length + idx}></br>);
+            itemsRender.push(<br key={idx * 2 + 1}></br>);
         });
         return (<>{itemsRender}</>)
     };

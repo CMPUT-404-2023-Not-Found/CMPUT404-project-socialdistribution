@@ -9,10 +9,8 @@ import { Typography } from '@mui/material';
 
 import Backend from '../../utils/Backend';
 import AuthContext from '../../context/AuthContext';
-import BasicCard from '../../components/common/BasicCard/BasicCard';
 import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
-import PostHeader from '../../components/Post/PostHeader';
-import PostContent from '../../components/Post/PostContent';
+import PostCard from '../../components/Post/PostCard';
 import PageHeader from '../../components/Page/PageHeader';
 
 const Stream = () => {
@@ -38,49 +36,12 @@ const Stream = () => {
 
     // RENDER APP =================================================
     const renderNodePosts = (items) => {
-        // console.log(items);
         if (!items || items.length <= 0) return (<Typography paragraph >No Posts</Typography>);
         let itemsRender = [];
         items.forEach((item, idx) => {
             console.log(item);
-            if (item['@context']) {
-                itemsRender.push(
-                    <BasicCard 
-                        key={idx}
-                        header = {
-                            <PostHeader 
-                                author={{ displayName: item.author }}
-                                title={item.summary}
-                            />
-                        }
-                        content = {
-                            <PostContent 
-                                description='Got an activitystream'
-                                content={item.object}
-                            />
-                        }
-                    />
-                );
-            } else {
-                itemsRender.push(
-                    <BasicCard 
-                        key={idx}
-                        header={
-                            <PostHeader 
-                                author={item.author} 
-                                title={item.title} 
-                                time={(item.updated_at ? item.updated_at : item.published)} 
-                            />}
-                        content={
-                            <PostContent 
-                                description={item.description}
-                                contentType={item.contentType}
-                                content={item.content}
-                            />}
-                    />
-                );
-            }
-            itemsRender.push(<br></br>);
+            itemsRender.push(<PostCard key={idx * 2} post={item} />);
+            itemsRender.push(<br key={idx * 2 + 1} />);
         });
         return (<>{itemsRender}</>)
     };

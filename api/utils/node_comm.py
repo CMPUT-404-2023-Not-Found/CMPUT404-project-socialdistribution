@@ -37,17 +37,31 @@ class NodeComm():
         }
     }
 
-    # Retrieve objects from other nodes
     def get_objects(self, item_list):
-        '''
-        Do a lookup of the data_list urls and retrieve the object
-        '''
+        """Attempt to retrieve the objects (post, comment, like, follower, author) from item_list
+
+        Args:
+            item_list (:obj:`list` of :obj:`dict`): A list of objects to be queried for.
+                Each object in `item_list` is expected to of form:
+                    
+                    {
+                        'author': str,
+                        'object': str,
+                        'type': str,
+                    }
+
+        Returns:
+            results (:obj:`list` of :obj:`dict`): A list of objects that have been queried or the original object
+
+        """
         num_threads = len(item_list)
         thread_list = [None] * num_threads
         logger.info('created %s threads', num_threads)
         results = [None] * num_threads
         for i in range(num_threads):
             source_item = item_list[i]
+            # Like & Follow objects require the lookup_results to replace the source item author key
+            # Post & Comment objects require the lookup_results replace the source item entirely
             if (source_item['type'] in ['like', 'follow']):
                 lookup_target, lookup_type = ('author', 'author')
             else: 
@@ -63,9 +77,19 @@ class NodeComm():
         return results
 
     def get_internal_object(self, source_item, results, lookup_target, lookup_type, idx):
-        '''
-        URL matches own self thus query database for data else return original object_data
-        '''
+        """Retrieve the object from the interal database & store result in `results`
+        
+        Args:
+            source_item (dict): The source object
+            results (:obj:`list` of :obj:`dict`): A list to store the queried object
+            lookup_target (str): If set to 'author' then the queried object replaces the 'author' key of `source_item`
+            lookup_type (str): Type of model to be queried
+            idx (int): The index to store the queried result in the `results` list.
+
+        Returns:
+            None
+
+        """
         ret = {**source_item}
         source_item_url = source_item[lookup_target]
         source_item_uuid = self.parse_object_uuid(source_item_url)
@@ -82,6 +106,16 @@ class NodeComm():
         results[idx] = ret
 
     def query_database(self, type, uuid):
+        """Query the Django database for `type` and id `uuid`
+
+        Args:
+            type (str): The model to be queried & serialized against.
+            uuid (str): The UUID of the object to be queried for.
+
+        Returns:
+            ret (:obj:`dict`): The serialized object queried for, else None.
+
+        """
         ret = None
         try:
             db_data = self.lookup_config[type]['model'].objects.get(id=uuid)
@@ -93,9 +127,18 @@ class NodeComm():
         return ret
 
     def get_external_object(self, source_item, lookup_target, results, idx):
-        '''
-        URL is not host app, thus query nodes for data
-        '''
+        """Retrieve the object from the external node API & store result in `results`
+        
+        Args:
+            source_item (dict): The source object
+            lookup_target (str): If set to 'author' then the queried object replaces the 'author' key of `source_item`
+            results (:obj:`list` of :obj:`dict`): A list to store the queried object
+            idx (int): The index to store the queried result in the `results` list.
+
+        Returns:
+            None
+
+        """
         ret = {**source_item}
         lookup_response = None
         source_item_url = source_item[lookup_target]
@@ -112,6 +155,16 @@ class NodeComm():
         results[idx] = ret
     
     def query_node(self, node_data, url):
+        """Query an external node API against `url`
+
+        Args:
+            node_data (:obj:`dict` of str): The node username & password for HTTP Basic Auth
+            url (str): The URL of the object to be queried for.
+
+        Returns:
+            ret (:obj:`dict`): The JSON HTTP response of the object queried for, else None.
+
+        """
         ret = None
         r = None
         raw_content = None
@@ -129,7 +182,6 @@ class NodeComm():
                         r.status_code, repr(raw_content[0:255]))
         return ret
 
-    # Send objects to other nodes
     def send_object(self, inbox_urls, data):
         '''
         Send a object to a node url inbox

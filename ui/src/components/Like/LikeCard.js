@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 
 import BasicCard from '../common/BasicCard/BasicCard';
 import BasicAvatar from '../common/BasicAvatar/BasicAvatar';
-import { likeCardStyles } from './style';
+import { likeCardStyles } from './styles';
 
 const LikeCard = ({ like }) => {
     const navigate = useNavigate();

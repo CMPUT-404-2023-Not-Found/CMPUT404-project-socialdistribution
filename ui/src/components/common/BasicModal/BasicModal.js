@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography';
 
 import { modalStyles } from './styles';
 
-const BasicModal = ({ title, subTitle, content, open, onClose }) => {
+const BasicModal = ({ children, title, subTitle, open, onClose }) => {
 
     return (
         <Modal aria-labelledby={title} aria-describedby={subTitle} open={open} onClose={onClose}>
@@ -25,7 +25,7 @@ const BasicModal = ({ title, subTitle, content, open, onClose }) => {
                 <Typography id={subTitle} sx={{ mt: 2 }}>
                     {subTitle}
                 </Typography>
-                {content}
+                {children}
             </Box>
         </Modal>
     );

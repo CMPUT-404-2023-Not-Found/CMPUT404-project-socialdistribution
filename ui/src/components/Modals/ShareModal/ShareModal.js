@@ -127,9 +127,9 @@ const ShareModal = ({ open, onClose, objectNodeId }) => {
         subTitle={(followerList && followerList.length > 0) ? 'Choose which followers to share with' : null}
         open={open}
         onClose={onClose}
-        content={renderContent()}
         validate={() => {}}
     >
+    {renderContent()}
     </BasicModal>
   );
 }

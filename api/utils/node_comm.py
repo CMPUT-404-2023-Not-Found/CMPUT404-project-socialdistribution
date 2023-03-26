@@ -66,12 +66,13 @@ class NodeComm():
         source_item_url = source_item['object']
         source_item_uuid = self.parse_object_uuid(source_item_url)
         if source_item_uuid:
-            try:
-                db_data = self.lookup_config[source_item['type']]['model'].objects.get(id=source_item_uuid)
-                serializer = self.lookup_config[source_item['type']]['serializer'](db_data)
-                lookup_response = serializer.data
-            except Exception as e:
-                logger.error('Failed internal lookup on type [%s] url [%s]. e [%s]', source_item['type'], source_item_url, e)
+            if source_item['type'] is not 'follow' and source_item['type'] is not 'like':
+                try:
+                    db_data = self.lookup_config[source_item['type']]['model'].objects.get(id=source_item_uuid)
+                    serializer = self.lookup_config[source_item['type']]['serializer'](db_data)
+                    lookup_response = serializer.data
+                except Exception as e:
+                    logger.error('Failed internal lookup on type [%s] url [%s]. e [%s]', source_item['type'], source_item_url, e)
         else:
             logger.error('Could not determine object uuid from url [%s]', source_item_url)
         results[idx] = lookup_response if lookup_response else source_item
@@ -82,6 +83,10 @@ class NodeComm():
         '''
         lookup_response = None
         source_item_url = source_item['object']
+        if source_item['type'] is 'follow' or source_item['type'] is 'like':
+            results[idx] = source_item
+            return
+
         host_url = self.parse_host_url(source_item_url)
         node_data = self.get_node_auth(host_url)
         if not node_data:

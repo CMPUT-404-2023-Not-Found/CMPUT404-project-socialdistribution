@@ -21,7 +21,7 @@ class CommentListCreateViewTest(Base):
         '''
         Test getting list of comments
         '''
-        comment_count = Comment.objects.all().count()
+        comment_count = Comment.objects.filter(post=self.post_uuid).count()
         response = self.admin_client.get(self.get_comment_url(self.author_uuid, self.post_uuid))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], comment_count)

@@ -13,6 +13,7 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 import AuthContext from '../../../context/AuthContext';
+import BasicPagination from '../../common/BasicPagination/BasicPagination';
 import Backend from '../../../utils/Backend';
 import BasicModal from '../../common/BasicModal/BasicModal';
 import CommonButton from '../../common/CommonButton/CommonButton';
@@ -24,26 +25,15 @@ const ShareModal = ({ open, onClose, objectNodeId }) => {
     const [ followerList, setFollowerList ] = useState([]);
     const [ sendList, setSendList ] = useState({});
     const { user, authTokens, logoutUser } = useContext(AuthContext);
+    const followerEndpoint = `/api/authors/${user.user_id}/followers`;
+    const itemResultsKey = 'items';
 
     //  event listeners -------------------------------------------
     useEffect(() => {
-      if (open) { 
-        setSendList({});
-        const getFollowers = async () => {
-            const [response, data] = await Backend.get(`/api/authors/${user.user_id}/followers/`, authTokens.access);
-            if (response.status && response.status === 200) {
-                console.log('Got followers');
-                console.log(data);
-                setFollowerList(data.items);
-            } else if (response.statusText === 'Unauthorized'){
-                logoutUser();
-            } else {
-                console.log('Failed to get followers');
-            }
-        };
-        getFollowers();
+        if (open) {
+            setSendList({});
         }
-    }, [open, user, authTokens, logoutUser]);
+    }, [open]);
 
     //  functions       -------------------------------------------
     const handleChange = (e) => {
@@ -124,12 +114,19 @@ const ShareModal = ({ open, onClose, objectNodeId }) => {
     return (
     <BasicModal
         title={(followerList && followerList.length > 0) ? 'Share with followers?': 'Sorry, you have no followers'}
-        subTitle={(followerList && followerList.length > 0) ? 'Choose which followers to share with' : null}
+        subTitle={(followerList && followerList.length > 0) ? 'Choose who to share with' : null}
         open={open}
         onClose={onClose}
         validate={() => {}}
     >
-    {renderContent()}
+        {open &&
+            <BasicPagination 
+                itemEndpoint={followerEndpoint} 
+                itemResultsKey={itemResultsKey}
+                setItems={(followerList) => setFollowerList(followerList)}
+            />
+        }
+        {renderContent()}
     </BasicModal>
   );
 }

@@ -76,6 +76,7 @@ const Stream = () => {
                                 description={item.description}
                                 contentType={item.contentType}
                                 content={item.content}
+                                commentURL={item.comments}
                             />}
                     />
                 );

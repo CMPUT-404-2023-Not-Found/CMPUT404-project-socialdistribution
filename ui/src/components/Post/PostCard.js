@@ -16,14 +16,14 @@ const PostCard = ({ post, ...actions }) => {
         <BasicCard
             header={
             <PostHeader
-                title={post.title ? post.title : 'No title'}
+                title={post.title ? post.title : post.summary ? post.summary : 'No Title'}
                 author={post.author && post.author}
                 time={post.updated_at ? post.updated_at : post.published}
             />}
             content={
             <PostContent 
                 description={post.description}
-                contentType={post.contentType}
+                contentType={post.contentType ? post.contentType : post['@context']}
                 content={post.content}
                 postNodeId={post.id}
             />}

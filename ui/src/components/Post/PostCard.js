@@ -9,7 +9,7 @@ import React from 'react';
 import BasicCard from '../common/BasicCard/BasicCard';
 import PostHeader from './PostHeader';
 import PostContent from './PostContent';
-import PostActions from './PostActions';
+import PostActions from './PostActions'
 
 const PostCard = ({ post, ...actions }) => {
     return (

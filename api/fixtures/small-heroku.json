@@ -573,15 +573,6 @@
   },
   {
     "model": "follower.follower",
-    "pk": 1,
-    "fields": {
-      "follower_node_id": "https://sd7-api.herokuapp.com/api/authors/de52020f-f5df-4361-b771-2829a99f16a2",
-      "followee": "398113ca-ce82-420a-b1e8-e8de260d3a64",
-      "followed_at": "2023-03-16T23:14:58.870Z"
-    }
-  },
-  {
-    "model": "follower.follower",
     "pk": 2,
     "fields": {
       "follower_node_id": "https://sd7-api.herokuapp.com/api/authors/12fae447-fb43-4cbc-84f9-8965aab66926",

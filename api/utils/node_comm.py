@@ -62,8 +62,10 @@ class NodeComm():
             source_item = item_list[i]
             # Like & Follow objects require the lookup_results to replace the source item author key
             # Post & Comment objects require the lookup_results replace the source item entirely
-            if (source_item['type'] in ['like', 'follow']):
+            if (source_item['type'] == 'like'):
                 lookup_target, lookup_type = ('author', 'author')
+            elif (source_item['type'] == 'follow'):
+                lookup_target, lookup_type = ('actor', 'author')
             else: 
                 lookup_target, lookup_type = ('object', source_item['type']) 
             source_item_url = source_item[lookup_target]

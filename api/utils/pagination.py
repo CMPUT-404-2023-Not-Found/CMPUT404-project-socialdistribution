@@ -19,6 +19,10 @@ class CustomPagination(pagination.PageNumberPagination):
         return {
             'type': 'object',
             'properties': {
-                  'items': schema,
+                    'count': {
+                        'type': 'integer',
+                        'example': 10
+                    },
+                    'items': schema,
               },
           }

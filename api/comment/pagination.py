@@ -24,6 +24,7 @@ class CommentPagination(CustomPagination):
         post_id = comment_id[:-9]
         
         return Response(OrderedDict([
+            ('count', self.page.paginator.count),
             ('type', 'comments'),
             ('page', self.page.number),
             ('size', self.page.paginator.per_page),
@@ -36,6 +37,10 @@ class CommentPagination(CustomPagination):
         return {
             'type': 'object',
             'properties': {
+                    'count': {
+                        'type': 'integer',
+                        'example': 10
+                    },
                     'type': {
                         'type': 'string',
                         'example': 'comments'

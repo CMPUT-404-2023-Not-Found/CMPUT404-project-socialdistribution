@@ -17,6 +17,7 @@ class LikePagination(CustomPagination):
 
     def get_paginated_response(self, data):
         return Response(OrderedDict([
+            ('count', self.page.paginator.count),
             ('type', 'liked'),
             ('items', data)
         ]))
@@ -25,6 +26,10 @@ class LikePagination(CustomPagination):
         return {
             'type': 'object',
             'properties': {
+                    'count': {
+                        'type': 'integer',
+                        'example': 10
+                    },
                     'type': {
                         'type': 'string',
                         'example': 'liked'

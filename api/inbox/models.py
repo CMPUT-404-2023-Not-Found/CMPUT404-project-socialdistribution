@@ -15,7 +15,7 @@ class Inbox(Model):
     class TypeChoices(models.TextChoices):
         POST    = ('post', 'Post')
         LIKE    = ('like', 'Like')
-        FR      = ('follow_request', 'Follow Request')
+        FR      = ('follow', 'Follow Request')
         COMMENT = ('comment', 'Comment')
     
     class W3ContextChoices(models.TextChoices):

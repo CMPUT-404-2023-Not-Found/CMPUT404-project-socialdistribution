@@ -39,7 +39,7 @@ const ShareModal = ({ open, onClose, objectNodeId }) => {
     const handleChange = (e) => {
         const follower_id = e.target.value;
         const send_to_follower = e.target.checked;
-        console.log(`setting ${follower_id} to ${send_to_follower}`)
+        console.debug(`setting ${follower_id} to ${send_to_follower}`);
         setSendList(values => ({ ...values, [follower_id]: send_to_follower}));
     }
 
@@ -68,17 +68,18 @@ const ShareModal = ({ open, onClose, objectNodeId }) => {
             inbox_urls: inboxUrls
         }
 
-        console.log('Sharing inboxData: ')
-        console.log(inboxData);
+        console.log('Sharing inboxData ...')
+        console.debug(inboxData);
         
         const [ response, data ] = await Backend.post(`/api/node/object/`, authTokens.access, JSON.stringify(inboxData));
         if (response.status && response.status === 201) {
-            console.log('Sent inbox data:');
-            console.log(data);
+            console.log('Sent inbox data ...');
+            console.debug(data);
         } else if (response.statusText === 'Unauthorized'){
             logoutUser();
         } else {
-            console.log('Failed to send inbox data');
+            console.error('Failed to send inbox data');
+            console.error(inboxData);
         }
         onClose();
     };

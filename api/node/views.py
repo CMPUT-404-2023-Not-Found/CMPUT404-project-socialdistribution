@@ -2,13 +2,13 @@
 # node/views.py
 
 from rest_framework import status
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from threading import Thread
 
 from .models import Node
-from .serializers import NodeRetrieveSerializer
+from .serializers import NodeRetrieveSerializer, NodeListSerializer
 from utils.node_comm import NodeComm
 
 NodeComm = NodeComm()
@@ -69,3 +69,8 @@ class NodeView(GenericAPIView):
         thread = Thread(target=NodeComm.send_object, args=(inbox_urls, data_to_send))
         thread.start()
         return Response(status=status.HTTP_201_CREATED, data=data_to_send)
+
+class NodeListView(ListAPIView):
+    queryset = Node.objects.all()
+    serializer_class = NodeListSerializer
+    permission_classes = [IsAuthenticated]

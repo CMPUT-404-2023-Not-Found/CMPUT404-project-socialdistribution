@@ -3,8 +3,9 @@
 
 from django.urls import path
 
-from .views import NodeView
+from .views import NodeView, NodeListView
 
 urlpatterns = [
-    path('object/', NodeView.as_view(), name="node")
+    path('object/', NodeView.as_view(), name="node"),
+    path('', NodeListView.as_view(), name="nodeList")
 ]

@@ -34,12 +34,12 @@ const Stream = () => {
         <>
             <PageHeader title='Stream'></PageHeader>
             <GridWrapper>
-            {renderNodePosts(nodePosts)}
             <BasicPagination 
                 itemEndpoint={postEndpoint} 
                 itemResultsKey={itemResultsKey} 
                 setItems={(posts) => setNodePosts(posts)}
             />
+            {renderNodePosts(nodePosts)}
             </GridWrapper>
         </>
     );

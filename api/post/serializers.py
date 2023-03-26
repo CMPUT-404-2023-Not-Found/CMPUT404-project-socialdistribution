@@ -37,7 +37,7 @@ class PostSerializer(serializers.ModelSerializer):
     type            = serializers.SerializerMethodField('get_type')
     @extend_schema_field(CharField)
     def get_type(self, obj): return 'post'
-
+    
     comments        = serializers.SerializerMethodField('get_comments')
     @extend_schema_field(URLField)
     def get_comments(self, obj): 
@@ -59,3 +59,13 @@ class PostSerializer(serializers.ModelSerializer):
                     'published', 'visibility', 'unlisted',
                     'rev', 'updated_at'
                 ]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        if 'base64' in representation['contentType']:
+            representation.pop('content')
+            representation.pop('contentType')
+            representation['content'] = f'![]({representation["id"]}/image)'
+            representation['contentType'] = 'text/markdown'
+        return representation

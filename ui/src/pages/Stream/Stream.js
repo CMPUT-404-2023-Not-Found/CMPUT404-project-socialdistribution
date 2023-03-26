@@ -74,6 +74,7 @@ const Stream = () => {
                         content={
                             <PostContent 
                                 description={item.description}
+                                contentType={item.contentType}
                                 content={item.content}
                             />}
                     />

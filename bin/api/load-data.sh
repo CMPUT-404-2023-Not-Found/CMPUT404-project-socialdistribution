@@ -7,9 +7,10 @@
 source .env
 
 if [ "#$FIXTURE_FILES" = "#" ]; then echo "ERR could not find fixture files in your env"; exit 1; fi;
-cd ../../
 
-pwd
+curdir=`pwd`
+
+cd ../../
 cd api/
 source venv/bin/activate
 
@@ -17,3 +18,5 @@ for FILE in $FIXTURE_FILES
 do
 	python manage.py loaddata $FILE
 done
+
+cd $curdir

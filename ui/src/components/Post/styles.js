@@ -13,3 +13,12 @@ export const postHeaderStyles = {
         }
     }
 }
+
+export const PostContentStyles = {
+    cardMedia: {
+        height: '512',
+        sx: {
+            objectFit: 'contain'
+        }
+    }
+}

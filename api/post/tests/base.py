@@ -14,7 +14,7 @@ class Base(APITestCase):
     '''
     Base class for Post test suite
     '''
-    fixtures = ['fixtures/db.json']
+    fixtures = ['fixtures/db.json', 'fixtures/small-follower.json']
 
     post_data = {
         'unlisted': False,
@@ -31,6 +31,12 @@ class Base(APITestCase):
         self.author_post_uuid = 'a0dfc41c-4d32-47d1-a567-aed24ae4736e'
         self.admin = Author.objects.get(username='stephenking')
         self.admin_client = self.configure_client(self.admin)
+
+        self.friendlybaker = Author.objects.get(username='friendlybaker')
+        self.friendlybaker_client = self.configure_client(self.friendlybaker)
+        self.friend_post_uuid = 'f1f6aefa-8032-41c9-933e-3b3db93d55f6'
+        self.clarence0 = Author.objects.get(username='clarence0')
+        self.clarence0_client = self.configure_client(self.clarence0)
     
     def configure_client(self, user):
         '''

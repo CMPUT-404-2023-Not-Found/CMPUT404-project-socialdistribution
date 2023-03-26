@@ -6,7 +6,7 @@
 export APP_HOST='localhost:8000'
 export APP_URL="http://${APP_HOST}"
 export AUTHOR_API="${APP_URL}/api/authors"
-export NODE_API="${APP_URL}/api/node"
+export NODE_API="${APP_URL}/api/node/object"
 export POST_API="${AUTHOR_API}/%s/posts"
 export TOKEN_API="${APP_URL}/api/token"
 export COMMENT_API="${AUTHOR_API}/%s/posts/%s/comments"

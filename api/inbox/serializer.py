@@ -21,14 +21,42 @@ class InboxSerializer(serializers.ModelSerializer):
         fields = [ 'context', 'summary', 'type', 'author', 'object' ]
 
     def to_internal_value(self, data):
+        object_type = self.get_object_type(data)
+        author_url = self.get_author_url(data)
+        object_url = self.get_object_url(data)
         new_data = {
-            'summary': data.get('summary', ''),
-            'type': data.get('type', ''),
-            'author': data.get('author', {}).get('url', ''),
-            'object': data.get('object', '')
+            'summary': data.get('summary', 'You got a notification!'),
+            'type': object_type,
+            'author': author_url,
+            'object': object_url
         }
         if data.get('@context'): new_data['context'] = data.get('@context')
         return super().to_internal_value(new_data)
+
+    def get_author_url(self, data):
+        '''
+        Incoming author information locations:
+            post: 'author'
+            like: 'author'
+            comment: 'author'
+            follow: 'actor'
+        '''
+        author_data = data.get('author', {})
+        if author_data == {}:
+            author_data = data.get('actor', {})
+        return author_data.get('url', '')
+
+    def get_object_type(self, data):
+        return data.get('type', '').lower()
+    
+    def get_object_url(self, data):
+        ret = ''
+        object_data = data.get('object', {})
+        if isinstance(object_data, str):
+            ret = object_data        
+        else:
+            ret = object_data.get('url', '')
+        return ret
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)

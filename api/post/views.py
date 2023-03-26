@@ -3,8 +3,10 @@
 
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
-from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
+from django.http import HttpResponse
+import base64
+from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView,  GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -13,12 +15,24 @@ from follower.models import Follower
 from .serializers import PostSerializer
 from .models import Post
 from utils.permissions import IsAuthenticatedWithJWT, NodeReadOnly, OwnerCanWrite
+from follower.models import Follower
 from utils.node_comm import NodeComm
-nc = NodeComm()
 
 import logging
 logger = logging.getLogger('django')
 rev = 'rev: $xujSyn7$x'
+
+nc = NodeComm()
+
+def isFriend(follower_url, author_uuid):
+    if nc.parse_object_uuid(follower_url) == str(author_uuid):
+        return True
+
+    # inefficient? probably not in our case, even if there are like 10000 followers but idk
+    if Follower.objects.filter(followee=author_uuid, follower_node_id=follower_url).count() == 1:
+        return True
+
+    return False
 
 # This code is modifed from a video tutorial from Cryce Truly on 2020-06-19 retrieved on 2023-02-16, to Youtube crycetruly
 # video here:
@@ -37,7 +51,7 @@ class PostListCreateView(ListCreateAPIView):
         author_uuid = self.kwargs.get(self.lookup_url_kwarg)
         author_obj = Author.objects.get(id=author_uuid)
         logger.info('Creating new post for author_uuid [%s]', author_uuid)
-        post = serializer.save(author=author_obj)
+        post = serializer.save(author=author_obj, content=self.request.data['content'])
         if post and not post.unlisted:
             inbox_obj_raw = {
                 'summary': post.title,
@@ -49,7 +63,7 @@ class PostListCreateView(ListCreateAPIView):
             logger.info('Sending new post [%s] to inboxes of followers [%s] of author_uuid [%s]', post.id, len(followers), author_uuid)
             follower_inboxs = []
             for follower in followers:
-                follower_inbox = nc.get_author_inbox(follower.follower)
+                follower_inbox = nc.get_author_inbox(follower.follower_node_id)
                 follower_inboxs.append(follower_inbox)
             nc.send_object(follower_inboxs, inbox_obj)
         return post
@@ -61,7 +75,13 @@ class PostListCreateView(ListCreateAPIView):
             logger.info('Get recent posts for author_uuid: [%s] with query_params [%s]', author_uuid, str(self.request.query_params)) # type: ignore
         else:
             logger.info('Get recent posts for author_uuid: [%s]', author_uuid)
-        return self.queryset.filter(author_id=author_uuid).order_by('-published')
+        
+        follower_url = self.request.user.get_node_id()
+        if isFriend(follower_url, author_uuid) or self.request.user.groups.filter(name='node').exists():
+            logger.info('Get public and private posts for author_uuid: [%s]', author_uuid)      
+            return self.queryset.filter(author_id=author_uuid, unlisted=False).order_by('-published')
+
+        return self.queryset.filter(author_id=author_uuid, visibility="PUBLIC", unlisted=False).order_by('-published')
 
 class PostDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
@@ -74,6 +94,20 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
         post_id = self.kwargs.get(self.lookup_field)
         logger.info('Getting content for post id: [%s]', post_id)
         return super().get_object()
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        if serializer.data['visibility'] == "PUBLIC":
+            return Response(serializer.data)
+
+        author_uuid = self.kwargs.get('author_uuid')
+        follower_url = self.request.user.get_node_id()
+        if isFriend(follower_url, author_uuid) or self.request.user.groups.filter(name='node').exists():
+            logger.info('Get private post for author_uuid: [%s]', author_uuid)      
+            return Response(serializer.data)
+        
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     @extend_schema(
         operation_id='post_post_update'
@@ -116,6 +150,35 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
         logger.info('Deleting post id: [%s]', post_id)
         return super().perform_destroy(instance)
 
+class PostImageView(GenericAPIView):
+    '''
+    Node view for node-to-node communication
+    '''
+    queryset = Post.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        '''
+        Get an object from another node
+        '''
+        lookup_url_kwarg = 'id'
+        post_uuid = self.kwargs.get(lookup_url_kwarg)
+        logger.info(rev)
+
+        logger.info('Doing lookup of post_uuid [%s]', post_uuid)
+        post_obj = Post.objects.get(id=post_uuid)
+
+        # This code is modified from a post by sadashiv30 on StackOverflow on 2015-09-15, retrieved on 2023-03-20
+        # https://stackoverflow.com/questions/22276518/returning-binary-data-with-django-httpresponse
+        postcontent = post_obj.content.split(',')[1]
+        bytesarr = bytes(postcontent, 'UTF-8')
+        decoded = base64.decodebytes(bytesarr)
+
+        logger.info(postcontent[:10])
+        if post_obj and 'text' not in post_obj.content_type:
+            return HttpResponse(decoded, content_type='application/octet-stream')
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+  
 class PostListAllView(ListAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.all()

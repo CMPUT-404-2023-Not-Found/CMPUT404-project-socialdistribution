@@ -5,7 +5,10 @@ ui/src/pages/Inbox/Inbox.js
 */
 
 import React, { useContext, useEffect, useState } from 'react';
-import { Typography } from '@mui/material';
+import Button from '@mui/material/Button';
+import CardHeader from '@mui/material/CardHeader';
+import CardContent from '@mui/material/CardContent';
+import { useNavigate } from 'react-router-dom';
 
 import Backend from '../../utils/Backend';
 import AuthContext from '../../context/AuthContext';
@@ -15,12 +18,14 @@ import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
 import PostHeader from '../../components/Post/PostHeader';
 import PostContent from '../../components/Post/PostContent';
 import PageHeader from '../../components/Page/PageHeader';
+import LikeCard from '../../components/Like/LikeCard';
 
 const Inbox = () => {
     //  variable declarations -------------------------------------
     const [ inbox, setInbox ] = useState({});
     const { user, authTokens, logoutUser } = useContext(AuthContext);
-    
+    const navigate = useNavigate();
+
     //  event listners --------------------------------------------
     useEffect(() => {
         const getInbox = async () => {
@@ -41,31 +46,20 @@ const Inbox = () => {
     // RENDER APP =================================================
     const renderInbox = (items) => {
         // console.log(items);
-        if (!items || items.length <= 0) return (<Typography paragraph >No Posts</Typography>);
+        if (!items || items.length <= 0) {
+            return (
+            <BasicCard>
+                <CardHeader title='No Posts' subheader='You have no notifications' />
+                <CardContent>
+                    <Button variant='contained' onClick={() => {navigate('/')}}>Go To Stream</Button>
+                </CardContent>
+            </BasicCard>);
+        }
         let itemsRender = [];
         items.forEach((item, idx) => {
             console.log(item);
-            if (item['@context']) {
-                itemsRender.push(
-                    <BasicCard 
-                        key={idx * 2}
-                        header = {
-                            <PostHeader 
-                                author={{ displayName: item.author }}
-                                title={item.summary}
-                            />
-                        }
-                        content = {
-                            <PostContent 
-                                description='Got an activitystream'
-                                contentType={item['@context']}
-                                content={item.object}
-                            />
-                        }
-                    />
-                );
-            } else {
-                switch(item.type) {
+            let item_type = item.type.toLowerCase();
+            switch(item_type) {
                 case 'post':
                     itemsRender.push(<PostCard key={idx * 2} post={item} />);
                     break;
@@ -73,14 +67,31 @@ const Inbox = () => {
                     // TODO render
                     break;
                 case 'like':
-                    // TODO render
+                    itemsRender.push(<LikeCard key={idx * 2} like={item}/>)
                     break;
-                case 'follow_request':
+                case 'follow':
                     // TODO Render
                     break;
                 default:
                     console.error('Unknown inbox type: ' + item.type);
-                }
+                    itemsRender.push(
+                        <BasicCard 
+                            key={idx * 2}
+                            header = {
+                                <PostHeader 
+                                    author={{ displayName: item.author }}
+                                    title={item.summary}
+                                />
+                            }
+                            content = {
+                                <PostContent 
+                                    description='Got an activitystream'
+                                    contentType={item['@context']}
+                                    content={item.object}
+                                />
+                            }
+                        />
+                    );
             }
             itemsRender.push(<br key={idx * 2 + 1}></br>);
         });

@@ -22,7 +22,9 @@ CRT_BODY=`cat <<EOF
 }
 EOF`
 
+hdr_dump=`mktemp`
 rsp=`curl -s \
+     -D "$hdr_dump" \
      -d "$CRT_BODY" \
      -H "Content-Type: application/json" \
      "$CRT_AUTHOR_URL"`
@@ -32,9 +34,11 @@ echo "$rsp" | grep -q "$RAND"
 e=$?
 if [ $e -ne 0 ]
 then
+    cat "$hdr_dump"
     echo "ERR Could not create author $USR_NAME"
     echo "$rsp"
 else
+    cat "$hdr_dump"
     echo "$rsp" | jq 2>/dev/null
     e=$?; if [ $e -ne 0 ]; then echo "$rsp"; exit $e; fi
     user_data=`echo "$rsp" | jq -c 2>/dev/null`

@@ -48,9 +48,11 @@ class NodeComm():
         results = [None] * num_threads
         for i in range(num_threads):
             source_item = item_list[i]
-            source_item_url = source_item['object']
+            lookup_target = 'author' if (source_item['type'] in ['like', 'follow']) else 'object'
+            lookup_type = 'author' if (source_item['type'] in ['like', 'follow']) else source_item['type']
+            source_item_url = source_item[lookup_target]
             if self.is_host_internal(source_item_url):
-                thread_list[i] = Thread(target=self.get_internal_object, args=(source_item, results, i))
+                thread_list[i] = Thread(target=self.get_internal_object, args=(source_item, results, lookup_target, lookup_type, i))
             else:
                 thread_list[i] = Thread(target=self.get_external_object, args=(source_item, results, i))
             thread_list[i].start()
@@ -58,24 +60,35 @@ class NodeComm():
             thread.join()
         return results
 
-    def get_internal_object(self, source_item, results, idx):
+    def get_internal_object(self, source_item, results, lookup_target, lookup_type, idx):
         '''
         URL matches own self thus query database for data else return original object_data
         '''
-        lookup_response = None
-        source_item_url = source_item['object']
+        ret = {**source_item}
+        source_item_url = source_item[lookup_target]
         source_item_uuid = self.parse_object_uuid(source_item_url)
-        if source_item_uuid:
-            if source_item['type'] is not 'follow' and source_item['type'] is not 'like':
-                try:
-                    db_data = self.lookup_config[source_item['type']]['model'].objects.get(id=source_item_uuid)
-                    serializer = self.lookup_config[source_item['type']]['serializer'](db_data)
-                    lookup_response = serializer.data
-                except Exception as e:
-                    logger.error('Failed internal lookup on type [%s] url [%s]. e [%s]', source_item['type'], source_item_url, e)
-        else:
+        if not source_item_uuid:
             logger.error('Could not determine object uuid from url [%s]', source_item_url)
-        results[idx] = lookup_response if lookup_response else source_item
+            results[idx] = source_item
+            return
+
+        lookup_response = self.query_database(lookup_type, source_item_uuid)
+        if lookup_response and (lookup_target == 'author'):
+            ret[lookup_target] = lookup_response
+        elif lookup_response:
+            ret = lookup_response
+        results[idx] = ret
+
+    def query_database(self, type, uuid):
+        ret = None
+        try:
+            db_data = self.lookup_config[type]['model'].objects.get(id=uuid)
+            serializer = self.lookup_config[type]['serializer'](db_data)
+            lookup_response = serializer.data
+            ret = lookup_response
+        except Exception as e:
+            logger.error('Failed internal lookup on type [%s] uuid [%s]. e [%s]', type, uuid, e)
+        return ret
 
     def get_external_object(self, source_item, results, idx):
         '''

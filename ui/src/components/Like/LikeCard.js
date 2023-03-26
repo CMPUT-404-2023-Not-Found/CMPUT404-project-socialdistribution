@@ -4,7 +4,7 @@ ui/src/components/Like/LikeCard.js
 
 */
 import React from 'react';
-import { CardContent, CardHeader, Typography } from '@mui/material';
+import { CardContent, CardHeader } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 

@@ -11,6 +11,7 @@ class CustomPagination(pagination.PageNumberPagination):
     max_page_size = 100
     def get_paginated_response(self, data):
         return Response(OrderedDict([
+            ('count', self.page.paginator.count),
             ('items', data)
         ]))
 

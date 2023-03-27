@@ -20,7 +20,7 @@ import PageHeader from '../components/Page/PageHeader';
 const EditPost = () => {
     //  variable declarations -------------------------------------
     let navigate = useNavigate();
-    const{ postId } = useParams();
+    const{ postId } = useParams(); // recieve the selected post id from PostHeader.js
     console.log(postId);
 
     const { user, authTokens, logoutUser } = useContext(AuthContext);
@@ -28,7 +28,18 @@ const EditPost = () => {
     const [options, setOptions] = useState(null);
     
     const {register, handleSubmit} = useForm();
+
+    const getPostData =  async () => {
+        const [response, postData] = await Backend.get(`/api/authors/${user.user_id}/posts/${postId}`, authTokens.access);
+        // console.log(postData);
+        return postData;
+    }
     
+    let postData = getPostData();
+    postData.then((data) => {
+        console.log(data);
+    })
+
     //  event listeners --------------------------------------------
     useEffect(() => {
         const getOptions = async () => {
@@ -62,6 +73,7 @@ const EditPost = () => {
     }
 
     const editPost = async (formData) => {
+
         let fileContentTypes = ['image/jpeg;base64', 'image/png;base64', 'application/base64']
         if (fileContentTypes.includes(formData.contentType)) {
             console.log(formData);
@@ -74,7 +86,7 @@ const EditPost = () => {
 
         delete formData.file;
         
-        const [response, data] = await Backend.post(`/api/authors/${user.user_id}/posts/`, authTokens.access, JSON.stringify(formData));
+        const [response, data] = await Backend.post(`/api/authors/${user.user_id}/posts/${postId}`, authTokens.access, JSON.stringify(formData));
         if (response.status && response.status === 201) {
             navigate('/posts/');
         } else if (response.statusText === 'Unauthorized'){
@@ -99,7 +111,7 @@ const EditPost = () => {
                     </DynamicForm>
                     : 
                     <div>
-                        Loading form ...
+                        Loading the selected post ...
                     </div>
                 }
             </GridWrapper>

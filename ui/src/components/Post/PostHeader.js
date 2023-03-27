@@ -21,12 +21,10 @@ const PostHeader = ({ author, title, subheader, time, postId }) => {
     const [ anchorEl, setAnchorEl ] = React.useState(null);
     const navigate = useNavigate();
 
-    console.log(postId);
     const regex = /\/([\w-]+)$/;
     const match = postId.match(regex);
     if (match) {
         const postIdFromUrl = match[1];
-        console.log(postIdFromUrl);
     }
     const postIdFromUrl = match[1];
 

@@ -52,10 +52,18 @@ class PostListCreateView(ListCreateAPIView):
         author_obj = Author.objects.get(id=author_uuid)
         logger.info('Creating new post for author_uuid [%s]', author_uuid)
         post = serializer.save(author=author_obj, content=self.request.data['content'])
-        # # Handle nested categories
-        # categories_data = self.request.data.get('categories', [])
-        # for category_data in categories_data:
-        #     Category.objects.create(post=post, **category_data)
+
+        # Save the post without categories first
+        post = serializer.save(author=author_obj, content=self.request.data['content'])
+
+        # Get the categories from the request data
+        categories = self.request.data.get('categories', [])
+
+        # Save the categories associated with the post
+        for category_name in categories:
+            category = Category(post=post, category=category_name)
+            category.save()
+
             
         if post and not post.unlisted:
             inbox_obj_raw = {

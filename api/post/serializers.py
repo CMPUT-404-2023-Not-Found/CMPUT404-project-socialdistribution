@@ -32,7 +32,9 @@ class PostSerializer(serializers.ModelSerializer):
     categories      = serializers.SerializerMethodField('get_categories')
     @extend_schema_field(ListField)
     # def get_categories(self, obj): return ['this', 'is', 'a', 'hack']
+    
     def get_categories(self, obj): return obj.get_category_item_list()
+
     contentType     = ChoiceField(choices=Post.CONTENT_TYPE_OPTIONS, source='content_type', required=True)
     type            = serializers.SerializerMethodField('get_type')
     @extend_schema_field(CharField)
@@ -47,11 +49,6 @@ class PostSerializer(serializers.ModelSerializer):
     # @extend_schema_field(CommentSerializer)
     # def get_commentsSrc(self, obj):
     #     pass
-    
-# class CategorySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Category
-#         fields = ['id', 'name']
 
     class Meta:
         model = Post

@@ -45,7 +45,10 @@ const Followers = () => {
     }, [ user, authTokens, logoutUser ]);
 
     const deleteFollower = async (follower, idx) => {
-        const response = await Backend.delete(`/api/authors/${user.user_id}/followers/${follower.id}`, authTokens.access);
+        console.info('Deleting follower ...');
+        const follower_id = follower.id || follower.object;
+        console.info(follower_id);
+        const response = await Backend.delete(`/api/authors/${user.user_id}/followers/${follower_id}`, authTokens.access);
         if (response.status && response.status === 204) {
             console.log("Deleted Follower");
             followers.splice(idx,1);

@@ -2,12 +2,15 @@
 # comment/views.py
 
 from drf_spectacular.utils import extend_schema
+from rest_framework import status
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from .models import Comment
 from .pagination import CommentPagination
 from .serializers import CommentSerializer
+from author.models import Author
 from post.models import Post
 from post.serializers import PostSerializer
 from utils.permissions import NodeReadOnly
@@ -16,10 +19,6 @@ import logging
 logger = logging.getLogger('django')
 rev = 'rev: $xuasEcn7$x'
 
-import logging
-logger = logging.getLogger('django')
-rev = 'rev: $xujSyn7$x' # not really sure what to set this to
-
 class CommentListCreateView(ListCreateAPIView):
     serializer_class = CommentSerializer
     queryset = Comment.objects.all()
@@ -27,17 +26,25 @@ class CommentListCreateView(ListCreateAPIView):
     lookup_url_kwarg = 'post_uuid'
     permission_classes = [IsAuthenticated|NodeReadOnly]
 
-    @extend_schema(
-        operation_id='comment_create'
-    )
-    def perform_create(self, serializer):
+    def post(self, request, *args, **kwargs):
+        '''
+        Create a new comment on post post_uuid
+        '''
         logger.info(rev)
-        post_uuid = self.kwargs.get(self.lookup_url_kwarg)
+        post_uuid = kwargs.get(self.lookup_url_kwarg)
         post_obj = Post.objects.get(id=post_uuid)
-        logger.info('Creating comment for post_uuid: [%s]', post_uuid)
-        author_url = PostSerializer(post_obj).data['author']['id']
-        return serializer.save(post=post_obj, author=author_url)
-    
+        author_node_id = request.user.get_node_id()
+        logger.info('Creating comment for author [%s] under post_uuid [%s]', author_node_id, post_uuid)
+        comment_data = { **request.data, 'author': author_node_id}
+        serializer = self.get_serializer(data=comment_data)
+        if serializer.is_valid():
+            serializer.save(post=post_obj)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        else:
+            logger.error('Failed to create comment for author [%s] under post_uuid [%s]. e [%s]', author_node_id, post_uuid, serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def get_queryset(self):
         logger.info(rev)
         self.request.kwargs = self.kwargs

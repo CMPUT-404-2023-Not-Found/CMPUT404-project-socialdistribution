@@ -14,7 +14,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import InboxIcon from '@mui/icons-material/Inbox';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PeopleIcon from '@mui/icons-material/People';
-import { IconButton } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
 
 export const mainNavbarItems = [
     {

@@ -7,6 +7,7 @@ import React from 'react'
 import CardHeader from '@mui/material/CardHeader';
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { useNavigate } from 'react-router-dom';
 
 import BasicAvatar from '../common/BasicAvatar/BasicAvatar';
 import BasicMenu from '../common/BasicMenu/BasicMenu';
@@ -18,13 +19,22 @@ import { utcToLocal } from '../../utils/Utils';
 const PostHeader = ({ author, title, subheader, time, postId }) => {
     const [ open, setOpen ] = React.useState(false);
     const [ anchorEl, setAnchorEl ] = React.useState(null);
+    const navigate = useNavigate();
+
     console.log(postId);
+    const regex = /\/([\w-]+)$/;
+    const match = postId.match(regex);
+    if (match) {
+        const postIdFromUrl = match[1];
+        console.log(postIdFromUrl);
+    }
+    const postIdFromUrl = match[1];
+
     const menuItems = [
         {
             id: 1,
             label: 'Edit',
-            onClick: () => window.location.href = `/edit-post/`,
-            onClickParams: { id: 1 },
+            route: '/editpost/' + postIdFromUrl,
         }, 
         {
             id: 2,

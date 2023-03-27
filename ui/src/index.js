@@ -42,7 +42,7 @@ root.render(
                      <Route path="/posts/:postid" element={<PostDetail />} />
                      <Route path="/profile" element={<Profile />} />
                      <Route path="/createpost" element={<CreatePost />} />
-                     <Route path="/editpost" element={<EditPost />} />
+                     <Route path="/editpost/:postId" element={<EditPost />} />
                   </Route>
                   <Route path="/login" element={<Login />} />
                   <Route path="*" element={<NotFound />} />

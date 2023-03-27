@@ -19,6 +19,7 @@ const PostCard = ({ post, ...actions }) => {
                 title={post.title ? post.title : post.summary ? post.summary : 'No Title'}
                 author={post.author && post.author}
                 time={post.updated_at ? post.updated_at : post.published}
+                postId={post.id}
             />}
             content={
             <PostContent 

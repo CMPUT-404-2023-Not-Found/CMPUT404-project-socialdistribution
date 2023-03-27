@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useContext, useState, useEffect } from 'react';
 import AuthContext from '../context/AuthContext';
 import DynamicForm from '../utils/DynamicForm';
@@ -20,8 +20,8 @@ import PageHeader from '../components/Page/PageHeader';
 const EditPost = () => {
     //  variable declarations -------------------------------------
     let navigate = useNavigate();
-
-    const currentPost = useParams();
+    const{ postId } = useParams();
+    console.log(postId);
 
     const { user, authTokens, logoutUser } = useContext(AuthContext);
     

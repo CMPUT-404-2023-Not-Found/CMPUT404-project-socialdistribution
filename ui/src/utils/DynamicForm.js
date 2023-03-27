@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react';
 import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom';
 import CheckboxInput from './CheckboxInput';
 import FileInput from './FileInput';
 import SelectInput from './SelectInput';
@@ -64,15 +65,21 @@ const DynamicForm = ({options, formSubmitFunction}) => {
     const [showCustomCategoryInput, setShowCustomCategoryInput] = useState(false);
     const [customCategoryError, setCustomCategoryError] = useState('');
     const [categoriesError, setCategoriesError] = useState('');
+    
+    const navigate = useNavigate();
 
+
+    // Update your onSubmit function to navigate to the stream page
     const onSubmit = (data) => {
       if (selectedCategories.length === 0) {
         setCategoriesError('Please select at least one category.');
       } else {
         setCategoriesError(''); // Clear the error message when categories are selected
         formSubmitFunction({ ...data, categories: selectedCategories });
+        navigate('/'); // Navigate to the stream page
       }
     };
+    
 
     const handleCategoriesChange = (event, value) => {
       if (value.includes('other')) {

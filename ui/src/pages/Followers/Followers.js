@@ -53,10 +53,16 @@ const Followers = () => {
             console.log("Deleted follower " + follower_id);
             followers.splice(idx,1);
             setFollowers([...followers]);
+            setNotificationMessage('Deleted follower ' + follower_id);
+            setShowNotification(true);
+            setNotificationSeverity('success');
         } else if (response.statusText === 'Unauthorized'){
             logoutUser();
         } else {
             console.error('Failed to delete follower');
+            setNotificationMessage('Failed to delete follower ' + follower_id);
+            setShowNotification(true);
+            setNotificationSeverity('error');
         }
     }
     

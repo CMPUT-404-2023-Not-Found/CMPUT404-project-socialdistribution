@@ -5,7 +5,7 @@ ui/src/pages/Stream/Stream.js
 */
 
 import React, { useContext, useEffect, useState } from 'react';
-import { Typography } from '@mui/material';
+import { Typography, InputLabel, Select, MenuItem, FormControl } from '@mui/material';
 
 import Backend from '../../utils/Backend';
 import AuthContext from '../../context/AuthContext';
@@ -17,6 +17,8 @@ const Stream = () => {
     //  variable declarations -------------------------------------
     const [ nodePosts, setNodePosts ] = useState({});
     const { authTokens, logoutUser } = useContext(AuthContext);
+    const [nodeURL, setNodeURL] = useState('Home');
+    const [nodes, setNodes] = useState({});
 
     //  event listners --------------------------------------------
     useEffect(() => {
@@ -31,8 +33,30 @@ const Stream = () => {
                 console.log('Failed to get posts');
             }
         };
+
+        const getNodes = async () => {
+            const [response, data] = await Backend.get(`/api/node/`, authTokens.access);
+            if (response.status && response.status === 200) {
+                console.log(data)
+                setNodes(data);
+            } else if (response.statusText === 'Unauthorized'){
+                logoutUser();
+            } else {
+                console.log('Failed to get posts');
+            }    
+        }
         getNodePosts();
+        getNodes();
     }, [authTokens, logoutUser]);
+
+    const handleNodeURLSelect = (event) => {
+        let prevURL = nodeURL;
+        setNodeURL(event.target.value);
+
+        if (nodeURL != prevURL && nodeURL != 'Home') {
+            // make backend call
+        }
+    }
 
     // RENDER APP =================================================
     const renderNodePosts = (items) => {
@@ -45,10 +69,33 @@ const Stream = () => {
         });
         return (<>{itemsRender}</>)
     };
-
     return (
         <>
             <PageHeader title='Stream'></PageHeader>
+
+            <FormControl sx={{
+                marginTop: 5,
+                marginLeft: 40,
+                width: '100%'
+            }}>
+                <InputLabel id="select-node-label">Node</InputLabel>
+                <Select
+                    labelId="select-node-label"
+                    id="select-node"
+                    value={nodeURL}
+                    label="Node"
+                    onChange={handleNodeURLSelect}
+                >
+                    <MenuItem value="Home">{nodeURL}</MenuItem>
+                    { nodes.items ? nodes.items.map((item) => {
+                        let url = `${item.host}${item.api_path}`
+                        return (
+                            <MenuItem value={url}>{item.host}</MenuItem>
+                        )
+                    }): null
+                    }
+                </Select>
+            </FormControl>
             <GridWrapper>
             {renderNodePosts(nodePosts.items)}
             </GridWrapper>

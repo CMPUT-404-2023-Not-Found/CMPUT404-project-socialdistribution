@@ -1,11 +1,12 @@
 # 2023-02-13
 # node/views.py
-
+import requests
 from rest_framework import status
 from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from threading import Thread
+import json
 
 from .models import Node
 from .serializers import NodeRetrieveSerializer, NodeListSerializer
@@ -73,4 +74,26 @@ class NodeView(GenericAPIView):
 class NodeListView(ListAPIView):
     queryset = Node.objects.all()
     serializer_class = NodeListSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
+
+class NodePublicView(ListAPIView):
+    queryset = Node.objects.all()
+    serializer_class = NodeListSerializer
+    # permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        '''
+        Get public posts from another node'
+        '''
+        logger.info(rev)
+        nodeURL = self.kwargs.get('nodeGetURL')
+
+        try:
+            node_obj = Node.objects.get(host=nodeURL)
+            getURL = node_obj.host + node_obj.api_path
+            response = requests.get(getURL, auth=(node_obj.username, node_obj.password), timeout=5, allow_redirects=True)
+            data = json.loads(response.content.decode('utf-8'))
+            return Response(status=response.status_code, data=data)
+        except Node.DoesNotExist as e:
+            message = f'Node url {nodeURL} was not found in the database'
+            return Response(status=status.HTTP_404_NOT_FOUND, data={"error": str(e), "message": message})

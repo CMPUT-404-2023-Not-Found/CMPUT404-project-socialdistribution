@@ -7,7 +7,7 @@ from rest_framework.fields import CharField, ChoiceField, DateTimeField, Integer
 
 from author.serializers import ExistingAuthorSerializer
 from comment.serializers import CommentSerializer
-from .models import Post
+from .models import Category, Post
 
 import logging
 logger = logging.getLogger('django')
@@ -28,7 +28,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     origin          = URLField(required=False)
     source          = URLField(required=False)
-
+    # categories = CategorySerializer(many=True, read_only=True)
     categories      = serializers.SerializerMethodField('get_categories')
     @extend_schema_field(ListField)
     # def get_categories(self, obj): return ['this', 'is', 'a', 'hack']
@@ -47,6 +47,11 @@ class PostSerializer(serializers.ModelSerializer):
     # @extend_schema_field(CommentSerializer)
     # def get_commentsSrc(self, obj):
     #     pass
+    
+# class CategorySerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Category
+#         fields = ['id', 'name']
 
     class Meta:
         model = Post

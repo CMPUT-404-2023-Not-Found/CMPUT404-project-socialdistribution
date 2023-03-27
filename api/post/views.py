@@ -13,7 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 from author.models import Author
 from follower.models import Follower
 from .serializers import PostSerializer
-from .models import Post
+from .models import Category, Post
 from utils.permissions import IsAuthenticatedWithJWT, NodeReadOnly, OwnerCanWrite
 from follower.models import Follower
 from utils.node_comm import NodeComm
@@ -52,6 +52,11 @@ class PostListCreateView(ListCreateAPIView):
         author_obj = Author.objects.get(id=author_uuid)
         logger.info('Creating new post for author_uuid [%s]', author_uuid)
         post = serializer.save(author=author_obj, content=self.request.data['content'])
+        # # Handle nested categories
+        # categories_data = self.request.data.get('categories', [])
+        # for category_data in categories_data:
+        #     Category.objects.create(post=post, **category_data)
+            
         if post and not post.unlisted:
             inbox_obj_raw = {
                 'summary': post.title,
@@ -67,6 +72,7 @@ class PostListCreateView(ListCreateAPIView):
                 follower_inboxs.append(follower_inbox)
             nc.send_object(follower_inboxs, inbox_obj)
         return post
+    
     
     def get_queryset(self):
         logger.info(rev)
@@ -89,6 +95,7 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     permission_classes = [IsAuthenticatedWithJWT|OwnerCanWrite|NodeReadOnly]
 
+    
     def get_object(self):
         logger.info(rev)
         post_id = self.kwargs.get(self.lookup_field)

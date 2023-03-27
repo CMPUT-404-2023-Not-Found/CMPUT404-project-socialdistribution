@@ -13,7 +13,7 @@ import PageHeader from '../../components/Page/PageHeader';
 import AuthorCard from '../../components/Author/AuthorCard';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import BasicCard from '../../components/common/BasicCard/BasicCard';
-import { isValidHttpUrl } from '../../utils/Utils'
+import { isValidHttpUrl, getInboxUrl } from '../../utils/Utils'
 
 const Followers = () => {
     //  variable declarations -------------------------------------
@@ -61,16 +61,16 @@ const Followers = () => {
         if (!isValidHttpUrl(input)){
             return
         }
-        // TODO: Create the JSON data for the POST!!
         let profile;
         const [response, data] = await Backend.get(`/api/authors/${user.user_id}/`, authTokens.access);
         if (response.status && response.status === 200) {
-            console.log("Sent request");
+            console.log("Got profile ...");
+            console.debug(data);
             profile = data;
         } else if (response.statusText === 'Unauthorized'){
             logoutUser();
         } else {
-            console.log('Failed to send request');
+            console.log('Failed to get profile');
         }
         console.log(input);
         let inboxData = {
@@ -79,16 +79,17 @@ const Followers = () => {
             object: {
                 url: input
             },
-            inbox_urls : [input],
+            inbox_urls : [getInboxUrl(input)],
             actor : profile 
         }
-        const followRequestResponse = await Backend.post(`/api/node/object/`, authTokens.access, JSON.stringify(inboxData));
-        if (response.status && response.status === 200) {
-            console.log("Sent request");
-        } else if (response.statusText === 'Unauthorized'){
+        const [ frResponse, frData ] = await Backend.post(`/api/node/object/`, authTokens.access, JSON.stringify(inboxData));
+        if (frResponse.status && frResponse.status === 201) {
+            console.log("Sent follow request");
+        } else if (frResponse.statusText === 'Unauthorized'){
             logoutUser();
         } else {
             console.log('Failed to send request');
+            console.debug(frResponse);
         }
     }
 

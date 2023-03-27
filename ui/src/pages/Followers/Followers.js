@@ -13,6 +13,7 @@ import PageHeader from '../../components/Page/PageHeader';
 import AuthorCard from '../../components/Author/AuthorCard';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import BasicCard from '../../components/common/BasicCard/BasicCard';
+import { isValidHttpUrl } from '../../utils/Utils'
 
 const Followers = () => {
     //  variable declarations -------------------------------------
@@ -57,11 +58,32 @@ const Followers = () => {
     // This is where we POST to the "object's" inbox
     const sendFollowRequest = async () => {
         console.log(input);
+        if (!isValidHttpUrl(input)){
+            return
+        }
         // TODO: Create the JSON data for the POST!!
-
-        // TODO: NEED TO VERIFIY THIS INPUT LATER!!
-        const response = await Backend.post(`/api/authors/${input}/inbox/`, authTokens.access);
-        if (response.status && response.status === 201) {
+        let profile;
+        const [response, data] = await Backend.get(`/api/authors/${user.user_id}/`, authTokens.access);
+        if (response.status && response.status === 200) {
+            console.log("Sent request");
+            profile = data;
+        } else if (response.statusText === 'Unauthorized'){
+            logoutUser();
+        } else {
+            console.log('Failed to send request');
+        }
+        console.log(input);
+        let inboxData = {
+            summary: 'I want to follow you',
+            type: 'Follow',
+            object: {
+                url: input
+            },
+            inbox_urls : [input],
+            actor : profile 
+        }
+        const followRequestResponse = await Backend.post(`/api/node/object/`, authTokens.access, JSON.stringify(inboxData));
+        if (response.status && response.status === 200) {
             console.log("Sent request");
         } else if (response.statusText === 'Unauthorized'){
             logoutUser();

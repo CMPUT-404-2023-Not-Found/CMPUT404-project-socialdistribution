@@ -47,12 +47,6 @@ export const mainNavbarItems = [
         label: 'Followers',
         route: 'followers',
     },
-    {
-        id: 5,
-        icon: <IconButton />,
-        label: 'Edit an existing Post',
-        route: 'editpost',
-    }
 ]
 
 export const secondaryNavbarItems = [

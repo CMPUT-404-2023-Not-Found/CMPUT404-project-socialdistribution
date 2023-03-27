@@ -15,14 +15,16 @@ import { utcToLocal } from '../../utils/Utils';
 
 
 
-const PostHeader = ({ author, title, subheader, time }) => {
+const PostHeader = ({ author, title, subheader, time, postId }) => {
     const [ open, setOpen ] = React.useState(false);
     const [ anchorEl, setAnchorEl ] = React.useState(null);
-    // const menuItems = ['Cancel', 'Delete', 'Edit'];
+    console.log(postId);
     const menuItems = [
         {
             id: 1,
             label: 'Edit',
+            onClick: () => window.location.href = `/edit-post/`,
+            onClickParams: { id: 1 },
         }, 
         {
             id: 2,

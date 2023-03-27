@@ -17,7 +17,7 @@ import PageHeader from '../components/Page/PageHeader';
     found here: https://developer.mozilla.org/en-US/docs/Learn/Forms/Your_first_form
 */
 
-const CreatePost = () => {
+const EditPost = () => {
     //  variable declarations -------------------------------------
     let navigate = useNavigate();
 
@@ -28,13 +28,13 @@ const CreatePost = () => {
     const [options, setOptions] = useState(null);
     
     const {register, handleSubmit} = useForm();
-
+    
     //  event listeners --------------------------------------------
     useEffect(() => {
         const getOptions = async () => {
-            const [response, data] = await Backend.options(`/api/authors/${user.user_id}/posts/${post_id}`, authTokens.access);
-            data.actions.PUT = {
-                ...data.actions.PUT,
+            const [response, data] = await Backend.options(`/api/authors/${user.user_id}/posts/`, authTokens.access);
+            data.actions.POST = {
+                ...data.actions.POST,
                 'file': {
                     'type' : 'file',
                     'label': 'File',
@@ -74,9 +74,9 @@ const CreatePost = () => {
 
         delete formData.file;
         
-        const [response, data] = await Backend.post(`/api/authors/${user.user_id}/posts/${post_id}`, authTokens.access, JSON.stringify(formData));
+        const [response, data] = await Backend.post(`/api/authors/${user.user_id}/posts/`, authTokens.access, JSON.stringify(formData));
         if (response.status && response.status === 201) {
-            navigate('/posts/${post_id}');
+            navigate('/posts/');
         } else if (response.statusText === 'Unauthorized'){
             logoutUser();
         } else {
@@ -107,4 +107,4 @@ const CreatePost = () => {
     );
 }
 
-export default CreatePost;
+export default EditPost;

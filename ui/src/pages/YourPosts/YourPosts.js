@@ -53,6 +53,7 @@ const YourPosts = () => {
                             author={item.author} 
                             title={item.title} 
                             time={(item.updated_at ? item.updated_at : item.published)} 
+                            postId={item.id}
                         />}
                     content={
                         <PostContent 

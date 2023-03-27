@@ -25,6 +25,7 @@ class InboxPagination(CustomPagination):
         lookup_inbox_items = NodeComm.get_objects(inbox_items)
 
         return Response(OrderedDict([
+            ('count', self.page.paginator.count),
             ('type', 'inbox'),
             ('author', author_node_id),
             ('items', lookup_inbox_items)
@@ -34,6 +35,10 @@ class InboxPagination(CustomPagination):
         return {
             'type': 'object',
             'properties': {
+                    'count': {
+                        'type': 'integer',
+                        'example': 10
+                    },
                     'type': {
                         'type': 'string',
                         'example': 'inbox'

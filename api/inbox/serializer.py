@@ -44,7 +44,7 @@ class InboxSerializer(serializers.ModelSerializer):
         author_data = data.get('author', {})
         if author_data == {}:
             author_data = data.get('actor', {})
-        return author_data.get('url', '')
+        return author_data.get('url', '') if isinstance(author_data, dict) else ''
 
     def get_object_type(self, data):
         return data.get('type', '').lower()
@@ -61,4 +61,6 @@ class InboxSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation['@context'] = representation.pop('context')
+        if representation['type'] == 'follow':
+            representation['actor'] = representation.pop('author')
         return representation

@@ -24,6 +24,7 @@ import YourPosts from './pages/YourPosts/YourPosts';
 import PostDetail from './components/PostDetail';
 import NotFound from './components/NotFound';
 import CreatePost from './pages/CreatePost';
+import Followers from './pages/Followers/Followers';
 
 import './index.css';
 
@@ -41,6 +42,7 @@ root.render(
                      <Route path="/posts/:postid" element={<PostDetail />} />
                      <Route path="/profile" element={<Profile />} />
                      <Route path="/createpost" element={<CreatePost />} />
+                     <Route path="/followers" element={<Followers />} />
                   </Route>
                   <Route path="/login" element={<Login />} />
                   <Route path="*" element={<NotFound />} />

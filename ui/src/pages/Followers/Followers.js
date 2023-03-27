@@ -47,10 +47,10 @@ const Followers = () => {
     const deleteFollower = async (follower, idx) => {
         console.info('Deleting follower ...');
         const follower_id = follower.id || follower.object;
-        console.info(follower_id);
+        console.debug(follower_id);
         const response = await Backend.delete(`/api/authors/${user.user_id}/followers/${follower_id}`, authTokens.access);
         if (response.status && response.status === 204) {
-            console.log("Deleted Follower");
+            console.log("Deleted follower " + follower_id);
             followers.splice(idx,1);
             setFollowers([...followers]);
         } else if (response.statusText === 'Unauthorized'){

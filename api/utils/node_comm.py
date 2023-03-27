@@ -176,11 +176,16 @@ class NodeComm():
         except Exception as e:
             logger.error('Failed requests.get to object from url [%s] e %s', url, e)
             return ret
-        try:
-            ret = json.loads(raw_content)
-        except Exception as e:
-            logger.error('Not JSON-parsable in response from [%s]. e [%s] ret status [%s] ret body [%s]', 
-                        url, e, 
+        if r.status_code == 200:
+            try:
+                ret = json.loads(raw_content)
+            except Exception as e:
+                logger.error('Not JSON-parsable in response from [%s]. e [%s] ret status [%s] ret body [%s]', 
+                            url, e, 
+                            r.status_code, repr(raw_content[0:255]))
+        else:
+            logger.error('Got a non-200 response from [%s]. HTTP status [%s] return body [%s]', 
+                        url, 
                         r.status_code, repr(raw_content[0:255]))
         return ret
 

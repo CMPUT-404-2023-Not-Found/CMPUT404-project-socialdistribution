@@ -14,7 +14,7 @@ import AuthorCard from '../../components/Author/AuthorCard';
 
 const Followers = () => {
     //  variable declarations -------------------------------------
-    const [ followers, setFollowers ] = useState({}); // TODO change this to an array
+    const [ followers, setFollowers ] = useState([]);
     const { user, authTokens, logoutUser } = useContext(AuthContext);
 
     //  event listeners --------------------------------------------
@@ -24,7 +24,7 @@ const Followers = () => {
             if (response.status && response.status === 200) {
                 console.log('Got followers');
                 console.log(data);
-                setFollowers(data);
+                setFollowers(data.items);
             } else if (response.statusText === 'Unauthorized'){
                 logoutUser();
             } else {
@@ -34,38 +34,36 @@ const Followers = () => {
         getFollowers();
     }, [ user, authTokens, logoutUser ]);
 
-    const deleteFollower = async (author) => {
-        const response = await Backend.delete(`/api/authors/${user.user_id}/followers/${author.id}`, authTokens.access);
+    const deleteFollower = async (follower, idx) => {
+        const response = await Backend.delete(`/api/authors/${user.user_id}/followers/${follower.id}`, authTokens.access);
         if (response.status && response.status === 204) {
             console.log("Deleted Follower");
-            // TODO use an array to keep track of followers
+            followers.splice(idx,1);
+            setFollowers([...followers]);
         } else if (response.statusText === 'Unauthorized'){
             logoutUser();
         } else {
             console.log('Failed to delete follower');
         }
-        // reloads window using the cached version of the page
-        // seems sketch? better way to do this? 
-        window.location.reload(false);
     }
 
     // render functions ------------------------------------------
-    const renderFollowers = (items) => {
-        if (!items || items.length <= 0) return (<Typography paragraph >No Followers</Typography>);
+    const renderFollowers = (followers) => {
+        if (!followers || followers.length <= 0) return (<Typography paragraph >No Followers</Typography>);
         let itemsRender = [];
-        items.forEach((item, idx) => {
+        followers.forEach((follower, idx) => {
             itemsRender.push(
-                <AuthorCard author = {item} size = "medium"> 
+                <AuthorCard author = {follower} size = "medium"> 
                     <div>
                         <IconButton 
                             aria-label="delete-follower"
-                            onClick={()=> deleteFollower(item)}>
+                            onClick={()=> deleteFollower(follower, idx)}>
                         <PersonRemoveIcon/>
                         </IconButton>
                     </div>
                 </AuthorCard>
             );
-            itemsRender.push(<br key={idx + items.length}></br>);
+            itemsRender.push(<br key={idx + followers.length}></br>);
         });
         return (<>{itemsRender}</>)
     }
@@ -74,7 +72,7 @@ const Followers = () => {
     <>
         <PageHeader followers={followers} title='Followers'></PageHeader>
         <GridWrapper>
-            {renderFollowers(followers.items)}
+            {renderFollowers(followers)}
         </GridWrapper>
     </>
   )

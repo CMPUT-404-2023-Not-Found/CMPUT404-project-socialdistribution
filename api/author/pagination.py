@@ -13,6 +13,7 @@ rev = 'rev: $xFgLu67$x'
 class AuthorPagination(CustomPagination):
     def get_paginated_response(self, data):
         return Response(OrderedDict([
+            ('count', self.page.paginator.count),
             ('type', 'authors'),
             ('items', data)
         ]))

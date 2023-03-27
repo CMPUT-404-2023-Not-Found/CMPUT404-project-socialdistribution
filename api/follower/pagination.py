@@ -25,6 +25,7 @@ class FollowerPagination(CustomPagination):
         lookup_results = NodeComm.get_objects(lookup_list)
         
         return Response(OrderedDict([
+            ('count', self.page.paginator.count),
             ('type', 'followers'),
             ('items', lookup_results)
         ]))

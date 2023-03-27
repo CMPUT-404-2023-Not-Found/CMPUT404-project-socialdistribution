@@ -2,7 +2,9 @@
 # author/tests/test_views.py
 
 from rest_framework import status
+
 from .base import Base
+from inbox.models import Inbox
 
 class InboxViewTests(Base):
     '''
@@ -14,8 +16,10 @@ class InboxViewTests(Base):
         '''
         Test getting an inbox of an author 
         '''
+        inbox_count = Inbox.objects.filter(author=self.first_author.id).count()
         response = self.author_client.get(self.get_inbox_url(self.first_author.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], inbox_count)
     
     # Test Inbox view POST /api/authors/uuid/
     def test_add_post_to_first_authors_inbox(self):
@@ -38,3 +42,5 @@ class InboxViewTests(Base):
         '''
         response = self.author_client.delete(self.get_inbox_url(self.first_author.id))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        inbox_count = Inbox.objects.filter(author=self.first_author.id).count()
+        self.assertEqual(inbox_count, 0)

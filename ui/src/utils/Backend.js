@@ -23,6 +23,23 @@ class Backend {
         return [ response, (data ? data : false)]
     }
 
+    async getDirect(path, token) {
+        const url = path;
+        let response = null;
+        try {
+            response = await fetch(url, {
+                headers: {
+                    'Authorization': 'Bearer ' + String(token)
+                }
+            });
+        } catch (error) {
+            console.error('Failed to call backend. e ');
+            console.error(error);
+        }
+        const data = response ? await response.json() : null;
+        return [ response, (data ? data : false)]
+    }
+
     async post(path, token, requestData, requestDataType='application/json') {
         const url = this.API_URL + path;
         let response = null;

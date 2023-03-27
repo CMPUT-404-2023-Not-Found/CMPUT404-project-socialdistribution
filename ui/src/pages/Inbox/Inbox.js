@@ -43,7 +43,7 @@ const Inbox = () => {
         let itemsRender = [];
         inboxItems.forEach((item, idx) => {
             console.log(item);
-            let item_type = item.type.toLowerCase();
+            let item_type = item.type ? item.type.toLowerCase() : '';
             switch(item_type) {
                 case 'post':
                     itemsRender.push(<PostCard key={idx * 2} post={item} />);

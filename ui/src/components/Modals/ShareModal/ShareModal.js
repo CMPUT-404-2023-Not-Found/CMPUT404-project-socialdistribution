@@ -17,7 +17,7 @@ import BasicPagination from '../../common/BasicPagination/BasicPagination';
 import Backend from '../../../utils/Backend';
 import BasicModal from '../../common/BasicModal/BasicModal';
 import CommonButton from '../../common/CommonButton/CommonButton';
-import { getInboxUrl, isObjectEmpty, isValidHttpUrl } from '../../../utils/Utils';
+import { getInboxUrl, isObjectEmpty, isValidHttpUrl, isURLLocalhost } from '../../../utils/Utils';
 import { modalStyles } from './styles';
 
 const ShareModal = ({ open, onClose, objectNodeId }) => {
@@ -88,11 +88,13 @@ const ShareModal = ({ open, onClose, objectNodeId }) => {
     const renderCheckbox = (item) => {
         let inSendList = false;
         let isChecked = false;
-        if (item.url in sendList) { inSendList = true; }
-        if (inSendList) { isChecked = sendList[item.url]}
+        // TODO: This is a hack to see if the URL is localhost
+        let follower_url = isURLLocalhost(item.url) ? isURLLocalhost(item.id) ? item.url : item.id : item.url
+        if (follower_url in sendList) { inSendList = true; }
+        if (inSendList) { isChecked = sendList[follower_url]}
         return ( 
             <Checkbox 
-                value={item.url || item.id}
+                value={follower_url}
                 checked={isChecked}
                 onChange={handleChange}
             />

@@ -11,11 +11,18 @@ import AuthContext from '../../context/AuthContext';
 import Backend from '../../utils/Backend';
 import PageHeader from '../../components/Page/PageHeader';
 import AuthorCard from '../../components/Author/AuthorCard';
+import SearchBar from '../../components/SearchBar/SearchBar';
+import BasicCard from '../../components/common/BasicCard/BasicCard';
 
 const Followers = () => {
     //  variable declarations -------------------------------------
     const [ followers, setFollowers ] = useState([]);
     const { user, authTokens, logoutUser } = useContext(AuthContext);
+    const [ input, setInput ] = useState('');
+
+    const handleChange = (event) => {
+        setInput(event.target.value);
+    }
 
     //  event listeners --------------------------------------------
     useEffect(() => {
@@ -46,8 +53,38 @@ const Followers = () => {
             console.log('Failed to delete follower');
         }
     }
+    
+    // This is where we POST to the "object's" inbox
+    const sendFollowRequest = async () => {
+        console.log(input);
+        // TODO: Create the JSON data for the POST!!
+
+        // TODO: NEED TO VERIFIY THIS INPUT LATER!!
+        const response = await Backend.post(`/api/authors/${input}/inbox/`, authTokens.access);
+        if (response.status && response.status === 201) {
+            console.log("Sent request");
+        } else if (response.statusText === 'Unauthorized'){
+            logoutUser();
+        } else {
+            console.log('Failed to send request');
+        }
+    }
+
 
     // render functions ------------------------------------------
+    const renderSearchBar = () => {
+        return (
+            <>
+            <BasicCard 
+                content = {<SearchBar 
+                    placeholder='Enter Author ID'
+                    onChange={(event) => handleChange(event)}
+                    onSearch={() => sendFollowRequest()}
+                />}
+            />
+            </>
+        )
+    }
     const renderFollowers = (followers) => {
         if (!followers || followers.length <= 0) return (<Typography paragraph >No Followers</Typography>);
         let itemsRender = [];
@@ -65,13 +102,14 @@ const Followers = () => {
             );
             itemsRender.push(<br key={idx + followers.length}></br>);
         });
-        return (<>{itemsRender}</>)
+        return (<>{itemsRender}</>);
     }
     // RENDER APP =================================================
     return (
     <>
         <PageHeader followers={followers} title='Followers'></PageHeader>
         <GridWrapper>
+            {renderSearchBar()}
             {renderFollowers(followers)}
         </GridWrapper>
     </>

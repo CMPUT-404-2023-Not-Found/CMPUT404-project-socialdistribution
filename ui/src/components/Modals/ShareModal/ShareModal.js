@@ -88,7 +88,7 @@ const ShareModal = ({ open, onClose, objectNodeId }) => {
     const renderCheckbox = (item) => {
         let inSendList = false;
         let isChecked = false;
-        // TODO: This is a hack to see if the URL is localhost
+        // TODONT: This is a hack to see if the URL is localhost
         let follower_url = isURLLocalhost(item.url) ? isURLLocalhost(item.id) ? item.url : item.id : item.url
         if (follower_url in sendList) { inSendList = true; }
         if (inSendList) { isChecked = sendList[follower_url]}

@@ -60,6 +60,17 @@ class Backend {
         return [ response, (responseData ? responseData : false)]
     }
 
+    async delete(path, token) {
+        const url = this.API_URL + path;
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': 'Bearer ' + String(token)
+            },
+            method: 'delete'
+        });
+        return response
+    }
+    
     async options(path, token) {
         const url = this.API_URL + path;
         let response = null;

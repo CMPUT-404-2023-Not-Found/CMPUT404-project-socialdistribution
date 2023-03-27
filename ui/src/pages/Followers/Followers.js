@@ -59,6 +59,7 @@ const Followers = () => {
     const sendFollowRequest = async () => {
         console.log(input);
         if (!isValidHttpUrl(input)){
+            setInput('');
             return
         }
         let profile;
@@ -91,6 +92,7 @@ const Followers = () => {
             console.log('Failed to send request');
             console.debug(frResponse);
         }
+        setInput('');
     }
 
 
@@ -101,6 +103,7 @@ const Followers = () => {
             <BasicCard 
                 content = {<SearchBar 
                     placeholder='Enter Author ID'
+                    value={input}
                     onChange={(event) => handleChange(event)}
                     onSearch={() => sendFollowRequest()}
                 />}

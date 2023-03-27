@@ -62,7 +62,7 @@ class NodeComm():
             source_item = item_list[i]
             # Like & Follow objects require the lookup_results to replace the source item author key
             # Post & Comment objects require the lookup_results replace the source item entirely
-            if (source_item['type'] == 'like'):
+            if (source_item['type'] == 'like' or source_item['type'] == 'comment'):
                 lookup_target, lookup_type = ('author', 'author')
             elif (source_item['type'] == 'follow'):
                 lookup_target, lookup_type = ('actor', 'author')
@@ -176,11 +176,16 @@ class NodeComm():
         except Exception as e:
             logger.error('Failed requests.get to object from url [%s] e %s', url, e)
             return ret
-        try:
-            ret = json.loads(raw_content)
-        except Exception as e:
-            logger.error('Not JSON-parsable in response from [%s]. e [%s] ret status [%s] ret body [%s]', 
-                        url, e, 
+        if r.status_code == 200:
+            try:
+                ret = json.loads(raw_content)
+            except Exception as e:
+                logger.error('Not JSON-parsable in response from [%s]. e [%s] ret status [%s] ret body [%s]', 
+                            url, e, 
+                            r.status_code, repr(raw_content[0:255]))
+        else:
+            logger.error('Got a non-200 response from [%s]. HTTP status [%s] return body [%s]', 
+                        url, 
                         r.status_code, repr(raw_content[0:255]))
         return ret
 

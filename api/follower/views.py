@@ -73,7 +73,14 @@ class FollowerDetailView(RetrieveUpdateDestroyAPIView):
         logger.info(rev)
         follower = self.kwargs.get(self.lookup_field)
         followee = Author.objects.get(id=self.kwargs['author_uuid'])
-        logger.info('Deleting follower: [%s] from followee [%s]', follower, followee)
+        logger.info('Trying to delete follower: [%s] from followee [%s]', follower, followee)
         instance = Follower.objects.filter(follower_node_id=follower, followee=followee)
-        instance.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if not instance: return Response(status=status.HTTP_404_NOT_FOUND)
+
+        was_deleted, the_deleted = instance.delete()
+        if was_deleted and was_deleted == 1:
+            logger.info('Successfully deleted follower [%s] from followee [%s]', follower, followee)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            logger.error('Failed to delete follower [%s] from followee [%s] e [%s] [%s]', follower, followee, was_deleted, the_deleted)
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -1,23 +1,13 @@
-import React, { useContext }from "react";
+import React from "react";
 import { CardContent, CardHeader, IconButton, Typography } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import ToolTip from '@mui/material/Tooltip';
 
 import BasicCard from '../common/BasicCard/BasicCard';
 import BasicAvatar from '../common/BasicAvatar/BasicAvatar';
-import AuthContext from '../../context/AuthContext';
-import Backend from '../../utils/Backend';
 
 
 const AuthorCard = ({ children, author, size }) => {
-  const { user, authTokens, logoutUser } = useContext(AuthContext);
-  
-  // Should I be dealing witht the onclick event in this file or in Followers.js?
-  // Have to implement delete in Backend.js
-  const deleteFollower = async () => {
-    const [response, data] = await Backend.get(`/api/authors/${user.user_id}/followers/`, authTokens.access);
-    console.log("deleted");
-  }
 
   return (
     <>
@@ -44,7 +34,7 @@ const AuthorCard = ({ children, author, size }) => {
         />
         <CardContent>
           <Typography variant={size === 'medium' ? 'body1' : 'h5'}>ID</Typography>
-          <Typography variant="body1">{author.url}</Typography>
+          <Typography variant="body1">{author.url || author.object}</Typography>
         </CardContent>
         {children}
       </BasicCard>

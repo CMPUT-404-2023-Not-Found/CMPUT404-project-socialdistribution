@@ -32,13 +32,13 @@ const Followers = () => {
         const getFollowers = async () => {
             const [response, data] = await Backend.get(`/api/authors/${user.user_id}/followers/`, authTokens.access);
             if (response.status && response.status === 200) {
-                console.log('Got followers');
-                console.log(data);
+                console.log('Got followers list ...');
+                console.debug(data);
                 setFollowers(data.items);
             } else if (response.statusText === 'Unauthorized'){
                 logoutUser();
             } else {
-                console.log('Failed to get followers');
+                console.error('Failed to get followers');
             }
         };
         getFollowers();
@@ -48,7 +48,7 @@ const Followers = () => {
         console.info('Deleting follower ...');
         const follower_id = follower.id || follower.object;
         console.debug(follower_id);
-        const response = await Backend.delete(`/api/authors/${user.user_id}/followers/${follower_id}`, authTokens.access);
+        const response = await Backend.delete(`/api/authors/${user.user_id}/followers/${follower_id}/`, authTokens.access);
         if (response.status && response.status === 204) {
             console.log("Deleted follower " + follower_id);
             followers.splice(idx,1);
@@ -56,12 +56,13 @@ const Followers = () => {
         } else if (response.statusText === 'Unauthorized'){
             logoutUser();
         } else {
-            console.log('Failed to delete follower');
+            console.error('Failed to delete follower');
         }
     }
     
     // This is where we POST to the "object's" inbox
     const sendFollowRequest = async () => {
+        console.log('Attemtping follower request ...')
         console.debug(input);
         if (!isValidHttpUrl(input)){
             setNotificationMessage('Invalid follower id');
@@ -79,9 +80,10 @@ const Followers = () => {
         } else if (response.statusText === 'Unauthorized'){
             logoutUser();
         } else {
-            console.log('Failed to get profile');
+            console.error('Failed to get profile');
         }
-        console.log(input);
+        console.log('Sending follower request inbox data ...')
+        console.debug(input);
         let inboxData = {
             summary: 'I want to follow you',
             type: 'Follow',
@@ -92,10 +94,9 @@ const Followers = () => {
         }
         const [ frResponse, frData ] = await Backend.post(`/api/node/object/`, authTokens.access, JSON.stringify(inboxData));
         if (frResponse.status && frResponse.status === 201) {
-            console.log("Sent follow request");
-            setShowNotification(true);
             setNotificationMessage('Follow request sent!');
             setNotificationSeverity('success');
+            setShowNotification(true);
         } else if (frResponse.statusText === 'Unauthorized'){
             logoutUser();
         } else {

@@ -5,6 +5,9 @@ pages/Followers/Followers.js
 import React, { useContext, useEffect, useState } from 'react';
 import { Typography, IconButton } from '@mui/material';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+import Snackbar from '@mui/material/Snackbar';
+import Button from '@mui/material/Button';
+import CloseIcon from '@mui/icons-material/Close';
 
 import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
 import AuthContext from '../../context/AuthContext';
@@ -17,6 +20,8 @@ import { isValidHttpUrl, getInboxUrl } from '../../utils/Utils'
 
 const Followers = () => {
     //  variable declarations -------------------------------------
+    const [ open, setOpen ] = React.useState(false);
+    const [ notificationMessage, setNotificationMessage ] = useState('');
     const [ followers, setFollowers ] = useState([]);
     const { user, authTokens, logoutUser } = useContext(AuthContext);
     const [ input, setInput ] = useState('');
@@ -59,6 +64,8 @@ const Followers = () => {
     const sendFollowRequest = async () => {
         console.log(input);
         if (!isValidHttpUrl(input)){
+            setNotificationMessage('Invalid follower id');
+            setOpen(true);
             setInput('');
             return
         }
@@ -86,6 +93,8 @@ const Followers = () => {
         const [ frResponse, frData ] = await Backend.post(`/api/node/object/`, authTokens.access, JSON.stringify(inboxData));
         if (frResponse.status && frResponse.status === 201) {
             console.log("Sent follow request");
+            setOpen(true);
+            setNotificationMessage('Follow request sent!');
         } else if (frResponse.statusText === 'Unauthorized'){
             logoutUser();
         } else {
@@ -95,7 +104,28 @@ const Followers = () => {
         setInput('');
     }
 
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+    };
 
+    const notification = (
+        <>
+            <Button color="secondary" size="small" onClick={handleClose}>
+                Dismiss
+            </Button>
+            <IconButton
+            size="small"
+            aria-label="close"
+            color="inherit"
+            onClick={handleClose}
+            >
+            <CloseIcon fontSize="small" />
+            </IconButton>
+        </>
+    );
     // render functions ------------------------------------------
     const renderSearchBar = () => {
         return (
@@ -137,6 +167,13 @@ const Followers = () => {
         <GridWrapper>
             {renderSearchBar()}
             {renderFollowers(followers)}
+            <Snackbar
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                message={notificationMessage}
+                action={notification}
+            />
         </GridWrapper>
     </>
   )

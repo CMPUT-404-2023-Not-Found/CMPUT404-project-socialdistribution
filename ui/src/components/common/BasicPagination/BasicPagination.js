@@ -29,15 +29,17 @@ const BasicPagination = ({ itemEndpoint, itemResultsKey, setItems }) => {
     //  event listeners -------------------------------------------
     useEffect(() => {
         const getItems = async () => {
-            const [response, data] = await Backend.get(`${itemEndpoint}/?page=${pagination.page}&size=${pageSize}`, authTokens.access);
+            let pagination_endpoint = `${itemEndpoint}/?page=${pagination.page}&size=${pageSize}`;
+            console.log(`Calling ${pagination_endpoint} for list of items...`);
+            const [response, data] = await Backend.get(pagination_endpoint, authTokens.access);
             if (response.status && response.status === 200) {
-                console.log(data)
+                console.debug(data)
                 setPagination(pagination => ({...pagination, count: data.count}));
                 setItems(data[itemResultsKey]);
             } else if (response.statusText === 'Unauthorized'){
                 logoutUser();
             } else {
-                console.log(`Failed to get items from ${itemEndpoint}`);
+                console.error(`Failed to get items from ${pagination_endpoint}`);
             }
         };
         getItems();

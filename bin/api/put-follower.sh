@@ -11,7 +11,7 @@ follower_node_id="$2"
 
 follower_node_id_enc=`echo -n "$follower_node_id" | jq -sRr @uri`
 put_follower_url=`printf "${FOLLOWER_API}" $author_uuid`
-put_follower_url="${put_follower_url}/${follower_node_id_enc}"
+put_follower_url="${put_follower_url}/${follower_node_id_enc}/"
 
 auth_hdr=$(./get-auth.sh 'bearer' $(cat .username) $(cat .password))
 hdr_dump=`mktemp`

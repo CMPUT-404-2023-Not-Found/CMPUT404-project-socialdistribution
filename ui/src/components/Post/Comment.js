@@ -7,15 +7,7 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 
 import BasicAvatar from '../common/BasicAvatar/BasicAvatar';
 
-const Comment = (comment) => {
-    // no idea why react passes it in like this,
-    // makes a new key called comment and assigns the comment object
-    // passed in to that
-    let commentObj = comment.comment;
-    let content = commentObj.comment;
-    let contentType = commentObj.contentType;
-    console.log(comment);
-
+const Comment = ({ comment }) => {
 
     const renderCommentBody = (content, contentType) => {
         switch (contentType) {
@@ -40,12 +32,12 @@ const Comment = (comment) => {
     return (
         <ListItem alignItems="flex-start">
             <ListItemAvatar>
-                <BasicAvatar profile={commentObj.author} size='small'></BasicAvatar>
+                <BasicAvatar profile={comment.author} size='small'></BasicAvatar>
             </ListItemAvatar>
             <ListItemText
-            primary={commentObj.author.displayName}
+            primary={comment.author.displayName || comment.author.url}
             secondary={
-                renderCommentBody(content, contentType)
+                renderCommentBody(comment.comment, comment.contentType)
             }
             />
         </ListItem>

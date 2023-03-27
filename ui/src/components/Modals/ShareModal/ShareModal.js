@@ -13,6 +13,7 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 import AuthContext from '../../../context/AuthContext';
+import BasicPagination from '../../common/BasicPagination/BasicPagination';
 import Backend from '../../../utils/Backend';
 import BasicModal from '../../common/BasicModal/BasicModal';
 import CommonButton from '../../common/CommonButton/CommonButton';
@@ -24,36 +25,27 @@ const ShareModal = ({ open, onClose, objectNodeId }) => {
     const [ followerList, setFollowerList ] = useState([]);
     const [ sendList, setSendList ] = useState({});
     const { user, authTokens, logoutUser } = useContext(AuthContext);
+    const followerEndpoint = `/api/authors/${user.user_id}/followers`;
+    const itemResultsKey = 'items';
 
     //  event listeners -------------------------------------------
     useEffect(() => {
-      if (open) { 
-        setSendList({});
-        const getFollowers = async () => {
-            const [response, data] = await Backend.get(`/api/authors/${user.user_id}/followers/`, authTokens.access);
-            if (response.status && response.status === 200) {
-                console.log('Got followers');
-                console.log(data);
-                setFollowerList(data.items);
-            } else if (response.statusText === 'Unauthorized'){
-                logoutUser();
-            } else {
-                console.log('Failed to get followers');
-            }
-        };
-        getFollowers();
+        if (open) {
+            setSendList({});
         }
-    }, [open, user, authTokens, logoutUser]);
+    }, [open]);
 
     //  functions       -------------------------------------------
     const handleChange = (e) => {
         const follower_id = e.target.value;
         const send_to_follower = e.target.checked;
+        console.debug(`setting ${follower_id} to ${send_to_follower}`);
         setSendList(values => ({ ...values, [follower_id]: send_to_follower}));
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // Don't attempt send request if no followers selected
         if ( isObjectEmpty(sendList) ) { onClose(); return }
         let inboxUrls = [];
         for (const property in sendList) {
@@ -67,6 +59,8 @@ const ShareModal = ({ open, onClose, objectNodeId }) => {
                 }
             }
         }
+        // Don't attempt send request if followers selected ended up as all false
+        if (inboxUrls.length <= 0 ) { onClose(); return}
         let inboxData = {
             summary: 'sharing a post',
             type: 'post',
@@ -74,23 +68,37 @@ const ShareModal = ({ open, onClose, objectNodeId }) => {
             inbox_urls: inboxUrls
         }
 
-        console.log('Sharing inboxData: ')
-        console.log(inboxData);
+        console.log('Sharing inboxData ...')
+        console.debug(inboxData);
         
         const [ response, data ] = await Backend.post(`/api/node/object/`, authTokens.access, JSON.stringify(inboxData));
         if (response.status && response.status === 201) {
-            console.log('Sent inbox data:');
-            console.log(data);
-            setFollowerList(data.items);
+            console.log('Sent inbox data ...');
+            console.debug(data);
         } else if (response.statusText === 'Unauthorized'){
             logoutUser();
         } else {
-            console.log('Failed to send inbox data');
+            console.error('Failed to send inbox data');
+            console.error(inboxData);
         }
         onClose();
     };
 
     // RENDER APP =================================================
+    const renderCheckbox = (item) => {
+        let inSendList = false;
+        let isChecked = false;
+        if (item.url in sendList) { inSendList = true; }
+        if (inSendList) { isChecked = sendList[item.url]}
+        return ( 
+            <Checkbox 
+                value={item.url || item.id}
+                checked={isChecked}
+                onChange={handleChange}
+            />
+        )
+    }
+
     const renderContent = () => {
         if (!followerList || followerList.length <= 0) {
             return (
@@ -104,7 +112,7 @@ const ShareModal = ({ open, onClose, objectNodeId }) => {
             item.displayName && followerListRender.push(
                 <FormControlLabel
                     key={idx} label={item.displayName ? item.displayName : item.url}
-                    control={<Checkbox value={item.url || item.id} onChange={handleChange}/>} 
+                    control={renderCheckbox(item)}
                 />
             );
         });
@@ -124,12 +132,19 @@ const ShareModal = ({ open, onClose, objectNodeId }) => {
     return (
     <BasicModal
         title={(followerList && followerList.length > 0) ? 'Share with followers?': 'Sorry, you have no followers'}
-        subTitle={(followerList && followerList.length > 0) ? 'Choose which followers to share with' : null}
+        subTitle={(followerList && followerList.length > 0) ? 'Choose who to share with' : null}
         open={open}
         onClose={onClose}
-        content={renderContent()}
         validate={() => {}}
     >
+        {open &&
+            <BasicPagination 
+                itemEndpoint={followerEndpoint} 
+                itemResultsKey={itemResultsKey}
+                setItems={(followerList) => setFollowerList(followerList)}
+            />
+        }
+        {renderContent()}
     </BasicModal>
   );
 }

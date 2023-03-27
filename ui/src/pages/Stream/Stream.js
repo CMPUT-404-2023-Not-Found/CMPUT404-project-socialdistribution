@@ -4,35 +4,19 @@ ui/src/pages/Stream/Stream.js
 
 */
 
-import React, { useContext, useEffect, useState } from 'react';
-import { Typography } from '@mui/material';
+import React, { useState } from 'react';
+import Typography from '@mui/material/Typography';
 
-import Backend from '../../utils/Backend';
-import AuthContext from '../../context/AuthContext';
+import BasicPagination from '../../components/common/BasicPagination/BasicPagination';
 import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
 import PostCard from '../../components/Post/PostCard';
 import PageHeader from '../../components/Page/PageHeader';
 
 const Stream = () => {
     //  variable declarations -------------------------------------
-    const [ nodePosts, setNodePosts ] = useState({});
-    const { authTokens, logoutUser } = useContext(AuthContext);
-
-    //  event listners --------------------------------------------
-    useEffect(() => {
-        const getNodePosts = async () => {
-            const [response, data] = await Backend.get(`/api/posts/`, authTokens.access);
-            if (response.status && response.status === 200) {
-                console.log(data)
-                setNodePosts(data);
-            } else if (response.statusText === 'Unauthorized'){
-                logoutUser();
-            } else {
-                console.log('Failed to get posts');
-            }
-        };
-        getNodePosts();
-    }, [authTokens, logoutUser]);
+    const postEndpoint = '/api/posts';
+    const itemResultsKey = 'items';
+    const [ nodePosts, setNodePosts ] = useState([]);
 
     // RENDER APP =================================================
     const renderNodePosts = (items) => {
@@ -50,7 +34,12 @@ const Stream = () => {
         <>
             <PageHeader title='Stream'></PageHeader>
             <GridWrapper>
-            {renderNodePosts(nodePosts.items)}
+            <BasicPagination 
+                itemEndpoint={postEndpoint} 
+                itemResultsKey={itemResultsKey} 
+                setItems={(posts) => setNodePosts(posts)}
+            />
+            {renderNodePosts(nodePosts)}
             </GridWrapper>
         </>
     );

@@ -1,15 +1,11 @@
 # 2023-02-18
-# post/tests.py
+# post/tests/test_views.py
 
-from django.urls import reverse
-from django.utils.crypto import get_random_string
 from rest_framework import status
 import uuid
 
-from post.models import Post
-from post.views import PostListCreateView
-
 from .base import Base
+from post.models import Post
 
 class PostViewTests(Base):
     '''
@@ -27,6 +23,7 @@ class PostViewTests(Base):
         response = self.admin_client.get(list_post_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['items'], [])
+        self.assertEqual(response.data['count'], 0)
     
     def test_list_single_post(self):
         '''
@@ -36,15 +33,18 @@ class PostViewTests(Base):
         list_response = self.author_client.get(create_post_url)
         self.assertEqual(list_response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(list_response.data['items']), 1)
+        self.assertEqual(list_response.data['count'], 1)
 
     def test_list_post_as_friend(self):
         '''
         Test friend posts
         '''
+        post_count = Post.objects.filter(author=self.author.id).count()
         create_post_url = self.get_create_post_url(self.author.id)
         list_response = self.friendlybaker_client.get(create_post_url)
         self.assertEqual(list_response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(list_response.data['items']), 2)
+        self.assertEqual(len(list_response.data['items']), post_count)
+        self.assertEqual(list_response.data['count'], post_count)
 
 
     def test_list_post_as_stranger(self):

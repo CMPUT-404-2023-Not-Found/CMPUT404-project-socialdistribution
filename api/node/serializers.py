@@ -16,10 +16,10 @@ class NodeRetrieveSerializer(serializers.Serializer):
 
 class NodeListSerializer(serializers.Serializer):
     host = serializers.URLField(read_only=True)
-    api_prefix = serializers.URLField(read_only=True)
+    api_path = serializers.URLField(read_only=True)
 
     class Meta:
         model = Node
         fields = [
-            'host', 'api_prefix'
+            'host', 'api_path'
         ]

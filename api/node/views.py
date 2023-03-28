@@ -93,7 +93,11 @@ class NodePublicView(ListAPIView):
             getURL = node_obj.host + node_obj.api_path
             response = requests.get(getURL, auth=(node_obj.username, node_obj.password), timeout=5, allow_redirects=True)
             data = json.loads(response.content.decode('utf-8'))
-            return Response(status=response.status_code, data=data)
+            if (response.status_code == 200):
+                return Response(status=response.status_code, data=data)
+            else:
+                message = f'Not okay'
+                return Response(status=status.HTTP_404_NOT_FOUND, data={"message": message})
         except Node.DoesNotExist as e:
             message = f'Node url {nodeURL} was not found in the database'
             return Response(status=status.HTTP_404_NOT_FOUND, data={"error": str(e), "message": message})

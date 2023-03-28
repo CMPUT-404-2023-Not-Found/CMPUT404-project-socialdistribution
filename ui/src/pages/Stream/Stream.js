@@ -22,8 +22,9 @@ const Stream = () => {
 
     //  event listners --------------------------------------------
     useEffect(() => {
-        const getNodePosts = async () => {
-            const [response, data] = await Backend.get(`/api/posts/`, authTokens.access);
+        const getNodePosts = async (urlPath) => {
+            console.log(`url path: ${urlPath}`)
+            const [response, data] = await Backend.get(`${urlPath}`, authTokens.access);
             if (response.status && response.status === 200) {
                 console.log(data)
                 setNodePosts(data);
@@ -45,17 +46,20 @@ const Stream = () => {
                 console.log('Failed to get posts');
             }    
         }
-        getNodePosts();
-        getNodes();
-    }, [authTokens, logoutUser]);
 
-    const handleNodeURLSelect = (event) => {
-        let prevURL = nodeURL;
-        setNodeURL(event.target.value);
-
-        if (nodeURL != prevURL && nodeURL != 'Home') {
-            // make backend call
+        if (nodeURL == 'Home') {
+            getNodePosts('/api/posts');
         }
+        else { 
+            getNodePosts(`/api/node/${nodeURL}`)
+        }
+
+        getNodes();
+    }, [authTokens, logoutUser, nodeURL]);
+
+    const handleNodeURLSelect = async (event) => {
+        setNodeURL(event.target.value);
+        console.log("set it to, ", event.target.value)
     }
 
     // RENDER APP =================================================
@@ -86,9 +90,9 @@ const Stream = () => {
                     label="Node"
                     onChange={handleNodeURLSelect}
                 >
-                    <MenuItem value="Home">{nodeURL}</MenuItem>
+                    <MenuItem value="Home">Home</MenuItem>
                     { nodes.items ? nodes.items.map((item) => {
-                        let url = `${item.host}${item.api_path}`
+                        let url = `${item.host}`
                         return (
                             <MenuItem value={url}>{item.host}</MenuItem>
                         )

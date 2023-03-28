@@ -98,9 +98,6 @@ const handleSubmit = async (e) => {
     }
     setOpenSnackbar(false);
   };
-  
-
-  
 
   return (
     <Grid item xs={12}>
@@ -182,6 +179,11 @@ const handleSubmit = async (e) => {
                 {passwordError}
             </div>
             )}
+
+            <br />
+            <div  className="login-link">
+              <a href="/login">Already have an account? Log in</a>
+            </div>
             <br />
             <Button type="submit">Sign Up</Button>
             <br />

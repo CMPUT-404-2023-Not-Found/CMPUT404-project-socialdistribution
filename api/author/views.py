@@ -80,17 +80,12 @@ class AuthorDetailView(RetrieveUpdateAPIView):
         '''
         GET request that returns a specific user
         '''
-        return self.retrieve(request, *args, **kwargs)
-    
-    def get_object(self):
-        '''
-        Utilized by self.get
-        '''
         logger.info(rev)
         author_uuid = self.kwargs.get(self.lookup_field)
-        requester_uuid = str(self.request.user)
-        logger.info('Requester [%s] is retreiving profile for author [%s]', requester_uuid, author_uuid)
-        return super().get_object()
+        logger.info('Retreiving profile for author [%s]', author_uuid)
+        author = self.get_object()
+        serializer = self.get_serializer(author)
+        return Response(serializer.data, headers={'Last-Modified': toLastModifiedHeader(author.updated_at)})
 
     @extend_schema(
         operation_id='authors_update'

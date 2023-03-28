@@ -92,9 +92,13 @@ const Stream = () => {
                 >
                     <MenuItem value="Home">Home</MenuItem>
                     { nodes.items ? nodes.items.map((item) => {
-                        let url = `${item.host}`
+                        let url = `${item.host}`;
+                        let name = item.display_name;
+                        if (name === '' || !name) {
+                            name = item.host;
+                        }
                         return (
-                            <MenuItem value={url}>{item.host}</MenuItem>
+                            <MenuItem value={url}>{name}</MenuItem>
                         )
                     }): null
                     }

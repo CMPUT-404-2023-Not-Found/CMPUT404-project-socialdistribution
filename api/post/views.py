@@ -13,7 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 from author.models import Author
 from follower.models import Follower
 from .serializers import PostSerializer
-from .models import Post
+from .models import Category, Post
 from utils.permissions import IsAuthenticatedWithJWT, NodeReadOnly, OwnerCanWrite
 from follower.models import Follower
 from utils.node_comm import NodeComm
@@ -52,6 +52,12 @@ class PostListCreateView(ListCreateAPIView):
         author_obj = Author.objects.get(id=author_uuid)
         logger.info('Creating new post for author_uuid [%s]', author_uuid)
         post = serializer.save(author=author_obj, content=self.request.data['content'])
+
+        categories = self.request.data.get('categories', [])
+        for category_name in categories:
+            category = Category(post=post, category=category_name)
+            category.save()
+
         if post and not post.unlisted:
             inbox_obj_raw = {
                 'summary': post.title,
@@ -67,6 +73,7 @@ class PostListCreateView(ListCreateAPIView):
                 follower_inboxs.append(follower_inbox)
             nc.send_object(follower_inboxs, inbox_obj)
         return post
+    
     
     def get_queryset(self):
         logger.info(rev)
@@ -89,6 +96,7 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     permission_classes = [IsAuthenticatedWithJWT|OwnerCanWrite|NodeReadOnly]
 
+    
     def get_object(self):
         logger.info(rev)
         post_id = self.kwargs.get(self.lookup_field)
@@ -114,6 +122,18 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
     )
     def post(self, request, *args, **kwargs):
         logger.info(rev)
+        
+        # get the post object
+        post_uuid = kwargs.get(self.lookup_field)
+        post_obj = Post.objects.get(id=post_uuid)
+        categories = self.request.data.get('categories', [])
+
+        # delete the old categories
+        Category.objects.filter(post=post_obj).delete()
+        for category_name in categories:
+            category = Category(post=post_obj, category=category_name)
+            category.save()
+
         return self.update(request, *args, **kwargs)
 
     @extend_schema(

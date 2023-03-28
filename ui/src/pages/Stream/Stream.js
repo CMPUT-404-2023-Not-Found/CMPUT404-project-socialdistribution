@@ -72,14 +72,14 @@ const Stream = () => {
                     onChange={handleNodeURLSelect}
                 >
                     <MenuItem value="/api/posts">Home</MenuItem>
-                    { nodes.items ? nodes.items.map((item) => {
+                    { nodes.items ? nodes.items.map((item, i) => {
                         let url = `/api/node/${item.host}`;
                         let name = item.display_name;
                         if (name === '' || !name) {
                             name = item.host;
                         }
                         return (
-                            <MenuItem value={url}>{name}</MenuItem>
+                            <MenuItem key={i} value={url}>{name}</MenuItem>
                         )
                     }): null
                     }

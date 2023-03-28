@@ -28,7 +28,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     origin          = URLField(required=False)
     source          = URLField(required=False)
-    # categories = CategorySerializer(many=True, read_only=True)
+  
     categories      = serializers.SerializerMethodField('get_categories')
     @extend_schema_field(ListField)
     # def get_categories(self, obj): return ['this', 'is', 'a', 'hack']

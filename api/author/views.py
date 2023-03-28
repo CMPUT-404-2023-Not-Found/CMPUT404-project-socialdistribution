@@ -11,6 +11,7 @@ from .models import Author
 from .pagination import AuthorPagination
 from .serializers import NewAuthorSerializer, ExistingAuthorSerializer
 from utils.permissions import AnonymousCanPost, IsAuthenticatedWithJWT, NodeReadOnly, OwnerCanWrite
+from utils.helper_funcs import toLastModifiedHeader
 
 import logging
 logger = logging.getLogger('django')
@@ -29,8 +30,19 @@ class AuthorView(ListCreateAPIView):
         '''
         GET request that returns list of authors ordered by username
         '''
-        return self.list(request, *args, **kwargs)
-    
+        queryset = self.filter_queryset(self.get_queryset())
+        datetime_list = [ author.updated_at for author in queryset ]
+        datetime_max = max(datetime_list)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            paginated_response = self.get_paginated_response(serializer.data)
+            paginated_response.headers['Last-Modified'] = toLastModifiedHeader(datetime_max)
+            return paginated_response
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, headers={'Last-Modified': toLastModifiedHeader(datetime_max)})
+
     def get_queryset(self):
         '''
         Utilized by self.get

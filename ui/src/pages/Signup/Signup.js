@@ -11,14 +11,21 @@ import { RiLockPasswordFill } from 'react-icons/ri';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import styled from 'styled-components';
 import Backend from '../../utils/Backend';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 import AuthContext from '../../context/AuthContext';
 import './Signup.css';
 
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+
 const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [username, setUsername] = useState('');
-  
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState('');
   const [password, setPassword] = useState('');
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -53,42 +60,6 @@ const Signup = () => {
   let navigate = useNavigate();
   let { registerUser } = useContext(AuthContext);
 
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     if (password !== confirmPassword) {
-//         console.log(password, confirmPassword)
-//       setPasswordError('Passwords do not match');
-//     } else {
-//       setPasswordError(''); // Clear password error state when passwords match
-//       // Perform signup logic here and navigate to the appropriate page after successful signup
-//     }
-//   };
-
-// const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     if (password !== confirmPassword) {
-//       setPasswordError('Passwords do not match');
-//     } else {
-//       setPasswordError(''); // Clear password error state when passwords match
-//       try {
-//         const response = await Backend.post('/api/authors/', JSON.stringify({
-//           username: username,
-//           password: password,
-//         }));
-//         if (response[0].ok) {
-//           navigate('/login'); // Navigate to the login page after successful signup
-//         } else {
-//           console.log(response);
-//           console.log(response[0].status);
-//           console.error("Failed to create new author");
-//         }
-//       } catch (error) {
-//         console.error("Error while creating new author");
-//         console.error(error);
-//       }
-//     }
-//   };
-
 const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
@@ -96,6 +67,7 @@ const handleSubmit = async (e) => {
     } else {
       setPasswordError('');
       try {
+        console.log(username, password);
         const response = await fetch('/api/authors/', {
           method: 'POST',
           headers: {
@@ -107,10 +79,12 @@ const handleSubmit = async (e) => {
           }),
         });
         if (response.ok) {
-          navigate('/login');
-        } else {
-          console.error("Failed to create new author");
-        }
+            setOpenSnackbar(true);
+            setSnackbarSeverity('success');
+            navigate('/login');
+          } else {
+            console.error('Failed to create new author');
+          }
       } catch (error) {
         console.error("Error while creating new author");
         console.error(error);
@@ -118,7 +92,14 @@ const handleSubmit = async (e) => {
     }
   };
   
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
   
+
   
 
   return (
@@ -204,6 +185,16 @@ const handleSubmit = async (e) => {
             <br />
             <Button type="submit">Sign Up</Button>
             <br />
+            <Snackbar
+            open={openSnackbar}
+            autoHideDuration={3000}
+            onClose={handleSnackbarClose}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+            <Alert onClose={handleSnackbarClose} severity={snackbarSeverity}>
+                {snackbarSeverity === 'success' ? 'Account created successfully!' : 'Failed to create account.'}
+            </Alert>
+            </Snackbar>
           </form>
         </div>
       </div>

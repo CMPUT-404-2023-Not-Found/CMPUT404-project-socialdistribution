@@ -6,6 +6,7 @@ import React, { useContext, useState } from 'react'
 import Grid from '@mui/material/Grid';
 import { useNavigate } from 'react-router-dom';
 import { FaUser, FaUserCircle } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import { RiLockPasswordFill } from 'react-icons/ri'
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 import styled from 'styled-components';
@@ -46,6 +47,7 @@ const Login = () => {
 
     //  event listeners --------------------------------------------
     let navigate = useNavigate();
+
     let {loginUser} = useContext(AuthContext)
     //  async functions -------------------------------------------
     // RENDER APP =================================================
@@ -92,9 +94,11 @@ const Login = () => {
 
                     <br></br>
                     <div className="forgot">
-                        <a href="#">Sign up</a>
+                        <Link to="/signup" className="signup-link">
+                        Sign up
+                        </Link>
                     </div>
-
+                    
                     <br></br>
                     <Button type="submit">Login</Button>
                     <br></br>

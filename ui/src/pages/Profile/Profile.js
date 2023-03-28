@@ -181,9 +181,7 @@ const Profile = () => {
             </BasicCard>
         )
     }
-    
-    
-    
+     
 
     const renderUpdateForm = () => {
         if (!update) {

@@ -17,6 +17,7 @@ from .models import Post
 from utils.permissions import IsAuthenticatedWithJWT, NodeReadOnly, OwnerCanWrite
 from follower.models import Follower
 from utils.node_comm import NodeComm
+from utils.helper_funcs import  getMaxLastModifiedHeader
 
 import logging
 logger = logging.getLogger('django')
@@ -25,13 +26,8 @@ rev = 'rev: $xujSyn7$x'
 nc = NodeComm()
 
 def isFriend(follower_url, author_uuid):
-    if nc.parse_object_uuid(follower_url) == str(author_uuid):
-        return True
-
-    # inefficient? probably not in our case, even if there are like 10000 followers but idk
     if Follower.objects.filter(followee=author_uuid, follower_node_id=follower_url).count() == 1:
         return True
-
     return False
 
 # This code is modifed from a video tutorial from Cryce Truly on 2020-06-19 retrieved on 2023-02-16, to Youtube crycetruly
@@ -68,20 +64,40 @@ class PostListCreateView(ListCreateAPIView):
             nc.send_object(follower_inboxs, inbox_obj)
         return post
     
-    def get_queryset(self):
+    def get(self, request, *args, **kwargs):
+        '''
+        GET posts associated with author_uuid
+        '''
         logger.info(rev)
-        author_uuid = self.kwargs.get(self.lookup_url_kwarg)
-        if (self.request.query_params): # type: ignore
-            logger.info('Get recent posts for author_uuid: [%s] with query_params [%s]', author_uuid, str(self.request.query_params)) # type: ignore
+        author_uuid = kwargs.get(self.lookup_url_kwarg)
+        if (request.query_params):
+            logger.info('Get recent posts for author_uuid: [%s] with query_params [%s]', author_uuid, str(request.query_params))
         else:
             logger.info('Get recent posts for author_uuid: [%s]', author_uuid)
         
-        follower_url = self.request.user.get_node_id()
-        if isFriend(follower_url, author_uuid) or self.request.user.groups.filter(name='node').exists():
-            logger.info('Get public and private posts for author_uuid: [%s]', author_uuid)      
-            return self.queryset.filter(author_id=author_uuid, unlisted=False).order_by('-published')
-
-        return self.queryset.filter(author_id=author_uuid, visibility="PUBLIC", unlisted=False).order_by('-published')
+        # Determine filter based on requester's identity
+        follower_url = request.user.get_node_id()
+        filter = {'author_id': author_uuid, 'visibility': "PUBLIC", 'unlisted': False}
+        if isFriend(follower_url, author_uuid) or request.user.groups.filter(name='node').exists():
+            logger.info('Friend [%s] is asking public/private posts for author_uuid: [%s]', follower_url, author_uuid)   
+            filter.pop('visibility')
+        elif self.request.user.id == author_uuid:
+            logger.info('Retreiving all posts for owner [%s]', author_uuid)   
+            filter.pop('unlisted')
+            filter.pop('visibility')
+        
+        queryset = self.queryset.filter(**filter).order_by('-published')
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            last_modified = getMaxLastModifiedHeader([ post.updated_at for post in page ])
+            serializer = self.get_serializer(page, many=True)
+            paginated_response = self.get_paginated_response(serializer.data)
+            paginated_response.headers['Last-Modified'] = last_modified
+            return paginated_response
+        
+        last_modified = getMaxLastModifiedHeader([ post.updated_at for post in queryset ])
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, headers={'Last-Modified': last_modified})
 
 class PostDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer

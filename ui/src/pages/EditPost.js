@@ -35,9 +35,24 @@ const EditPost = () => {
         return postData;
     }
     
+    let postTitle;
+    let postDescription;
+    let contentType;
+    let content;
+    let visibility;
+    let unlisted;
+    let categories;
+
     let postData = getPostData();
     postData.then((data) => {
         console.log(data);
+        postTitle = data['title'];
+        postDescription = data['description'];
+        contentType = data['contentType'];
+        content = data['content'];
+        visibility = data['visibility'];
+        unlisted = data['unlisted'];
+        categories = data['categories'];
     })
 
     //  event listeners --------------------------------------------
@@ -106,13 +121,13 @@ const EditPost = () => {
             <PageHeader title='Edit the selected Post'></PageHeader>
             <GridWrapper>
             {options ?
-                    <DynamicForm options={options} formSubmitFunction={editPost}>
-                        
-                    </DynamicForm>
-                    : 
-                    <div>
-                        Loading the selected post ...
-                    </div>
+                <DynamicForm options={options} formSubmitFunction={editPost}>
+                    
+                </DynamicForm>
+                : 
+                <div>
+                    Loading the selected post ...
+                </div>
                 }
             </GridWrapper>
        </>

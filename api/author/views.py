@@ -30,7 +30,12 @@ class AuthorView(ListCreateAPIView):
         '''
         GET request that returns list of authors ordered by username
         '''
-        queryset = self.filter_queryset(self.get_queryset())
+        logger.info(rev)
+        if (self.request.query_params):
+            logger.info('Getting list of author with query_params [%s]', str(request.query_params))
+        else:
+            logger.info('Getting list of author')
+        queryset = self.filter_queryset(self.get_queryset().order_by(Lower('username')))
         datetime_list = [ author.updated_at for author in queryset ]
         datetime_max = max(datetime_list)
         page = self.paginate_queryset(queryset)
@@ -42,17 +47,6 @@ class AuthorView(ListCreateAPIView):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, headers={'Last-Modified': toLastModifiedHeader(datetime_max)})
-
-    def get_queryset(self):
-        '''
-        Utilized by self.get
-        '''
-        logger.info(rev)
-        if (self.request.query_params): # type: ignore
-            logger.info('Getting list of author with query_params [%s]', str(self.request.query_params)) # type: ignore
-        else:
-            logger.info('Getting list of author')
-        return self.queryset.order_by(Lower('username'))
 
     @extend_schema(
         operation_id='authors_create'

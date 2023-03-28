@@ -101,3 +101,6 @@ class NodePublicView(ListAPIView):
         except Node.DoesNotExist as e:
             message = f'Node url {nodeURL} was not found in the database'
             return Response(status=status.HTTP_404_NOT_FOUND, data={"error": str(e), "message": message})
+        except Exception as e:
+            message = f'Error while fetching from {nodeURL}'
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR, data={"error": str(e), "message": message})

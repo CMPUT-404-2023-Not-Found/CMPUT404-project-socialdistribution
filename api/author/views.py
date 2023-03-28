@@ -11,7 +11,7 @@ from .models import Author
 from .pagination import AuthorPagination
 from .serializers import NewAuthorSerializer, ExistingAuthorSerializer
 from utils.permissions import AnonymousCanPost, IsAuthenticatedWithJWT, NodeReadOnly, OwnerCanWrite
-from utils.helper_funcs import toLastModifiedHeader
+from utils.helper_funcs import toLastModifiedHeader, getMaxLastModifiedHeader
 
 import logging
 logger = logging.getLogger('django')
@@ -36,17 +36,17 @@ class AuthorView(ListCreateAPIView):
         else:
             logger.info('Getting list of author')
         queryset = self.filter_queryset(self.get_queryset().order_by(Lower('username')))
-        datetime_list = [ author.updated_at for author in queryset ]
-        datetime_max = max(datetime_list)
         page = self.paginate_queryset(queryset)
         if page is not None:
+            last_modified = getMaxLastModifiedHeader([ author.updated_at for author in page ])
             serializer = self.get_serializer(page, many=True)
             paginated_response = self.get_paginated_response(serializer.data)
-            paginated_response.headers['Last-Modified'] = toLastModifiedHeader(datetime_max)
+            paginated_response.headers['Last-Modified'] = last_modified
             return paginated_response
 
+        last_modified = getMaxLastModifiedHeader([ author.updated_at for author in queryset ])
         serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data, headers={'Last-Modified': toLastModifiedHeader(datetime_max)})
+        return Response(serializer.data, headers={'Last-Modified': last_modified})
 
     @extend_schema(
         operation_id='authors_create'

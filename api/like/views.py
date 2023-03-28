@@ -39,13 +39,13 @@ class PostLikeView(ListAPIView):
         queryset = self.queryset.filter(post=post).order_by('-liked_at')
         page = self.paginate_queryset(queryset)
         if page is not None:
-            last_modified = toLastModifiedHeader(page[0].liked_at if page[0].liked_at else None)
+            last_modified = toLastModifiedHeader(page[0].liked_at if len(page) > 0 else None)
             serializer = self.get_serializer(page, many=True)
             paginated_response = self.get_paginated_response(serializer.data)
             paginated_response.headers['Last-Modified'] = last_modified
             return paginated_response
         
-        last_modified = toLastModifiedHeader(queryset[0].liked_at if queryset[0].liked_at else None)
+        last_modified = toLastModifiedHeader(queryset[0].liked_at if len(queryset) > 0 else None)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, headers={'Last-Modified': last_modified})
 
@@ -59,7 +59,7 @@ class CommentLikeView(ListAPIView):
     pagination_class = LikePagination
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
+    def get(self, request, *args, **kwargs):
         logger.info(rev)
         self.request.kwargs = self.kwargs
         comment_uuid = self.kwargs.get(self.lookup_url_kwarg)
@@ -68,4 +68,15 @@ class CommentLikeView(ListAPIView):
             logger.info('Get recent likes for comment_uuid: [%s] with query_params [%s]', comment_uuid, str(self.request.query_params))
         else:
             logger.info('Get recent likes for comment_uuid: [%s]', comment_uuid)
-        return self.queryset.filter(comment=comment).order_by('-liked_at')
+        queryset = self.queryset.filter(comment=comment).order_by('-liked_at')
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            last_modified = toLastModifiedHeader(page[0].liked_at if len(page) > 0 else None)
+            serializer = self.get_serializer(page, many=True)
+            paginated_response = self.get_paginated_response(serializer.data)
+            paginated_response.headers['Last-Modified'] = last_modified
+            return paginated_response
+
+        last_modified = toLastModifiedHeader(queryset[0].liked_at if len(queryset) > 0 else None)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, headers={'Last-Modified': last_modified})

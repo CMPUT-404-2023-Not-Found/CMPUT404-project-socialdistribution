@@ -3,6 +3,10 @@
 
 from datetime import datetime
 
+def getMaxLastModifiedHeader(myList):
+    datetime_max = max(myList)
+    return toLastModifiedHeader(datetime_max)
+
 def toLastModifiedHeader(myDate):
     timestamp = None
     if isinstance(myDate, datetime):

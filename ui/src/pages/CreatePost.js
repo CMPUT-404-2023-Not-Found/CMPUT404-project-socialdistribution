@@ -71,17 +71,6 @@ const CreatePost = () => {
         }
         console.log('formData:', formData); // Add this line
         delete formData.file;
-        
-        // Process categories
-        // if (formData.categories) {
-        //     // if (typeof formData.categories === 'string') {
-        //     //     formData.categories = formData.categories.split(',');
-                
-        //     //   }
-        //     formData.categories = formData.categories.join(',');
-            
-        //     console.log(formData.categories);
-        // }
 
         const [response, data] = await Backend.post(`/api/authors/${user.user_id}/posts/`, authTokens.access, JSON.stringify(formData));
         if (response.status && response.status === 201) {

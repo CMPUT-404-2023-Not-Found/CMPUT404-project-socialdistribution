@@ -1,0 +1,13 @@
+[
+  {
+    "model": "node.node",
+    "pk": "a3dd1317-c704-4490-b498-3a0dce3bb5c2",
+    "fields": {
+      "host": "https://sd-7-433-api.herokuapp.com",
+      "username": "node01",
+      "password": "P*ssw0rd!",
+      "api_path": "/api/posts",
+      "display_name": "Our own team but clone so technically it's remote"
+    }
+  }
+]

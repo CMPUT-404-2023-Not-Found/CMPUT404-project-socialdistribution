@@ -46,6 +46,38 @@ export function isValidHttpUrl(myString) {
 }
 
 /**
+ * 
+ * @param {string} myURL 
+ * @returns True if myURL host is localhost else False
+ */
+export function isURLLocalhost(myURL) {
+    let url;
+    try {
+        url = new URL(myURL);
+    } catch(e) {
+        console.error('Invalid url for ' + myURL);
+        return false;
+    }
+    return url.host.includes('localhost')
+}
+
+/**
+ * 
+ * @param {string} myURL A URL string
+ * @returns The path & query params of myURL
+ */
+export function parsePathFromURL(myURL) {
+    let url;
+    try {
+        url = new URL(myURL);
+    } catch(e) {
+        console.error('Failed to construct URL from string' + myURL);
+        return '/';
+    }
+    return url.pathname;
+}
+
+/**
  * Convert a UTC datetime string to local time
  * @param utcDateString A UTC ISO-8601 datetime string.
  * @returns Date string for local time

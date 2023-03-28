@@ -7,34 +7,23 @@ ui/src/pages/Stream/Stream.js
 import React, { useContext, useEffect, useState } from 'react';
 import { Typography, InputLabel, Select, MenuItem, FormControl } from '@mui/material';
 
-import Backend from '../../utils/Backend';
-import AuthContext from '../../context/AuthContext';
+import BasicPagination from '../../components/common/BasicPagination/BasicPagination';
 import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
 import PostCard from '../../components/Post/PostCard';
 import PageHeader from '../../components/Page/PageHeader';
+import AuthContext from '../../context/AuthContext';
+import Backend from '../../utils/Backend';
 
 const Stream = () => {
     //  variable declarations -------------------------------------
-    const [ nodePosts, setNodePosts ] = useState({});
+    const itemResultsKey = 'items';
+    const [ nodePosts, setNodePosts ] = useState([]);
     const { authTokens, logoutUser } = useContext(AuthContext);
-    const [nodeURL, setNodeURL] = useState('Home');
+    const [nodeURL, setNodeURL] = useState('/api/posts');
     const [nodes, setNodes] = useState({});
 
     //  event listners --------------------------------------------
     useEffect(() => {
-        const getNodePosts = async (urlPath) => {
-            console.log(`url path: ${urlPath}`)
-            const [response, data] = await Backend.get(`${urlPath}`, authTokens.access);
-            if (response.status && response.status === 200) {
-                console.log(data)
-                setNodePosts(data);
-            } else if (response.statusText === 'Unauthorized'){
-                logoutUser();
-            } else {
-                console.log('Failed to get posts');
-            }
-        };
-
         const getNodes = async () => {
             const [response, data] = await Backend.get(`/api/node/`, authTokens.access);
             if (response.status && response.status === 200) {
@@ -46,16 +35,8 @@ const Stream = () => {
                 console.log('Failed to get posts');
             }    
         }
-
-        if (nodeURL == 'Home') {
-            getNodePosts('/api/posts');
-        }
-        else { 
-            getNodePosts(`/api/node/${nodeURL}`)
-        }
-
         getNodes();
-    }, [authTokens, logoutUser, nodeURL]);
+    }, []);
 
     const handleNodeURLSelect = async (event) => {
         setNodeURL(event.target.value);
@@ -90,9 +71,9 @@ const Stream = () => {
                     label="Node"
                     onChange={handleNodeURLSelect}
                 >
-                    <MenuItem value="Home">Home</MenuItem>
+                    <MenuItem value="/api/posts">Home</MenuItem>
                     { nodes.items ? nodes.items.map((item) => {
-                        let url = `${item.host}`;
+                        let url = `/api/node/${item.host}`;
                         let name = item.display_name;
                         if (name === '' || !name) {
                             name = item.host;
@@ -105,7 +86,12 @@ const Stream = () => {
                 </Select>
             </FormControl>
             <GridWrapper>
-            {renderNodePosts(nodePosts.items)}
+            <BasicPagination 
+                itemEndpoint={nodeURL} 
+                itemResultsKey={itemResultsKey} 
+                setItems={(posts) => setNodePosts(posts)}
+            />
+            {renderNodePosts(nodePosts)}
             </GridWrapper>
         </>
     );

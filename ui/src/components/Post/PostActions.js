@@ -13,8 +13,14 @@ import Typography from '@mui/material/Typography';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import IconButton from '@mui/material/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
 
 import ShareAction from '../Actions/ShareAction/ShareAction';
+
+import Comment from './Comment';
+import BasicPagination from '../common/BasicPagination/BasicPagination';
+import { parsePathFromURL } from '../../utils/Utils';
 
 /*
 This code is modified from a documentation guide on Material UI Card components from Material UI SAS 2023, retrieved 2023-03-13 from mui.com
@@ -34,9 +40,42 @@ const ExpandMore = styled((props) => {
 
 const PostActions = ({ disableLike=false, disableShare=false, disableComments=false, postNodeId }) => {    
     const [expanded, setExpanded] = React.useState(false);
+    const [comments, setComments] = React.useState([]);
+    const postPath = parsePathFromURL(postNodeId);
+    const commentEndpoint = `${postPath}/comments`;
+    const itemResultsKey = 'comments';
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
+    };
+
+    const renderComments = () => {
+        if (!comments || comments.length <= 0) {
+            return (
+                <CardContent>
+                    <Typography paragraph>
+                        No comments
+                    </Typography>
+                </CardContent>
+            );
+        }
+        let commentRender = [];
+        comments.forEach((item, idx) => {
+            console.debug(item);
+            commentRender.push(
+                <Comment key={idx * 2} comment={item}/>
+            );
+            if (idx < comments.length-1 ) { 
+                commentRender.push(
+                    <Divider key={idx * 2 + 1} variant="inset" component="li" />
+                );
+            }
+        });
+        return (
+            <List>
+                {commentRender}
+            </List>
+        );
     };
 
     return (<>
@@ -58,12 +97,19 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
         </ExpandMore>
         }
     </CardActions>
+    {/* This code is adapted from the Material UI docs, retrieved on 2023-03-26
+    https://mui.com/material-ui/react-list/ */}
     {!disableComments && 
     <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-        <Typography paragraph>
-            Comments Go Here
-        </Typography>
+            <BasicPagination 
+                itemEndpoint={commentEndpoint} 
+                itemResultsKey={itemResultsKey}
+                setItems={(comments) => setComments(comments)}
+            />
+            <List>
+            {renderComments()}
+            </List>
         </CardContent>
     </Collapse>
     }

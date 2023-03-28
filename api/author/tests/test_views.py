@@ -28,8 +28,10 @@ class AuthorViewTests(Base):
         '''
         Test getting list of authors as an author
         '''
+        author_count = Author.objects.all().count()
         response = self.author_client.get(self.get_author_url())
         self.assertEquals(response.status_code, status.HTTP_200_OK)
+        self.assertEquals(response.data['count'], author_count)
     
     def test_get_list_of_authors_as_anonymous_user(self):
         '''

@@ -10,6 +10,8 @@ from author.models import Author
 from post.models import Post
 from post.serializers import PostSerializer
 from utils.pagination import CustomPagination
+from utils.node_comm import NodeComm
+NodeComm = NodeComm()
 
 import logging
 logger = logging.getLogger('django')
@@ -23,19 +25,31 @@ class CommentPagination(CustomPagination):
         # removes 'comments/' from teh string
         post_id = comment_id[:-9]
         
+        lookup_list = []
+        for comment in data:
+            lookup_list.append({
+                **comment,
+                'author': comment['author']
+            })
+        lookup_results = NodeComm.get_objects(lookup_list)
         return Response(OrderedDict([
+            ('count', self.page.paginator.count),
             ('type', 'comments'),
             ('page', self.page.number),
             ('size', self.page.paginator.per_page),
             ('post', post_id),
             ('id', comment_id),
-            ('comments', data)
+            ('comments', lookup_results)
         ]))
 
     def get_paginated_response_schema(self, schema):
         return {
             'type': 'object',
             'properties': {
+                    'count': {
+                        'type': 'integer',
+                        'example': 10
+                    },
                     'type': {
                         'type': 'string',
                         'example': 'comments'

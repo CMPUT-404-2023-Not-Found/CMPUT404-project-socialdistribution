@@ -4,14 +4,14 @@ ui/src/pages/Inbox/Inbox.js
 
 */
 
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Button from '@mui/material/Button';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import { useNavigate } from 'react-router-dom';
 
-import Backend from '../../utils/Backend';
 import AuthContext from '../../context/AuthContext';
+import BasicPagination from '../../components/common/BasicPagination/BasicPagination';
 import BasicCard from '../../components/common/BasicCard/BasicCard';
 import PostCard from '../../components/Post/PostCard';
 import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
@@ -23,31 +23,15 @@ import FollowCard from '../../components/Follow/FollowCard';
 
 const Inbox = () => {
     //  variable declarations -------------------------------------
-    const [ inbox, setInbox ] = useState({});
-    const { user, authTokens, logoutUser } = useContext(AuthContext);
+    const [ inboxItems, setInboxItems ] = useState([]);
+    const { user } = useContext(AuthContext);
     const navigate = useNavigate();
-
-    //  event listners --------------------------------------------
-    useEffect(() => {
-        const getInbox = async () => {
-            const [response, data] = await Backend.get(`/api/authors/${user.user_id}/inbox/`, authTokens.access);
-            if (response.status && response.status === 200) {
-                setInbox(data);
-            } else if (response.statusText === 'Unauthorized'){
-                logoutUser();
-            } else {
-                console.log('Failed to get posts');
-            }
-        };
-        getInbox();
-    }, [user, authTokens, logoutUser]);
-
-    //  async functions -------------------------------------------
+    const inboxEndpoint = `/api/authors/${user.user_id}/inbox`;
+    const itemResultsKey = 'items';
 
     // RENDER APP =================================================
-    const renderInbox = (items) => {
-        // console.log(items);
-        if (!items || items.length <= 0) {
+    const renderInbox = () => {
+        if (!inboxItems || inboxItems.length <= 0) {
             return (
             <BasicCard>
                 <CardHeader title='No Posts' subheader='You have no notifications' />
@@ -57,9 +41,9 @@ const Inbox = () => {
             </BasicCard>);
         }
         let itemsRender = [];
-        items.forEach((item, idx) => {
+        inboxItems.forEach((item, idx) => {
             console.log(item);
-            let item_type = item.type.toLowerCase();
+            let item_type = item.type ? item.type.toLowerCase() : '';
             switch(item_type) {
                 case 'post':
                     itemsRender.push(<PostCard key={idx * 2} post={item} />);
@@ -103,7 +87,12 @@ const Inbox = () => {
         <>
             <PageHeader title='Inbox' disableNotification></PageHeader>
             <GridWrapper>
-            {renderInbox(inbox.items)}
+            <BasicPagination 
+                itemEndpoint={inboxEndpoint} 
+                itemResultsKey={itemResultsKey} 
+                setItems={(inboxItems) => setInboxItems(inboxItems)}
+            />
+            {renderInbox(inboxItems)}
             </GridWrapper>
         </>
     );

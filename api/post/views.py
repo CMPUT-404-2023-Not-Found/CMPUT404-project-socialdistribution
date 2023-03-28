@@ -53,18 +53,11 @@ class PostListCreateView(ListCreateAPIView):
         logger.info('Creating new post for author_uuid [%s]', author_uuid)
         post = serializer.save(author=author_obj, content=self.request.data['content'])
 
-        # Save the post without categories first
-        post = serializer.save(author=author_obj, content=self.request.data['content'])
-
-        # Get the categories from the request data
         categories = self.request.data.get('categories', [])
-
-        # Save the categories associated with the post
         for category_name in categories:
             category = Category(post=post, category=category_name)
             category.save()
 
-            
         if post and not post.unlisted:
             inbox_obj_raw = {
                 'summary': post.title,
@@ -129,20 +122,14 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
     )
     def post(self, request, *args, **kwargs):
         logger.info(rev)
-        # when use post to update the content of a post
-        # how to update categories of that post?
-
+        
         # get the post object
         post_uuid = kwargs.get(self.lookup_field)
         post_obj = Post.objects.get(id=post_uuid)
-
-        # get the categories from the request data
         categories = self.request.data.get('categories', [])
 
         # delete the old categories
         Category.objects.filter(post=post_obj).delete()
-
-        # save the new categories
         for category_name in categories:
             category = Category(post=post_obj, category=category_name)
             category.save()

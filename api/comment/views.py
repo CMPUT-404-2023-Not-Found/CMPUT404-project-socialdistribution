@@ -57,7 +57,7 @@ class CommentListCreateView(ListCreateAPIView):
         queryset = self.queryset.filter(post_id=post_uuid).order_by('-published')
         page = self.paginate_queryset(queryset)
         if page is not None:
-            last_modified = toLastModifiedHeader(page[0].published if page[0].published else None)
+            last_modified = toLastModifiedHeader(page[0].published if len(page) > 0 else None)
             serializer = self.get_serializer(page, many=True)
             paginated_response = self.get_paginated_response(serializer.data)
             paginated_response.headers['Last-Modified'] = last_modified

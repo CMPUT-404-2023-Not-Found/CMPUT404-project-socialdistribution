@@ -5,6 +5,7 @@ from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.response import Response
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 import base64
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView,  GenericAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -120,17 +121,27 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
         author_uuid = kwargs.get('author_uuid')
         logger.info('Getting content for post id: [%s]', post_id)
         follower_url = request.user.get_node_id()
-        instance = self.get_object()
-        last_modified = toLastModifiedHeader(instance.updated_at)
-        serializer = PostSerializer(instance)
+
+        filter = {'author': author_uuid, 'visibility': 'PUBLIC'}
         if isFriend(follower_url, author_uuid) or request.user.groups.filter(name='node').exists():
-            logger.info('Friend [%s] is asking public/private posts for author_uuid: [%s]', follower_url, author_uuid)   
-            return Response(serializer.data, headers={'Last-Modified': last_modified})
+            logger.info('Friend [%s] is asking public/private posts for author_uuid: [%s]', follower_url, author_uuid)
+            filter.pop('visibility') 
         elif request.user.id == author_uuid:
             logger.info('Retreiving posts for owner [%s]', author_uuid)
-            return Response(serializer.data, headers={'Last-Modified': last_modified})
-        
-        return Response(status=status.HTTP_403_FORBIDDEN)
+            filter.pop('visibility')
+
+        post = self.get_object(filter)
+        last_modified = toLastModifiedHeader(post.updated_at)
+        serializer = PostSerializer(post)
+        return Response(serializer.data, headers={'Last-Modified': last_modified})
+
+    def get_object(self, filter={}):
+        queryset = self.filter_queryset(self.get_queryset())
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+        filter = {**filter, self.lookup_field: self.kwargs[lookup_url_kwarg]}
+        obj = get_object_or_404(queryset, **filter)
+        self.check_object_permissions(self.request, obj)
+        return obj
 
     @extend_schema(
         operation_id='post_post_update'

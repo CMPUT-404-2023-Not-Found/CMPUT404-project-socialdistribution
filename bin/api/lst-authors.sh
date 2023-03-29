@@ -22,9 +22,11 @@ fi
 auth_hdr=$(./get-auth.sh 'bearer' $(cat .username) $(cat .password))
 LST_AUTHOR_URL="${AUTHOR_API}/${page_query}"
 
-rsp=`curl -s -H "$auth_hdr" "$LST_AUTHOR_URL"`
-e=$?; if [ $e -ne 0 ]; then echo -n "ERR Could not GET to $LST_AUTHOR_URL "; echo "$rsp"; exit $e; fi
+hdr_dump=`mktemp`
+rsp=`curl -s -D "$hdr_dump" -H "$auth_hdr" "$LST_AUTHOR_URL"`
+e=$?; if [ $e -ne 0 ]; then cat "$hdr_dump" >&2; echo -n "ERR Could not GET to $LST_AUTHOR_URL "; echo "$rsp"; exit $e; fi
 
+cat "$hdr_dump" >&2
 echo "$rsp" | jq 2>/dev/null
 e=$?; if [ $e -ne 0 ]; then echo "$rsp"; exit $e; fi
 

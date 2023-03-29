@@ -101,8 +101,8 @@ const EditPost = () => {
 
         delete formData.file;
         
-        const [response, data] = await Backend.post(`/api/authors/${user.user_id}/posts/${postId}`, authTokens.access, JSON.stringify(formData));
-        if (response.status && response.status === 201) {
+        const [response, data] = await Backend.post(`/api/authors/${user.user_id}/posts/${postId}/`, authTokens.access, JSON.stringify(formData));
+        if (response.status && response.status === 200) {
             navigate('/posts/');
         } else if (response.statusText === 'Unauthorized'){
             logoutUser();
@@ -116,12 +116,15 @@ const EditPost = () => {
     // did this because options depends on the async function,
     // so if you pass null to dynamic form it gives an error
     // not sure of another way to fix it
+
+    let data = {...postData};
+
     return (
         <>
             <PageHeader title='Edit the selected Post'></PageHeader>
             <GridWrapper>
             {options ?
-                <DynamicForm options={options} formSubmitFunction={editPost}>
+                <DynamicForm options={options} formSubmitFunction={editPost} defaultobjs={data}>
                     
                 </DynamicForm>
                 : 

@@ -201,7 +201,7 @@ class PostImageView(GenericAPIView):
 
         logger.info('Doing lookup of post_uuid [%s]', post_uuid)
         post_obj = Post.objects.get(id=post_uuid)
-
+        last_modified = toLastModifiedHeader(post_obj.updated_at)
         # This code is modified from a post by sadashiv30 on StackOverflow on 2015-09-15, retrieved on 2023-03-20
         # https://stackoverflow.com/questions/22276518/returning-binary-data-with-django-httpresponse
         postcontent = post_obj.content.split(',')[1]
@@ -210,7 +210,7 @@ class PostImageView(GenericAPIView):
 
         logger.info(postcontent[:10])
         if post_obj and 'text' not in post_obj.content_type:
-            return HttpResponse(decoded, content_type='application/octet-stream')
+            return HttpResponse(decoded, content_type='application/octet-stream', headers={'Last-Modified': last_modified})
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
   

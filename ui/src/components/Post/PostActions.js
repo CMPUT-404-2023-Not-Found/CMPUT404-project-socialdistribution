@@ -21,6 +21,8 @@ import ShareAction from '../Actions/ShareAction/ShareAction';
 import Comment from './Comment';
 import BasicPagination from '../common/BasicPagination/BasicPagination';
 import { parsePathFromURL } from '../../utils/Utils';
+import backend from '../../utils/Backend';
+
 
 /*
 This code is modified from a documentation guide on Material UI Card components from Material UI SAS 2023, retrieved 2023-03-13 from mui.com
@@ -41,6 +43,7 @@ const ExpandMore = styled((props) => {
 const PostActions = ({ disableLike=false, disableShare=false, disableComments=false, postNodeId }) => {    
     const [expanded, setExpanded] = React.useState(false);
     const [comments, setComments] = React.useState([]);
+    const [isLiked, setIsLiked] = React.useState(false);
     const postPath = parsePathFromURL(postNodeId);
     const commentEndpoint = `${postPath}/comments`;
     const itemResultsKey = 'comments';
@@ -48,6 +51,11 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
+    // deal with like button
+    const handleLike = async () => {
+        setIsLiked(!isLiked);
+      };
+
 
     const renderComments = () => {
         if (!comments || comments.length <= 0) {
@@ -81,8 +89,8 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
     return (<>
     <CardActions disableSpacing>
         {!disableLike && 
-        <IconButton aria-label="like">
-            <FavoriteIcon />
+        <IconButton aria-label="like" onClick={handleLike}>
+            <FavoriteIcon style={{ color: isLiked ? '#CC0000' : 'inherit' }} />
         </IconButton>
         }
         {!disableShare && <ShareAction objectNodeId={postNodeId}/>}

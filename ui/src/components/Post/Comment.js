@@ -6,8 +6,17 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 
 import BasicAvatar from '../common/BasicAvatar/BasicAvatar';
+import IconButton from '@mui/material/IconButton';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 
 const Comment = ({ comment }) => {
+    // deal with like for comments
+    const [isThumbUp, setIsThumbUp] = React.useState(false);
+    const handleThumbUp = async () => {
+        setIsThumbUp(!isThumbUp);
+      };
+
 
     const renderCommentBody = (content, contentType) => {
         switch (contentType) {
@@ -40,6 +49,9 @@ const Comment = ({ comment }) => {
                 renderCommentBody(comment.comment, comment.contentType)
             }
             />
+            <IconButton aria-label="like" onClick={handleThumbUp} >
+                <ThumbUpIcon style={{ color: isThumbUp ? '#ef9645' : 'inherit' }}/>
+            </IconButton>  
         </ListItem>
     )
 }

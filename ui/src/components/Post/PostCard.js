@@ -11,7 +11,7 @@ import PostHeader from './PostHeader';
 import PostContent from './PostContent';
 import PostActions from './PostActions'
 
-const PostCard = ({ post, ...actions }) => {
+const PostCard = ({ post, source='', ...actions }) => {
     return (
         <BasicCard
             header={
@@ -31,6 +31,7 @@ const PostCard = ({ post, ...actions }) => {
                 <PostActions 
                     {...actions}
                     postNodeId={post.id}
+                    source={source}
                 />}
         />
     );

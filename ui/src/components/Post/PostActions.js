@@ -44,18 +44,24 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-const PostActions = ({ disableLike=false, disableShare=false, disableComments=false, postNodeId }) => {    
+const PostActions = ({ disableLike=false, disableShare=false, disableComments=false, postNodeId , source=''}) => {    
     const [expanded, setExpanded] = React.useState(false);
     const [comments, setComments] = React.useState([]);
     const [commentText, setCommentText] = React.useState('');
 
-    const [ showNotification, setShowNotification ] = React.useState(false);
-    const [ notificationSeverity, setNotificationSeverity ] = React.useState('info');
-    const [ notificationMessage, setNotificationMessage ] = React.useState('');
-
     const { user, authTokens, logoutUser } = React.useContext(AuthContext);
     const postPath = parsePathFromURL(postNodeId);
-    const commentEndpoint = `${postPath}/comments`;
+    let commentEndpoint;
+    let addComments = true;
+    console.log('out', postNodeId);
+    if (source.includes('node')) {
+        addComments = false;
+        console.log('in', postNodeId);
+        commentEndpoint = `/api/node/${postNodeId}/comments`;
+
+    } else {
+        commentEndpoint = `${postPath}/comments`;
+    }
     const itemResultsKey = 'comments';
 
     const handleExpandClick = () => {
@@ -74,39 +80,21 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
             )
 
             if (response.status && response.status === 201) {
-                setNotificationMessage('Comment Posted!');
-                setNotificationSeverity('success');
-                setShowNotification(true);
+                console.debug(responseData);
+                setCommentText('');
+                setComments([]); // to trigger the rerendering
             } else if (response.statusText === 'Unauthorized'){
-                // logoutUser();
+                logoutUser();
             } else {
                 console.log('Failed to send request');
                 console.debug(response);
             }
         } catch (error) {
+            // technically now the try catch is not needed but will still leave it in just in case
             console.log('Probably tried to comment on another node, ', error);
         }
 
-        console.log(user);
-        let inboxData = {
-            summary: `${user.displayName} commented on your post`,
-            type: 'comment',
-            object: {
-                url: `${postNodeId}/comments/`
-            },
-            inbox_urls : [getInboxUrl(`${user.url}`)]
-        }
-        const [ frResponse, frData ] = await Backend.post(`/api/node/object/`, authTokens.access, JSON.stringify(inboxData));
-        if (frResponse.status && frResponse.status === 201) {
-            setNotificationMessage('Follow request sent!');
-            setNotificationSeverity('success');
-            setShowNotification(true);
-        } else if (frResponse.statusText === 'Unauthorized'){
-            logoutUser();
-        } else {
-            console.log('Failed to send request');
-            console.debug(frResponse);
-        }
+        // removed sending comment to inbox
     }
 
     const renderComments = () => {
@@ -166,21 +154,27 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
             alignItems: 'flex-start',
             paddingLeft: '20pt',
         }}>
-            <BasicAvatar profile={user} size='small'></BasicAvatar>
-            <TextField sx={{
-                marginLeft: '10pt',
-                width: '80%',
-                marginRight: '10pt',
-            }} value={commentText} variant='standard' placeholder='Add a comment ...' multiline onChange={
-                (e) => {setCommentText(e.target.value)}
-            }></TextField>
-            <IconButton onClick={sendComment}>
-                <SendIcon color='primary'></SendIcon>
-            </IconButton>
+        {   addComments && 
+            <>
+                <BasicAvatar profile={user} size='small'></BasicAvatar>
+                <TextField sx={{
+                    marginLeft: '10pt',
+                    width: '80%',
+                    marginRight: '10pt',
+                }} value={commentText} variant='standard' placeholder='Add a comment ...' multiline onChange={
+                    (e) => {setCommentText(e.target.value)}
+                }></TextField>
+                <IconButton onClick={sendComment}>
+                    <SendIcon color='primary'></SendIcon>
+                </IconButton>
+            </>
+        }
             
         </Box>
         <CardContent>
+            {/* adding key will trigger rerendering on a new comment being added */}
             <BasicPagination 
+                key={comments}
                 itemEndpoint={commentEndpoint} 
                 itemResultsKey={itemResultsKey}
                 setItems={(comments) => setComments(comments)}

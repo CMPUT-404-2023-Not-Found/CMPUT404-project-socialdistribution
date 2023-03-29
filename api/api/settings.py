@@ -43,6 +43,8 @@ CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOWED_ORIGINS = [
     "https://socialdistcmput404.herokuapp.com",
     "https://social-t30.herokuapp.com",
+    "http://localhost:3000",
+    "http://localhost:8000"
 ]
 # if not CORS_ORIGIN_ALLOW_ALL:
 #     CORS_ORIGIN_WHITELIST = os.getenv("DJANGO_CORS_ORIGIN_WHITELIST").split(" ") # type: ignore

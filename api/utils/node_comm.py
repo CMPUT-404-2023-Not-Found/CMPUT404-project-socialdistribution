@@ -232,7 +232,6 @@ class NodeComm():
         host_url = self.parse_host_url(inbox_url)
         node_data = self.get_node_auth(host_url)
         if not node_data: return ret, ret_status
-        logger.info('xxx %s', data)
         try:
             r = requests.post(url=inbox_url, 
                             json=data, 

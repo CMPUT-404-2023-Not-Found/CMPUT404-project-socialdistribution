@@ -10,6 +10,7 @@ const SelectInput = ({register, obj, onChange}) => {
             <InputLabel
             style={{ backgroundColor: '#eaeff1',fontWeight: 'bold'  }}
             htmlFor={obj.name}
+            required
             >
             {/* {obj.help_text ? obj.help_text : obj.label} */}
             {obj.label}
@@ -17,8 +18,10 @@ const SelectInput = ({register, obj, onChange}) => {
           <Select  {...register(obj.name)}
           style={{ width: '15%',marginBottom:20 }}
           onChange={onChange}
+          required
           >
             <MenuItem >None</MenuItem>
+            
             {/* <MenuItem value="">
               {obj.help_text ? obj.help_text : obj.label}
             </MenuItem> */}

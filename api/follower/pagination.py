@@ -15,7 +15,6 @@ rev = 'rev: $xFgLu67$x'
 class FollowerPagination(CustomPagination):
 
     def get_paginated_response(self, follower_list):
-        logger.info(follower_list)
         lookup_list = []
         for follower in follower_list:
             lookup_list.append({

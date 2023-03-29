@@ -11,12 +11,14 @@ import React, { useContext, useEffect, useState } from 'react';
 import { CardContent, CardHeader, IconButton, Typography, Box, Button, TextField, FormControl,InputAdornment ,Tooltip} from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
 
-import BasicAvatar from '../../components/common/BasicAvatar/BasicAvatar';
 import BasicCard from '../../components/common/BasicCard/BasicCard';
 import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
 import AuthContext from '../../context/AuthContext';
 import Backend from '../../utils/Backend';
 import PageHeader from '../../components/Page/PageHeader';
+import AuthorCard from '../../components/Author/AuthorCard';
+import BasicAvatar from '../../components/common/BasicAvatar/BasicAvatar';
+
 
 import { Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
@@ -179,9 +181,7 @@ const Profile = () => {
             </BasicCard>
         )
     }
-    
-    
-    
+     
 
     const renderUpdateForm = () => {
         if (!update) {

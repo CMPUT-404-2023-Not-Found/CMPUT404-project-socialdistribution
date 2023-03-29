@@ -175,7 +175,7 @@ const DynamicForm = ({options, formSubmitFunction}) => {
             } else if (i === 2) {
               return (
                 <>
-                  {contentType === "image/png;base64" || contentType === "image/jpeg;base64" ? (
+                  {contentType === "image/png;base64" || contentType === "image/jpeg;base64" || contentType === "application/base64"? (
                     fileInputs.map((fileInput, i) => {
                       return (
                         <FileInput key={i} register={register} obj={fileInput} />

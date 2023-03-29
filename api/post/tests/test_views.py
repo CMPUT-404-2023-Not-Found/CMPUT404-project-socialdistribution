@@ -123,6 +123,8 @@ class PostViewTests(Base):
 
         expect_post_node_id = f'{self.author.get_node_id()}/posts/{self.author_post_uuid}'
         self.assertEqual(detail_response.data['id'], expect_post_node_id)
+        self.assertEqual(detail_response.data['likeCount'], 0)
+        self.assertEqual(detail_response.data['commentCount'], 1)
     
     def test_get_public_post_as_stranger(self):
         detail_post_url = self.get_detail_post_url(self.author.id, self.author_post_uuid)     

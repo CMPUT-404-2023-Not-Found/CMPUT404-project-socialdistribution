@@ -21,6 +21,10 @@ import ShareAction from '../Actions/ShareAction/ShareAction';
 import Comment from './Comment';
 import BasicPagination from '../common/BasicPagination/BasicPagination';
 import { parsePathFromURL } from '../../utils/Utils';
+import { Box, TextField } from '@mui/material';
+import BasicAvatar from '../common/BasicAvatar/BasicAvatar';
+import AuthContext from '../../context/AuthContext';
+import { height } from '@mui/system';
 
 /*
 This code is modified from a documentation guide on Material UI Card components from Material UI SAS 2023, retrieved 2023-03-13 from mui.com
@@ -41,6 +45,7 @@ const ExpandMore = styled((props) => {
 const PostActions = ({ disableLike=false, disableShare=false, disableComments=false, postNodeId }) => {    
     const [expanded, setExpanded] = React.useState(false);
     const [comments, setComments] = React.useState([]);
+    const { user, logoutUser } = React.useContext(AuthContext);
     const postPath = parsePathFromURL(postNodeId);
     const commentEndpoint = `${postPath}/comments`;
     const itemResultsKey = 'comments';
@@ -101,6 +106,18 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
     https://mui.com/material-ui/react-list/ */}
     {!disableComments && 
     <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <Box sx={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            paddingLeft: '20pt',
+        }}>
+            <BasicAvatar profile={user} size='small'></BasicAvatar>
+            <TextField sx={{
+                marginLeft: '10pt',
+                width: '80%',
+                marginRight: '10pt',
+            }} variant='standard'></TextField>
+        </Box>
         <CardContent>
             <BasicPagination 
                 itemEndpoint={commentEndpoint} 

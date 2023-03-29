@@ -232,6 +232,7 @@ class NodeComm():
         host_url = self.parse_host_url(inbox_url)
         node_data = self.get_node_auth(host_url)
         if not node_data: return ret, ret_status
+        logger.info('xxx %s', data)
         try:
             r = requests.post(url=inbox_url, 
                             json=data, 
@@ -252,7 +253,7 @@ class NodeComm():
         return ret, ret_status
 
     # Helper functions
-    def create_inbox_obj_data(self, author, request_data):
+    def create_inbox_obj_data(self, author, request_data, inbox_type):
         ret = None
         data = {
             'author': { 'url': author.get_node_id()}
@@ -261,7 +262,11 @@ class NodeComm():
         serializer = InboxSerializer(data=data)
         if serializer.is_valid():
             ret = serializer.data
-            ret['author'] = ExistingAuthorSerializer(Author.objects.get(id=author.id)).data
+            if inbox_type == 'follow':
+                ret['actor'] = ExistingAuthorSerializer(Author.objects.get(id=author.id)).data
+                ret['object'] = { 'url': ret.pop('object') }
+            else:
+                ret['author'] = ExistingAuthorSerializer(Author.objects.get(id=author.id)).data
         else:
             logger.info('Could not create inbox object e %s', serializer.errors)
         return ret

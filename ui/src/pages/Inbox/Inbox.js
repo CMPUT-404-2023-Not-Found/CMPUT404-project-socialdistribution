@@ -11,8 +11,10 @@ import CardContent from '@mui/material/CardContent';
 import { useNavigate } from 'react-router-dom';
 
 import AuthContext from '../../context/AuthContext';
+import Backend from '../../utils/Backend';
 import BasicPagination from '../../components/common/BasicPagination/BasicPagination';
 import BasicCard from '../../components/common/BasicCard/BasicCard';
+import CommonButton from '../../components/common/CommonButton/CommonButton';
 import PostCard from '../../components/Post/PostCard';
 import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
 import PostHeader from '../../components/Post/PostHeader';
@@ -24,10 +26,25 @@ import FollowCard from '../../components/Follow/FollowCard';
 const Inbox = () => {
     //  variable declarations -------------------------------------
     const [ inboxItems, setInboxItems ] = useState([]);
-    const { user } = useContext(AuthContext);
+    const { user, authTokens, logoutUser } = useContext(AuthContext);
     const navigate = useNavigate();
     const inboxEndpoint = `/api/authors/${user.user_id}/inbox`;
     const itemResultsKey = 'items';
+
+    const onClickClearInbox = async (e) => {
+        e.preventDefault();
+        console.debug('Clearning inbox ...');
+        console.debug(inboxEndpoint);
+        const response = await Backend.delete(inboxEndpoint, authTokens.access);
+        if (response.status && response.status === 204) {
+            console.info('Cleared inbox data ...');
+            setInboxItems([]);
+        } else if (response.statusText === 'Unauthorized'){
+            logoutUser();
+        } else {
+            console.error('Failed to clear inbox data');
+        }
+    }
 
     // RENDER APP =================================================
     const renderInbox = () => {
@@ -87,6 +104,7 @@ const Inbox = () => {
         <>
             <PageHeader title='Inbox' disableNotification></PageHeader>
             <GridWrapper>
+            <CommonButton variant='contained' onClick={onClickClearInbox}>Clear Inbox</CommonButton>
             <BasicPagination 
                 itemEndpoint={inboxEndpoint} 
                 itemResultsKey={itemResultsKey} 

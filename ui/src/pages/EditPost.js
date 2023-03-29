@@ -124,7 +124,7 @@ const EditPost = () => {
             <PageHeader title='Edit the selected Post'></PageHeader>
             <GridWrapper>
             {options ?
-                <DynamicForm options={options} formSubmitFunction={editPost} defaultobjs={data}>
+                <DynamicForm options={options} formSubmitFunction={editPost}>
                     
                 </DynamicForm>
                 : 

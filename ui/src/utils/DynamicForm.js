@@ -23,7 +23,7 @@ import Stack from '@mui/material/Stack';
     Got the idea for splitting into components from here:
     https://medium.com/swlh/how-to-generate-dynamic-form-from-json-with-react-5d70386bb38b
 */
-const DynamicForm = ({options, formSubmitFunction, defaultobjs}) => {
+const DynamicForm = ({options, formSubmitFunction}) => {
     // PROBLEM
     // properties in the options object must be exactly named as this form expects
     // If a property isn't there, easy to get errors due to accessing null object
@@ -34,11 +34,7 @@ const DynamicForm = ({options, formSubmitFunction, defaultobjs}) => {
     // into useForm
 
     //  variable declarations -------------------------------------
-    const { register, handleSubmit } = useForm({
-      defaultValues: {...defaultobjs
-      }
-    });
-    console.log(defaultobjs);
+    const { register, handleSubmit } = useForm({});
     const textInputs = [];
     const selectInputs = [];
     const checkboxInputs = [];

@@ -223,18 +223,21 @@ class PostListAllView(ListAPIView):
         '''
         GET a paginated list of all PUBLIC posts
         '''
-        return super().get(request, *args, **kwargs)
-    
-    @extend_schema(
-        operation_id='post_list_all'
-    )
-    def get_queryset(self):
-        '''
-        Utilized by self.get
-        '''
         logger.info(rev)
-        if (self.request.query_params): # type: ignore
-            logger.info('Get recent posts on system: with query_params [%s]', str(self.request.query_params)) # type: ignore
+        if (request.query_params):
+            logger.info('Get all recent PUBLIC posts on system: with query_params [%s]', str(request.query_params))
         else:
-            logger.info('Get recent posts on system')
-        return self.queryset.filter(visibility='PUBLIC').filter(unlisted=False).order_by('-published')
+            logger.info('Geting all recent PUBLIC posts on system')
+        queryset = self.queryset.filter(visibility='PUBLIC').filter(unlisted=False).order_by('-published')
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            last_modified = getMaxLastModifiedHeader([ post.updated_at for post in page ])
+            serializer = self.get_serializer(page, many=True)
+            paginated_response = self.get_paginated_response(serializer.data)
+            paginated_response.headers['Last-Modified'] = last_modified
+            return paginated_response
+
+        last_modified = getMaxLastModifiedHeader([ post.updated_at for post in queryset ])
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, headers={'Last-Modified': last_modified})

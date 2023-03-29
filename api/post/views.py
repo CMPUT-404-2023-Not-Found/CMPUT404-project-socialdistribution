@@ -17,7 +17,7 @@ from .models import Category, Post
 from utils.permissions import IsAuthenticatedWithJWT, NodeReadOnly, OwnerCanWrite
 from follower.models import Follower
 from utils.node_comm import NodeComm
-from utils.helper_funcs import  getMaxLastModifiedHeader
+from utils.helper_funcs import toLastModifiedHeader, getMaxLastModifiedHeader
 
 import logging
 logger = logging.getLogger('django')
@@ -87,7 +87,7 @@ class PostListCreateView(ListCreateAPIView):
         if isFriend(follower_url, author_uuid) or request.user.groups.filter(name='node').exists():
             logger.info('Friend [%s] is asking public/private posts for author_uuid: [%s]', follower_url, author_uuid)   
             filter.pop('visibility')
-        elif self.request.user.id == author_uuid:
+        elif request.user.id == author_uuid:
             logger.info('Retreiving all posts for owner [%s]', author_uuid)   
             filter.pop('unlisted')
             filter.pop('visibility')
@@ -116,40 +116,21 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
         GET a specific post content from post_uuid under author_uuid
         '''
         logger.info(rev)
-        post_id = self.kwargs.get(self.lookup_field)
-        author_uuid = kwargs.get(self.lookup_url_kwarg)
+        post_id = kwargs.get(self.lookup_field)
+        author_uuid = kwargs.get('author_uuid')
         logger.info('Getting content for post id: [%s]', post_id)
-        # Determine filter based on requester's identity
         follower_url = request.user.get_node_id()
         instance = self.get_object()
+        last_modified = toLastModifiedHeader(instance.updated_at)
+        serializer = PostSerializer(instance)
         if isFriend(follower_url, author_uuid) or request.user.groups.filter(name='node').exists():
             logger.info('Friend [%s] is asking public/private posts for author_uuid: [%s]', follower_url, author_uuid)   
-            filter.pop('visibility')
-        elif self.request.user.id == author_uuid:
-            logger.info('Retreiving all posts for owner [%s]', author_uuid)   
-            filter.pop('unlisted')
-            filter.pop('visibility')
-
-    def get_object(self):
-        logger.info(rev)
-        post_id = self.kwargs.get(self.lookup_field)
-        logger.info('Getting content for post id: [%s]', post_id)
-        return super().get_object()
-
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        if serializer.data['visibility'] == "PUBLIC":
-            return Response(serializer.data)
-
-        author_uuid = self.kwargs.get('author_uuid')
-        follower_url = self.request.user.get_node_id()
-        filter = {'author_id': author_uuid, 'visibility': "PUBLIC", 'unlisted': False}
-        if isFriend(follower_url, author_uuid) or self.request.user.groups.filter(name='node').exists():
-            logger.info('Get private post for author_uuid: [%s]', author_uuid)      
-            return Response(serializer.data)
+            return Response(serializer.data, headers={'Last-Modified': last_modified})
+        elif request.user.id == author_uuid:
+            logger.info('Retreiving posts for owner [%s]', author_uuid)
+            return Response(serializer.data, headers={'Last-Modified': last_modified})
         
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
+        return Response(status=status.HTTP_403_FORBIDDEN)
 
     @extend_schema(
         operation_id='post_post_update'

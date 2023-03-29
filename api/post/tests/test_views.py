@@ -137,7 +137,7 @@ class PostViewTests(Base):
     def test_get_friend_post_as_a_stranger(self):
         friend_post_url = self.get_detail_post_url(self.author.id, self.friend_post_uuid) 
         detail_response = self.clarence0_client.get(friend_post_url)
-        self.assertEqual(detail_response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(detail_response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_unlisted_post(self):
         pass

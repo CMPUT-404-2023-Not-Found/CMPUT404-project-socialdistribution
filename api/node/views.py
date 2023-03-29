@@ -65,7 +65,7 @@ class NodeView(GenericAPIView):
             logger.error('Invalid number of inboxes [%s] supported [%s], denying request', num_receiving_inbox, max_receiving_inbox)
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
-        data_to_send = NodeComm.create_inbox_obj_data(author=request.user, request_data=request.data)
+        data_to_send = NodeComm.create_inbox_obj_data(author=request.user, request_data=request.data, inbox_type=request.data['type'])
         logger.info('Sending object [%s] [%s] to [%s] inboxes', data_to_send['type'], data_to_send['object'], num_receiving_inbox)
         thread = Thread(target=NodeComm.send_object, args=(inbox_urls, data_to_send))
         thread.start()

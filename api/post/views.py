@@ -60,7 +60,7 @@ class PostListCreateView(ListCreateAPIView):
                 'type': 'post',
                 'object': post.get_node_id()
             }
-            inbox_obj = nc.create_inbox_obj_data(author_obj, inbox_obj_raw)
+            inbox_obj = nc.create_inbox_obj_data(author_obj, inbox_obj_raw, 'post')
             followers = Follower.objects.filter(followee=author_obj)
             logger.info('Sending new post [%s] to inboxes of followers [%s] of author_uuid [%s]', post.id, len(followers), author_uuid)
             follower_inboxs = []
@@ -111,7 +111,25 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     permission_classes = [IsAuthenticatedWithJWT|OwnerCanWrite|NodeReadOnly]
 
-    
+    def get(self, request, *args, **kwargs):
+        '''
+        GET a specific post content from post_uuid under author_uuid
+        '''
+        logger.info(rev)
+        post_id = self.kwargs.get(self.lookup_field)
+        author_uuid = kwargs.get(self.lookup_url_kwarg)
+        logger.info('Getting content for post id: [%s]', post_id)
+        # Determine filter based on requester's identity
+        follower_url = request.user.get_node_id()
+        instance = self.get_object()
+        if isFriend(follower_url, author_uuid) or request.user.groups.filter(name='node').exists():
+            logger.info('Friend [%s] is asking public/private posts for author_uuid: [%s]', follower_url, author_uuid)   
+            filter.pop('visibility')
+        elif self.request.user.id == author_uuid:
+            logger.info('Retreiving all posts for owner [%s]', author_uuid)   
+            filter.pop('unlisted')
+            filter.pop('visibility')
+
     def get_object(self):
         logger.info(rev)
         post_id = self.kwargs.get(self.lookup_field)
@@ -126,6 +144,7 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
 
         author_uuid = self.kwargs.get('author_uuid')
         follower_url = self.request.user.get_node_id()
+        filter = {'author_id': author_uuid, 'visibility': "PUBLIC", 'unlisted': False}
         if isFriend(follower_url, author_uuid) or self.request.user.groups.filter(name='node').exists():
             logger.info('Get private post for author_uuid: [%s]', author_uuid)      
             return Response(serializer.data)

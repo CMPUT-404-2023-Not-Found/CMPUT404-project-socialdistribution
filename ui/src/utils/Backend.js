@@ -60,17 +60,17 @@ class Backend {
         return [ response, (responseData ? responseData : false)]
     }
 
-    async postDirect(path, token, requestData, requestDataType='application/json') {
-        const url = path;
+    async put(path, token, requestData, requestDataType='application/json') {
+        const url = this.API_URL + path;
         let response = null;
         try {
             response = await fetch(url, {
                 headers: {
                     'Authorization': 'Bearer ' + String(token),
-                    'Content-Type': requestDataType
+                    'Content-Type': requestDataType ? requestDataType : null
                 },
-                method: 'post',
-                body: requestData
+                method: 'put',
+                body: requestData ? requestData : null
             });
         } catch (error) {
             console.error('Failed to call backend. e ');

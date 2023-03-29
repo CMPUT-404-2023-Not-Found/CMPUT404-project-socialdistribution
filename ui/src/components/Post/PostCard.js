@@ -31,6 +31,8 @@ const PostCard = ({ post, source='', ...actions }) => {
                 <PostActions 
                     {...actions}
                     postNodeId={post.id}
+                    likeCount={post.likeCount ? post.likeCount : null}
+                    commentCount={post.commentCount ? post.commentCount : post.count}
                     source={source}
                 />}
         />

@@ -6,7 +6,8 @@ from rest_framework import serializers
 from rest_framework.fields import CharField, ChoiceField, DateTimeField, IntegerField, ListField, URLField
 
 from author.serializers import ExistingAuthorSerializer
-from comment.serializers import CommentSerializer
+from comment.models import Comment
+from like.models import Like
 from .models import Category, Post
 
 import logging
@@ -23,8 +24,17 @@ class PostSerializer(serializers.ModelSerializer):
     updated_at      = DateTimeField(read_only=True, required=False)
     rev             = IntegerField(read_only=True, required=False)
 
-    commentCount    = IntegerField(source='comment_count', read_only=True, required=False)
-    likeCount       = IntegerField(source='like_count', read_only=True, required=False)
+    commentCount    = serializers.SerializerMethodField('get_commentCount', read_only=True)
+    @extend_schema_field(IntegerField)
+    def get_commentCount(self, obj):
+        comment_count = Comment.objects.filter(post=obj.id).count()
+        return comment_count
+
+    likeCount       = serializers.SerializerMethodField('get_likeCount', read_only=True)
+    @extend_schema_field(IntegerField)
+    def get_likeCount(self, obj):
+        like_count = Like.objects.filter(post=obj.id).count()
+        return like_count
 
     origin          = URLField(required=False)
     source          = URLField(required=False)

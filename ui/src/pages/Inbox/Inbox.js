@@ -5,14 +5,18 @@ ui/src/pages/Inbox/Inbox.js
 */
 
 import React, { useContext, useState } from 'react';
+import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import { useNavigate } from 'react-router-dom';
+import Snackbar from '@mui/material/Snackbar';
 
 import AuthContext from '../../context/AuthContext';
+import Backend from '../../utils/Backend';
 import BasicPagination from '../../components/common/BasicPagination/BasicPagination';
 import BasicCard from '../../components/common/BasicCard/BasicCard';
+import CommonButton from '../../components/common/CommonButton/CommonButton';
 import PostCard from '../../components/Post/PostCard';
 import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
 import PostHeader from '../../components/Post/PostHeader';
@@ -25,10 +29,40 @@ import Comment from '../../components/Post/Comment';
 const Inbox = () => {
     //  variable declarations -------------------------------------
     const [ inboxItems, setInboxItems ] = useState([]);
-    const { user } = useContext(AuthContext);
+    const [ notification, setNotification ] = useState({
+        open: false,
+        message: 'No message',
+        severity: 'info'
+    });
+    const { user, authTokens, logoutUser } = useContext(AuthContext);
     const navigate = useNavigate();
     const inboxEndpoint = `/api/authors/${user.user_id}/inbox`;
     const itemResultsKey = 'items';
+
+    //  event functions -------------------------------------------
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setNotification({...notification, open: false});
+    };
+
+    const onClickClearInbox = async (e) => {
+        e.preventDefault();
+        console.debug('Clearning inbox ...');
+        console.debug(inboxEndpoint);
+        const response = await Backend.delete(inboxEndpoint, authTokens.access);
+        if (response.status && response.status === 204) {
+            console.info('Cleared inbox data ...');
+            setInboxItems([]);
+            setNotification({...notification, open: true, message: 'Deleted inbox!', severity: 'success'})
+        } else if (response.statusText === 'Unauthorized'){
+            logoutUser();
+        } else {
+            console.error('Failed to clear inbox data');
+            setNotification({...notification, open: true, message: 'Failed to clear inbox!', severity: 'error'})
+        }
+    }
 
     // RENDER APP =================================================
     const renderInbox = () => {
@@ -88,6 +122,16 @@ const Inbox = () => {
         <>
             <PageHeader title='Inbox' disableNotification></PageHeader>
             <GridWrapper>
+            <CommonButton variant='contained' onClick={onClickClearInbox}>Clear Inbox</CommonButton>
+            <Snackbar
+                open={notification.open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+            >
+                <Alert onClose={handleClose} severity={notification.severity} sx={{ width: '100%' }}>
+                    {notification.message}
+                </Alert>
+            </Snackbar>
             <BasicPagination 
                 itemEndpoint={inboxEndpoint} 
                 itemResultsKey={itemResultsKey} 

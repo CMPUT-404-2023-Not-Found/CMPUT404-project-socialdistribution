@@ -20,6 +20,7 @@ import PostContent from '../../components/Post/PostContent';
 import PageHeader from '../../components/Page/PageHeader';
 import LikeCard from '../../components/Like/LikeCard';
 import FollowCard from '../../components/Follow/FollowCard';
+import Comment from '../../components/Post/Comment';
 
 const Inbox = () => {
     //  variable declarations -------------------------------------
@@ -49,7 +50,7 @@ const Inbox = () => {
                     itemsRender.push(<PostCard key={idx * 2} post={item} />);
                     break;
                 case 'comment':
-                    // TODO render
+                    itemsRender.push(<Comment key={idx * 2} comment={item} />)
                     break;
                 case 'like':
                     itemsRender.push(<LikeCard key={idx * 2} like={item}/>)

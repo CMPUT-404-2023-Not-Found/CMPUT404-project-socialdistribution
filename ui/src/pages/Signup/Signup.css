@@ -1,0 +1,54 @@
+#Signup {
+    text-align: center;
+    display:flex;
+    min-height:  100vh;
+    align-items: center;
+    justify-content: center;
+    color: #265156;
+    background-image: url(/src/images/signupbg.png);
+    background-size: cover;
+    background-position: center center;
+}
+
+.h1{
+    font-Family: "'IM Fell English SC', serif",
+}
+.signup-style,.signup-form{
+    display:flex;
+    flex-direction: column;
+}
+.signup-style{
+    padding: 4.5rem;
+    border: 1px solid #265156;
+    border-radius: 10px;    
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+  }
+  
+.icon-label {
+    display: flex;
+    align-items: center;
+    margin-right: 7px;
+    margin-left: 5px;
+}
+
+.input-container input { 
+    flex: 1;
+    padding: 7pt;
+    margin-bottom: 5pt;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+
+.show-password-icon {
+    margin-left: -20px;
+    cursor: pointer;
+}
+
+.login-link{
+    padding: 20px;
+}

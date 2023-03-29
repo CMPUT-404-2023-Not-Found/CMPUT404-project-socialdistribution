@@ -7,7 +7,7 @@ from rest_framework.fields import CharField, ChoiceField, DateTimeField, Integer
 
 from author.serializers import ExistingAuthorSerializer
 from comment.serializers import CommentSerializer
-from .models import Post
+from .models import Category, Post
 
 import logging
 logger = logging.getLogger('django')
@@ -28,26 +28,17 @@ class PostSerializer(serializers.ModelSerializer):
 
     origin          = URLField(required=False)
     source          = URLField(required=False)
-
+  
     categories      = serializers.SerializerMethodField('get_categories')
     @extend_schema_field(ListField)
     # def get_categories(self, obj): return ['this', 'is', 'a', 'hack']
+    
     def get_categories(self, obj): return obj.get_category_item_list()
+
     contentType     = ChoiceField(choices=Post.CONTENT_TYPE_OPTIONS, source='content_type', required=True)
     type            = serializers.SerializerMethodField('get_type')
     @extend_schema_field(CharField)
     def get_type(self, obj): return 'post'
-
-    content         = serializers.SerializerMethodField('get_content')
-
-    # char or url?
-    @extend_schema_field(CharField)
-    def get_content(self, obj):
-        if 'text' in obj.content_type:
-            return obj.content
-        else:
-            return f'{obj.get_node_id()}/image'
-
     
     comments        = serializers.SerializerMethodField('get_comments')
     @extend_schema_field(URLField)
@@ -70,3 +61,13 @@ class PostSerializer(serializers.ModelSerializer):
                     'published', 'visibility', 'unlisted',
                     'rev', 'updated_at'
                 ]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        if 'base64' in representation['contentType']:
+            representation.pop('content')
+            representation.pop('contentType')
+            representation['content'] = f'![]({representation["id"]}/image)'
+            representation['contentType'] = 'text/markdown'
+        return representation

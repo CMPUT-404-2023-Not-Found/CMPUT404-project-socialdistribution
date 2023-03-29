@@ -62,15 +62,16 @@ const CreatePost = () => {
     const createPost = async (formData) => {
         let fileContentTypes = ['image/jpeg;base64', 'image/png;base64', 'application/base64']
         if (fileContentTypes.includes(formData.contentType)) {
+            console.log(formData);
             let fileList = formData.file;
     
             let fileBase64 = await getFileData(fileList[0]);
 
             formData.content =  fileBase64;
         }
-
+        console.log('formData:', formData); // Add this line
         delete formData.file;
-        
+
         const [response, data] = await Backend.post(`/api/authors/${user.user_id}/posts/`, authTokens.access, JSON.stringify(formData));
         if (response.status && response.status === 201) {
             navigate('/posts');
@@ -86,6 +87,7 @@ const CreatePost = () => {
     // did this because options depends on the async function,
     // so if you pass null to dynamic form it gives an error
     // not sure of another way to fix it
+    
     return (
         <>
             <PageHeader title='Create a Post'></PageHeader>

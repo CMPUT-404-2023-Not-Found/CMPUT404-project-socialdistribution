@@ -15,7 +15,6 @@ rev = 'rev: $xFgLu67$x'
 class FollowerPagination(CustomPagination):
 
     def get_paginated_response(self, follower_list):
-        logger.info(follower_list)
         lookup_list = []
         for follower in follower_list:
             lookup_list.append({
@@ -25,6 +24,7 @@ class FollowerPagination(CustomPagination):
         lookup_results = NodeComm.get_objects(lookup_list)
         
         return Response(OrderedDict([
+            ('count', self.page.paginator.count),
             ('type', 'followers'),
             ('items', lookup_results)
         ]))

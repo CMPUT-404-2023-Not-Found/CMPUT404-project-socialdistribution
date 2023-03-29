@@ -11,7 +11,7 @@ import { Tooltip } from '@mui/material';
 
 const BasicAvatar = ({ profile, size }) => {
     const authorName = profile.displayName;
-    const authorNameShort = (authorName ? authorName.charAt(0) : 'h');
+    const authorNameShort = (authorName ? authorName.charAt(0) : '?');
     const avatarSize = (size ? size : 'small');
     if (profile.profileImage) {
         return (

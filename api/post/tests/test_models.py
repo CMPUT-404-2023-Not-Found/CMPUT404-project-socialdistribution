@@ -28,7 +28,9 @@ class PostModelTests(Base):
         create_post_url = self.get_create_post_url(self.author.id)
         response = self.author_client.post(create_post_url, test_post_data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertDictContainsSubset(test_post_data, response.data) # type: ignore
+        self.assertDictContainsSubset(test_post_data, response.data)
+        self.assertEqual(response.data['likeCount'], 0)
+        self.assertEqual(response.data['commentCount'], 0)
     
     '''
     Test Post model post.type

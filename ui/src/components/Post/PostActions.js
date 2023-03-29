@@ -6,6 +6,7 @@ ui/src/components/Post/PostActions.js
 
 import React from 'react';
 import { styled } from '@mui/material/styles';
+import Badge from '@mui/material/Badge';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Collapse from '@mui/material/Collapse';
@@ -38,7 +39,7 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-const PostActions = ({ disableLike=false, disableShare=false, disableComments=false, postNodeId }) => {    
+const PostActions = ({ disableLike=false, disableShare=false, disableComments=false, postNodeId, likeCount, commentCount }) => {    
     const [expanded, setExpanded] = React.useState(false);
     const [comments, setComments] = React.useState([]);
     const postPath = parsePathFromURL(postNodeId);
@@ -82,7 +83,13 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
     <CardActions disableSpacing>
         {!disableLike && 
         <IconButton aria-label="like">
-            <FavoriteIcon />
+            {likeCount ? 
+                <Badge badgeContent={likeCount} color='error'>
+                    <FavoriteIcon />
+                </Badge>
+            :
+                <FavoriteIcon />
+            }
         </IconButton>
         }
         {!disableShare && <ShareAction objectNodeId={postNodeId}/>}

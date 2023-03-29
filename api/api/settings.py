@@ -38,7 +38,7 @@ DEBUG = os.getenv("DJANGO_DEBUG")
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS").split(" ") # type: ignore
 # Allow CORS so that frontend react can talk to backend django
 # Either raw-dog and allow all origins or only whitelisted
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOWED_ORIGINS = [
     "https://socialdistcmput404.herokuapp.com",

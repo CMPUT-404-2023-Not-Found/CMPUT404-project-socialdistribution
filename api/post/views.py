@@ -5,6 +5,7 @@ from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.response import Response
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 import base64
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView,  GenericAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -17,7 +18,7 @@ from .models import Category, Post
 from utils.permissions import IsAuthenticatedWithJWT, NodeReadOnly, OwnerCanWrite
 from follower.models import Follower
 from utils.node_comm import NodeComm
-from utils.helper_funcs import  getMaxLastModifiedHeader
+from utils.helper_funcs import toLastModifiedHeader, getMaxLastModifiedHeader
 
 import logging
 logger = logging.getLogger('django')
@@ -60,7 +61,7 @@ class PostListCreateView(ListCreateAPIView):
                 'type': 'post',
                 'object': post.get_node_id()
             }
-            inbox_obj = nc.create_inbox_obj_data(author_obj, inbox_obj_raw)
+            inbox_obj = nc.create_inbox_obj_data(author_obj, inbox_obj_raw, 'post')
             followers = Follower.objects.filter(followee=author_obj)
             logger.info('Sending new post [%s] to inboxes of followers [%s] of author_uuid [%s]', post.id, len(followers), author_uuid)
             follower_inboxs = []
@@ -87,7 +88,7 @@ class PostListCreateView(ListCreateAPIView):
         if isFriend(follower_url, author_uuid) or request.user.groups.filter(name='node').exists():
             logger.info('Friend [%s] is asking public/private posts for author_uuid: [%s]', follower_url, author_uuid)   
             filter.pop('visibility')
-        elif self.request.user.id == author_uuid:
+        elif request.user.id == author_uuid:
             logger.info('Retreiving all posts for owner [%s]', author_uuid)   
             filter.pop('unlisted')
             filter.pop('visibility')
@@ -111,26 +112,36 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     permission_classes = [IsAuthenticatedWithJWT|OwnerCanWrite|NodeReadOnly]
 
-    
-    def get_object(self):
+    def get(self, request, *args, **kwargs):
+        '''
+        GET a specific post content from post_uuid under author_uuid
+        '''
         logger.info(rev)
-        post_id = self.kwargs.get(self.lookup_field)
+        post_id = kwargs.get(self.lookup_field)
+        author_uuid = kwargs.get('author_uuid')
         logger.info('Getting content for post id: [%s]', post_id)
-        return super().get_object()
+        follower_url = request.user.get_node_id()
 
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        if serializer.data['visibility'] == "PUBLIC":
-            return Response(serializer.data)
+        filter = {'author': author_uuid, 'visibility': 'PUBLIC'}
+        if isFriend(follower_url, author_uuid) or request.user.groups.filter(name='node').exists():
+            logger.info('Friend [%s] is asking public/private posts for author_uuid: [%s]', follower_url, author_uuid)
+            filter.pop('visibility') 
+        elif request.user.id == author_uuid:
+            logger.info('Retreiving posts for owner [%s]', author_uuid)
+            filter.pop('visibility')
 
-        author_uuid = self.kwargs.get('author_uuid')
-        follower_url = self.request.user.get_node_id()
-        if isFriend(follower_url, author_uuid) or self.request.user.groups.filter(name='node').exists():
-            logger.info('Get private post for author_uuid: [%s]', author_uuid)      
-            return Response(serializer.data)
-        
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
+        post = self.get_object(filter)
+        last_modified = toLastModifiedHeader(post.updated_at)
+        serializer = PostSerializer(post)
+        return Response(serializer.data, headers={'Last-Modified': last_modified})
+
+    def get_object(self, filter={}):
+        queryset = self.filter_queryset(self.get_queryset())
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+        filter = {**filter, self.lookup_field: self.kwargs[lookup_url_kwarg]}
+        obj = get_object_or_404(queryset, **filter)
+        self.check_object_permissions(self.request, obj)
+        return obj
 
     @extend_schema(
         operation_id='post_post_update'
@@ -201,7 +212,7 @@ class PostImageView(GenericAPIView):
 
         logger.info('Doing lookup of post_uuid [%s]', post_uuid)
         post_obj = Post.objects.get(id=post_uuid)
-
+        last_modified = toLastModifiedHeader(post_obj.updated_at)
         # This code is modified from a post by sadashiv30 on StackOverflow on 2015-09-15, retrieved on 2023-03-20
         # https://stackoverflow.com/questions/22276518/returning-binary-data-with-django-httpresponse
         postcontent = post_obj.content.split(',')[1]
@@ -210,7 +221,7 @@ class PostImageView(GenericAPIView):
 
         logger.info(postcontent[:10])
         if post_obj and 'text' not in post_obj.content_type:
-            return HttpResponse(decoded, content_type='application/octet-stream')
+            return HttpResponse(decoded, content_type='application/octet-stream', headers={'Last-Modified': last_modified})
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
   
@@ -223,18 +234,21 @@ class PostListAllView(ListAPIView):
         '''
         GET a paginated list of all PUBLIC posts
         '''
-        return super().get(request, *args, **kwargs)
-    
-    @extend_schema(
-        operation_id='post_list_all'
-    )
-    def get_queryset(self):
-        '''
-        Utilized by self.get
-        '''
         logger.info(rev)
-        if (self.request.query_params): # type: ignore
-            logger.info('Get recent posts on system: with query_params [%s]', str(self.request.query_params)) # type: ignore
+        if (request.query_params):
+            logger.info('Get all recent PUBLIC posts on system: with query_params [%s]', str(request.query_params))
         else:
-            logger.info('Get recent posts on system')
-        return self.queryset.filter(visibility='PUBLIC').filter(unlisted=False).order_by('-published')
+            logger.info('Geting all recent PUBLIC posts on system')
+        queryset = self.queryset.filter(visibility='PUBLIC').filter(unlisted=False).order_by('-published')
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            last_modified = getMaxLastModifiedHeader([ post.updated_at for post in page ])
+            serializer = self.get_serializer(page, many=True)
+            paginated_response = self.get_paginated_response(serializer.data)
+            paginated_response.headers['Last-Modified'] = last_modified
+            return paginated_response
+
+        last_modified = getMaxLastModifiedHeader([ post.updated_at for post in queryset ])
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, headers={'Last-Modified': last_modified})

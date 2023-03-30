@@ -11,7 +11,7 @@ import PostHeader from './PostHeader';
 import PostContent from './PostContent';
 import PostActions from './PostActions'
 
-const PostCard = ({ post, ...actions }) => {
+const PostCard = ({ post, source='', ...actions }) => {
     return (
         <BasicCard
             header={
@@ -34,6 +34,7 @@ const PostCard = ({ post, ...actions }) => {
                     likeCount={post.likeCount ? post.likeCount : null}
                     commentCount={post.commentCount ? post.commentCount : post.count}
                     post={post}
+                    source={source}
                 />}
         />
     );

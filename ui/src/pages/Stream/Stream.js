@@ -49,7 +49,7 @@ const Stream = () => {
         let itemsRender = [];
         items.forEach((item, idx) => {
             console.log(item);
-            itemsRender.push(<PostCard key={idx * 2} post={item} />);
+            itemsRender.push(<PostCard key={idx * 2} post={item} source={nodeURL}/>);
             itemsRender.push(<br key={idx * 2 + 1} />);
         });
         return (<>{itemsRender}</>)
@@ -79,7 +79,7 @@ const Stream = () => {
                             name = item.host;
                         }
                         return (
-                            <MenuItem key={i} value={url}>{name}</MenuItem>
+                            (item.api_path) && <MenuItem key={i} value={url}>{name}</MenuItem>
                         )
                     }): null
                     }

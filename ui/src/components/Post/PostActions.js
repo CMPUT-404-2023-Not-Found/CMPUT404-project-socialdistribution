@@ -54,10 +54,10 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
 
     const renderChips = () => {
         const chips = [];
-        chips.push(<Chip label={post.origin}/>)
-        chips.push(<Chip label={post.visibility}/>)
-        post.categories.forEach((category)=>{
-            chips.push(<Chip label= {category}/>)
+        chips.push(<Chip key={0} label={post.origin}/>)
+        chips.push(<Chip key={1} label= {post.visibility}/>)
+        post.categories.forEach((category, idx)=>{
+            chips.push(<Chip key={idx + 2} label={category}/>)
         });
         return chips;
     }   
@@ -105,7 +105,7 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
         </IconButton>
         }
         {!disableShare && <ShareAction objectNodeId={postNodeId}/>}
-        <Stack direction='row' spacing = {1}>{renderChips()}</Stack>
+        <Stack direction='row' spacing={1}>{renderChips()}</Stack>
         {!disableComments &&
         <ExpandMore
             expand={expanded}

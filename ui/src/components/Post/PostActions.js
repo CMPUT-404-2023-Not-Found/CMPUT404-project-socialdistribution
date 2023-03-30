@@ -16,6 +16,8 @@ import IconButton from '@mui/material/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/system/Stack';
 
 import ShareAction from '../Actions/ShareAction/ShareAction';
 
@@ -39,16 +41,26 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-const PostActions = ({ disableLike=false, disableShare=false, disableComments=false, postNodeId, likeCount, commentCount }) => {    
+const PostActions = ({ disableLike=false, disableShare=false, disableComments=false, postNodeId, likeCount, commentCount, post }) => {    
     const [expanded, setExpanded] = React.useState(false);
     const [comments, setComments] = React.useState([]);
     const postPath = parsePathFromURL(postNodeId);
     const commentEndpoint = `${postPath}/comments`;
     const itemResultsKey = 'comments';
-
+    
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
+
+    const renderChips = () => {
+        const chips = [];
+        chips.push(<Chip label={post.origin}/>)
+        chips.push(<Chip label={post.visibility}/>)
+        post.categories.forEach((category)=>{
+            chips.push(<Chip label= {category}/>)
+        });
+        return chips;
+    }   
 
     const renderComments = () => {
         if (!comments || comments.length <= 0) {
@@ -93,6 +105,7 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
         </IconButton>
         }
         {!disableShare && <ShareAction objectNodeId={postNodeId}/>}
+        <Stack direction='row' spacing = {1}>{renderChips()}</Stack>
         {!disableComments &&
         <ExpandMore
             expand={expanded}

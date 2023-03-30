@@ -11,12 +11,12 @@ from post.models import Post
 from .pagination import LikePagination
 
 from comment.models import Comment
-
+from rest_framework.generics import ListCreateAPIView
 import logging
 logger = logging.getLogger('django')
 rev = 'rev: $xna8syn7$x'
 
-class PostLikeView(ListAPIView):
+class PostLikeView(ListCreateAPIView):
     """
     A view for getting a list of likes on a post
     """
@@ -37,7 +37,7 @@ class PostLikeView(ListAPIView):
             logger.info('Get recent likes for post_uuid: [%s]', post_uuid)
         return self.queryset.filter(post=post).order_by('-liked_at')
 
-class CommentLikeView(ListAPIView):
+class CommentLikeView(ListCreateAPIView):
     """
     A view for getting a list of likes on a comment
     """

@@ -4,7 +4,7 @@ ui/src/components/Post/PostActions.js
 
 */
 
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -21,7 +21,9 @@ import ShareAction from '../Actions/ShareAction/ShareAction';
 import Comment from './Comment';
 import BasicPagination from '../common/BasicPagination/BasicPagination';
 import { parsePathFromURL } from '../../utils/Utils';
-import backend from '../../utils/Backend';
+import Backend from '../../utils/Backend';
+import AuthContext from '../../context/AuthContext';
+
 
 
 /*
@@ -44,6 +46,7 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
     const [expanded, setExpanded] = React.useState(false);
     const [comments, setComments] = React.useState([]);
     const [isLiked, setIsLiked] = React.useState(false);
+    const { user, authTokens, logoutUser } = useContext(AuthContext);
     const postPath = parsePathFromURL(postNodeId);
     const commentEndpoint = `${postPath}/comments`;
     const itemResultsKey = 'comments';
@@ -51,11 +54,40 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
-    // deal with like button
+
     const handleLike = async () => {
         setIsLiked(!isLiked);
-      };
+        if (!isLiked) {
+            createLike(postNodeId);
+        }
+    };
 
+    // ${postPath}/likes/ maybe the error?
+    // object: postNodeId, -> backend cannot process this field always null
+    // even Like created, still not showing in backend
+
+    // TODO: fix this
+    // TODO: fetch likes from backend and check if user has liked this post or not (set color to show the like status)
+    // TODO: if user has liked this post, then when user click the like button, it should unlike the post (delete the like object from backend)
+    
+    const createLike = async (postNodeId) => {
+        try {
+          const response = await Backend.post(`${postPath}/likes/`,
+            authTokens.access,
+            JSON.stringify({
+                summary: user.username + " like this post",
+                author: "http://localhost:8000/api/authors/"+ user.user_id,
+                object: postNodeId,
+                "@context": "https://www.w3.org/ns/activitystreams" 
+            })
+          );
+          const [resp, data] = response;
+          console.log('PostNodeID ', postNodeId);
+          console.log('Like created: ', data);
+        } catch (error) {
+          console.error('Error creating like: ', error);
+        }
+      };
 
     const renderComments = () => {
         if (!comments || comments.length <= 0) {

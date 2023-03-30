@@ -11,12 +11,13 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 
 const Comment = ({ comment }) => {
-    // deal with like for comments
     const [isThumbUp, setIsThumbUp] = React.useState(false);
     const handleThumbUp = async () => {
         setIsThumbUp(!isThumbUp);
       };
 
+    // TODO: make like work for comments
+    // same as like for post
 
     const renderCommentBody = (content, contentType) => {
         switch (contentType) {
@@ -35,7 +36,7 @@ const Comment = ({ comment }) => {
                 )
         }
     }
-
+    console.log('comment: ', comment);
     // This code is adapted from the Material UI docs, retrieved on 2023-03-26
     // https://mui.com/material-ui/react-list/
     return (

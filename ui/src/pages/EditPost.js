@@ -21,13 +21,11 @@ const EditPost = () => {
     //  variable declarations -------------------------------------
     let navigate = useNavigate();
     const{ postId } = useParams(); // recieve the selected post id from PostHeader.js
-    console.log(postId);
+    // console.log(postId);
 
     const { user, authTokens, logoutUser } = useContext(AuthContext);
     
     const [options, setOptions] = useState(null);
-    
-    const {register, handleSubmit} = useForm();
 
     const getPostData =  async () => {
         const [response, postData] = await Backend.get(`/api/authors/${user.user_id}/posts/${postId}`, authTokens.access);
@@ -44,8 +42,9 @@ const EditPost = () => {
     let categories;
 
     let postData = getPostData();
+    let defaultValues = {};
     postData.then((data) => {
-        console.log(data);
+        // console.log(data);
         postTitle = data['title'];
         postDescription = data['description'];
         contentType = data['contentType'];
@@ -53,7 +52,12 @@ const EditPost = () => {
         visibility = data['visibility'];
         unlisted = data['unlisted'];
         categories = data['categories'];
+        defaultValues.data = data;
     })
+    
+    const {register, handleSubmit} = useForm();
+
+    
 
     //  event listeners --------------------------------------------
     useEffect(() => {
@@ -69,7 +73,7 @@ const EditPost = () => {
                 }
             }
             setOptions(data);
-            console.log(data);
+            // console.log(data);
         }
 
         getOptions();
@@ -117,14 +121,12 @@ const EditPost = () => {
     // so if you pass null to dynamic form it gives an error
     // not sure of another way to fix it
 
-    let data = {...postData};
-
     return (
         <>
             <PageHeader title='Edit the selected Post'></PageHeader>
             <GridWrapper>
             {options ?
-                <DynamicForm options={options} formSubmitFunction={editPost}>
+                <DynamicForm options={options} formSubmitFunction={editPost} defaultValues={defaultValues.data} postId={postId} >
                     
                 </DynamicForm>
                 : 

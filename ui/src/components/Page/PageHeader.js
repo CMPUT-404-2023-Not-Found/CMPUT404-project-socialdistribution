@@ -22,8 +22,8 @@ const PageHeader = ({ title, disableNotification=false }) => {
         const getNotifications = async () => {
             const [response, data] = await Backend.get(`/api/authors/${user.user_id}/inbox/?count`, authTokens.access);
             if (response.status && response.status === 200) {
-                console.log('Got notifications data: ');
-                console.log(data);
+                // console.log('Got notifications data: ');
+                // console.log(data);
                 data.count && setNotification(data.count);
             } else if (response.statusText === 'Unauthorized'){
                 logoutUser();

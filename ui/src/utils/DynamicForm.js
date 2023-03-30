@@ -1,12 +1,14 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom';
+import AuthContext from '../context/AuthContext';
 import CheckboxInput from './CheckboxInput';
 import FileInput from './FileInput';
 import SelectInput from './SelectInput';
 import TextInput from './TextInput';
 import Button from '@mui/material/Button';
+import Backend from '../utils/Backend';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -23,7 +25,7 @@ import Stack from '@mui/material/Stack';
     Got the idea for splitting into components from here:
     https://medium.com/swlh/how-to-generate-dynamic-form-from-json-with-react-5d70386bb38b
 */
-const DynamicForm = ({options, formSubmitFunction}) => {
+const DynamicForm = ({options, formSubmitFunction, postId}) => {
     // PROBLEM
     // properties in the options object must be exactly named as this form expects
     // If a property isn't there, easy to get errors due to accessing null object
@@ -34,12 +36,53 @@ const DynamicForm = ({options, formSubmitFunction}) => {
     // into useForm
 
     //  variable declarations -------------------------------------
-    const { register, handleSubmit } = useForm({});
+    const { register, handleSubmit,  setValue} = useForm({ mode: 'onBlur' });
+    const { user, authTokens, logoutUser } = useContext(AuthContext);
+    // console.log(postId);
     const textInputs = [];
     const selectInputs = [];
     const checkboxInputs = [];
     const fileInputs = [];
     const [contentType, setContentType] = useState('');
+
+    const getPostData =  async () => {
+      const [response, postData] = await Backend.get(`/api/authors/${user.user_id}/posts/${postId}`, authTokens.access);
+      // console.log(postData);
+      return postData;
+  }
+  
+  if (postId !== undefined) { // If we are editing a post
+
+  // let postTitle;
+  // let postDescription;
+  // let postContentType;
+  // let postContent;
+  // let postVisibility;
+  // let postUnlisted;
+  // let postCategories;
+
+  const postCategories = [];
+
+  let postData = getPostData();
+  let defaultValues = {};
+  postData.then((data) => {
+      console.log(data);
+      console.log('dlfjdkjfk')
+      defaultValues = {...data};
+      console.log('hello', defaultValues);
+      setValue([
+        { title: data.title }, 
+    ]);
+
+      // const postTitle = data['title'];
+      // const postDescription = data['description'];
+      // const postContentType = data['contentType'];
+      // const postContent = data['content'];
+      // const postVisibility = data['visibility'];
+      // const postUnlisted = data['unlisted'];
+      // postCategories.push(data['categories']);
+  })
+}
 
     //  event listeners --------------------------------------------
     const categories = [
@@ -67,9 +110,13 @@ const DynamicForm = ({options, formSubmitFunction}) => {
     
     const navigate = useNavigate();
 
+    
 
     // Update your onSubmit function to navigate to the stream page
-    const onSubmit = (data) => {
+    const onSubmit = (data, postCategories) => {
+      if (postId !== undefined) {
+        selectedCategories = postCategories;
+      }
       if (selectedCategories.length === 0) {
         setCategoriesError('Please select at least one category.');
       } else {

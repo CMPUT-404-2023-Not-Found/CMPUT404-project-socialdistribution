@@ -17,6 +17,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import SendIcon from '@mui/icons-material/Send';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/system/Stack';
 
 import ShareAction from '../Actions/ShareAction/ShareAction';
 
@@ -45,7 +47,7 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-const PostActions = ({ disableLike=false, disableShare=false, disableComments=false, postNodeId, likeCount, commentCount, source='' }) => {    
+const PostActions = ({ disableLike=false, disableShare=false, disableComments=false, postNodeId, likeCount, commentCount, post, source='' }) => {    
     const [expanded, setExpanded] = React.useState(false);
     const [comments, setComments] = React.useState([]);
     const [commentText, setCommentText] = React.useState('');
@@ -64,7 +66,7 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
         commentEndpoint = `${postPath}/comments`;
     }
     const itemResultsKey = 'comments';
-
+    
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
@@ -97,6 +99,15 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
 
         // removed sending comment to inbox
     }
+    const renderChips = () => {
+        const chips = [];
+        chips.push(<Chip key={0} label={post.origin}/>)
+        chips.push(<Chip key={1} label= {post.visibility}/>)
+        post.categories.forEach((category, idx)=>{
+            chips.push(<Chip key={idx + 2} label={category}/>)
+        });
+        return chips;
+    }   
 
     const renderComments = () => {
         if (!comments || comments.length <= 0) {
@@ -141,6 +152,7 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
         </IconButton>
         }
         {!disableShare && <ShareAction objectNodeId={postNodeId}/>}
+        <Stack direction='row' spacing={1}>{renderChips()}</Stack>
         {!disableComments &&
         <ExpandMore
             expand={expanded}

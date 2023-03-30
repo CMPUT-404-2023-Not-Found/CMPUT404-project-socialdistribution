@@ -20,7 +20,7 @@ import ShareAction from '../Actions/ShareAction/ShareAction';
 
 import Comment from './Comment';
 import BasicPagination from '../common/BasicPagination/BasicPagination';
-import { parsePathFromURL } from '../../utils/Utils';
+import { getInboxUrl, parsePathFromURL } from '../../utils/Utils';
 import Backend from '../../utils/Backend';
 import AuthContext from '../../context/AuthContext';
 
@@ -42,7 +42,7 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-const PostActions = ({ disableLike=false, disableShare=false, disableComments=false, postNodeId }) => {    
+const PostActions = ({ disableLike=false, disableShare=false, disableComments=false, postAuthor, postNodeId }) => {    
     const [expanded, setExpanded] = React.useState(false);
     const [comments, setComments] = React.useState([]);
     const [isLiked, setIsLiked] = React.useState(false);
@@ -61,6 +61,15 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
             createLike(postNodeId);
         }
     };
+    // const handleLike = async () => {
+    //     if (isLiked) {
+    //         deleteLike(postNodeId);
+    //     } else {
+    //         createLike(postNodeId);
+    //     }
+    //     setIsLiked(!isLiked);
+    // };
+    
 
     // ${postPath}/likes/ maybe the error?
     // object: postNodeId, -> backend cannot process this field always null
@@ -72,16 +81,26 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
     
     const createLike = async (postNodeId) => {
         try {
-          const response = await Backend.post(`${postPath}/likes/`,
-            authTokens.access,
-            JSON.stringify({
-                summary: user.username + " like this post",
-                author: "http://localhost:8000/api/authors/"+ user.user_id,
+            let author_url = postAuthor.url || postAuthor.id;
+            let author_name = user.displayName || user.username;
+            let inbox_data = {
+                type: 'like',
+                summary: author_name + " liked your post",
                 object: postNodeId,
-                "@context": "https://www.w3.org/ns/activitystreams" 
-            })
+                inbox_urls: [getInboxUrl(author_url)]
+            }
+          const [ response, data ] = await Backend.post('/api/node/object/',
+            authTokens.access,
+            JSON.stringify(inbox_data)
           );
-          const [resp, data] = response;
+          if (response.status && response.status === 201) {
+            console.log('Like created: ', data);
+        } else if (response.statusText === 'Unauthorized'){
+            logoutUser();
+        } else {
+            console.log('Failed to send like');
+            console.debug(response);
+        }
           console.log('PostNodeID ', postNodeId);
           console.log('Like created: ', data);
         } catch (error) {
@@ -89,6 +108,37 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
         }
       };
 
+    //   const deleteLike = async (postNodeId) => {
+    //     try {
+    //         const response = await Backend.delete(`${postPath}/likes/delete_by_author_object/`, authTokens.access, JSON.stringify({
+    //             author: "http://localhost:8000/api/authors/" + user.user_id,
+    //             object: postNodeId
+    //         }));
+    //         const [resp, data] = response;
+    //         console.log('Like deleted: ', data);
+    //     } catch (error) {
+    //         console.error('Error deleting like: ', error);
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     fetchLikes();
+    // }, []);
+    
+    // const fetchLikes = async () => {
+    //     try {
+    //         const response = await Backend.get(`${postPath}/likes/`, authTokens.access);
+    //         const [resp, data] = response;
+    //         const userLikes = data.filter(
+    //             (like) => like.author === "http://localhost:8000/api/authors/" + user.user_id
+    //         );
+    //         setIsLiked(userLikes.length > 0);
+    //     } catch (error) {
+    //         console.error('Error fetching likes: ', error);
+    //     }
+    // };
+    
+    
     const renderComments = () => {
         if (!comments || comments.length <= 0) {
             return (

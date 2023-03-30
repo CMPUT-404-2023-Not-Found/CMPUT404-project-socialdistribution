@@ -30,6 +30,7 @@ const PostCard = ({ post, ...actions }) => {
             actions={
                 <PostActions 
                     {...actions}
+                    postAuthor={post.author}
                     postNodeId={post.id}
                 />}
         />

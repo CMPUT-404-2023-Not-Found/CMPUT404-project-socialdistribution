@@ -33,6 +33,7 @@ const PostCard = ({ post, ...actions }) => {
                     postNodeId={post.id}
                     likeCount={post.likeCount ? post.likeCount : null}
                     commentCount={post.commentCount ? post.commentCount : post.count}
+                    post={post}
                 />}
         />
     );

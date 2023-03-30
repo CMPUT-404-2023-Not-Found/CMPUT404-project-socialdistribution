@@ -6,6 +6,7 @@ ui/src/components/Post/PostActions.js
 
 import React, { useContext, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
+import Badge from '@mui/material/Badge';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Collapse from '@mui/material/Collapse';
@@ -15,6 +16,8 @@ import IconButton from '@mui/material/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/system/Stack';
 
 import ShareAction from '../Actions/ShareAction/ShareAction';
 
@@ -42,7 +45,7 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-const PostActions = ({ disableLike=false, disableShare=false, disableComments=false, postAuthor, postNodeId }) => {    
+const PostActions = ({ disableLike=false, disableShare=false, disableComments=false, postAuthor, postNodeId, likeCount, commentCount, post }) => {    
     const [expanded, setExpanded] = React.useState(false);
     const [comments, setComments] = React.useState([]);
     const [isLiked, setIsLiked] = React.useState(false);
@@ -50,7 +53,7 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
     const postPath = parsePathFromURL(postNodeId);
     const commentEndpoint = `${postPath}/comments`;
     const itemResultsKey = 'comments';
-
+    
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
@@ -139,6 +142,16 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
     // };
     
     
+    const renderChips = () => {
+        const chips = [];
+        chips.push(<Chip key={0} label={post.origin}/>)
+        chips.push(<Chip key={1} label= {post.visibility}/>)
+        post.categories.forEach((category, idx)=>{
+            chips.push(<Chip key={idx + 2} label={category}/>)
+        });
+        return chips;
+    }   
+
     const renderComments = () => {
         if (!comments || comments.length <= 0) {
             return (
@@ -172,10 +185,17 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
     <CardActions disableSpacing>
         {!disableLike && 
         <IconButton aria-label="like" onClick={handleLike}>
-            <FavoriteIcon style={{ color: isLiked ? '#CC0000' : 'inherit' }} />
+            {likeCount ? 
+                <Badge badgeContent={likeCount} color='error'>
+                    <FavoriteIcon style={{ color: isLiked ? '#CC0000' : 'inherit' }}/>
+                </Badge>
+            :
+                <FavoriteIcon style={{ color: isLiked ? '#CC0000' : 'inherit' }}/>
+            }
         </IconButton>
         }
         {!disableShare && <ShareAction objectNodeId={postNodeId}/>}
+        <Stack direction='row' spacing={1}>{renderChips()}</Stack>
         {!disableComments &&
         <ExpandMore
             expand={expanded}

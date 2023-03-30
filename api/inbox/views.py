@@ -16,6 +16,7 @@ from .serializer import InboxSerializer
 from utils.permissions import IsOwner, NodesCanPost, NonOwnerCanPost
 from utils.node_comm import NodeComm
 NodeComm = NodeComm()
+from utils.helper_funcs import getMaxLastModifiedHeader
 
 import logging
 logger = logging.getLogger('django')
@@ -40,8 +41,10 @@ class InboxListCreateDeleteView(DestroyAPIView, ListCreateAPIView):
         author_uuid = self.kwargs.get(self.lookup_url_kwarg)
         if 'count' in request.query_params or request.query_params.get('count', '') == 'true':
             logger.info('Getting count of objects in author [%s] inbox', author_uuid)
-            queryset_count = self.get_queryset().count()
-            return Response(status=status.HTTP_200_OK, data={'count': queryset_count})
+            queryset = self.get_queryset()
+            last_modified = getMaxLastModifiedHeader([inbox.received_at for inbox in queryset])
+            queryset_count = len(queryset)
+            return Response(status=status.HTTP_200_OK, data={'count': queryset_count}, headers={'Last-Modified': last_modified})
         else:
             return self.list(request, *args, **kwargs)
 

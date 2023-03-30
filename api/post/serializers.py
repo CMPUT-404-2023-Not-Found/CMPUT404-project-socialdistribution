@@ -36,8 +36,8 @@ class PostSerializer(serializers.ModelSerializer):
         like_count = Like.objects.filter(post=obj.id).count()
         return like_count
 
-    origin          = URLField(required=False)
-    source          = URLField(required=False)
+    origin          = serializers.SerializerMethodField('get_id')
+    source          = serializers.SerializerMethodField('get_id')
   
     categories      = serializers.SerializerMethodField('get_categories')
     @extend_schema_field(ListField)

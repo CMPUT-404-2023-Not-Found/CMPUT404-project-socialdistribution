@@ -36,14 +36,24 @@ const PostContent = ({ description, contentType, content }) => {
                         </ReactMarkdown>
                     </CardContent>
                 break;
-            case 'image/png;base64': case 'image/jpeg;base64': case 'image/link':
-                contentBodyRender = 
+            case 'image/png;base64': case 'image/jpeg;base64': case 'image/link': case 'image/png': case 'image/jpeg':
+                if (content.length < 400) {
+                    contentBodyRender = 
+                        <CardMedia 
+                            component='img' 
+                            height={PostContentStyles.cardMedia.height} 
+                            sx={PostContentStyles.cardMedia.sx}
+                            src={content} alt={description} 
+                            />
+                } else {
+                    contentBodyRender = 
                     <CardMedia 
                         component='img' 
                         height={PostContentStyles.cardMedia.height} 
                         sx={PostContentStyles.cardMedia.sx}
-                        src={content} alt={description} 
-                        />
+                        src={`data:image;base64,${content}`} alt={description} 
+                        />  
+                }
                 break;
             case 'https://www.w3.org/ns/activitystreams':
                 console.error('Got a raw activitystream for content: ', content);
@@ -62,7 +72,6 @@ const PostContent = ({ description, contentType, content }) => {
         }
         return contentBodyRender;
     };
-
     return (<>
     <CardContent>
         <Typography variant="body2" color="text.secondary">

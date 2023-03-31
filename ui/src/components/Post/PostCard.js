@@ -19,7 +19,7 @@ const PostCard = ({ post, source='', enableOptions, ...actions }) => {
                 title={post.title ? post.title : post.summary ? post.summary : 'No Title'}
                 author={post.author && post.author}
                 time={post.updated_at ? post.updated_at : post.published}
-                postNodeId={post.id}
+                postNodeId={post.id ? post.id : post.object}
                 enableOptions={enableOptions}
             />}
             content={
@@ -27,12 +27,12 @@ const PostCard = ({ post, source='', enableOptions, ...actions }) => {
                 description={post.description}
                 contentType={post.contentType ? post.contentType : post['@context']}
                 content={post.content}
-                postNodeId={post.id}
+                postNodeId={post.id ? post.id : post.object}
             />}
             actions={
                 <PostActions 
                     {...actions}
-                    postNodeId={post.id}
+                    postNodeId={post.id ? post.id : post.object}
                     likeCount={post.likeCount ? post.likeCount : null}
                     commentCount={post.commentCount ? post.commentCount : post.count}
                     post={post}

@@ -21,6 +21,9 @@ const PostOptions = ({ postNodeId }) => {
         },
         delete: {
             label: 'Delete',
+            sx: {
+                color: 'red'
+            }
         }
     }
 
@@ -61,7 +64,7 @@ const PostOptions = ({ postNodeId }) => {
             onClose={handleClose}
         >
             <MenuItem onClick={() => { navigate(menuItems.edit.route); handleClose() }}>{menuItems.edit.label}</MenuItem>
-            <MenuItem onClick={handleDelete}>{menuItems.delete.label}</MenuItem>
+            <MenuItem sx={menuItems.delete.sx} onClick={handleDelete}>{menuItems.delete.label}</MenuItem>
         </Menu>
         </>
     );

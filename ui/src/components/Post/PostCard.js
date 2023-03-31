@@ -11,7 +11,7 @@ import PostHeader from './PostHeader';
 import PostContent from './PostContent';
 import PostActions from './PostActions'
 
-const PostCard = ({ post, source='', ...actions }) => {
+const PostCard = ({ post, source='', enableOptions, ...actions }) => {
     return (
         <BasicCard
             header={
@@ -19,6 +19,8 @@ const PostCard = ({ post, source='', ...actions }) => {
                 title={post.title ? post.title : post.summary ? post.summary : 'No Title'}
                 author={post.author && post.author}
                 time={post.updated_at ? post.updated_at : post.published}
+                postNodeId={post.id}
+                enableOptions={enableOptions}
             />}
             content={
             <PostContent 

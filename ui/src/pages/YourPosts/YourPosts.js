@@ -30,7 +30,7 @@ const YourPosts = () => {
         let itemsRender = [];
         items.forEach((item, idx) => {
             console.log(item);
-            itemsRender.push(<PostCard key={idx * 2} post={item} disableLike />);
+            itemsRender.push(<PostCard key={idx * 2} post={item} enableOptions disableLike />);
             itemsRender.push(<br key={idx * 2 + 1}/>);
         });
         console.log(itemsRender)

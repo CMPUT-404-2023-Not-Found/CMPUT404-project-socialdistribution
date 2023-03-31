@@ -26,6 +26,7 @@ import PostDetail from './components/PostDetail';
 import NotFound from './components/NotFound';
 import CreatePost from './pages/CreatePost';
 import Followers from './pages/Followers/Followers';
+import EditPost from './pages/EditPost';
 
 import './index.css';
 
@@ -44,6 +45,7 @@ root.render(
                      <Route path="/profile" element={<Profile />} />
                      <Route path="/createpost" element={<CreatePost />} />
                      <Route path="/followers" element={<Followers />} />
+                     <Route path="/editpost/:postId" element={<EditPost />} />
                   </Route>
                   <Route path="/login" element={<Login />} />
                   <Route path="/signup" element={<Signup />} /> 

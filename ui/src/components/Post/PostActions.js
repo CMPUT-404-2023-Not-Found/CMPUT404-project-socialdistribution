@@ -49,6 +49,7 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
     const [expanded, setExpanded] = React.useState(false);
     const [comments, setComments] = React.useState([]);
     const [isLiked, setIsLiked] = React.useState(false);
+    const [likes, setLikes] = React.useState(likeCount);
     const { user, authTokens, logoutUser } = useContext(AuthContext);
     const postPath = parsePathFromURL(postNodeId);
     const commentEndpoint = `${postPath}/comments`;
@@ -64,23 +65,6 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
             createLike(postNodeId);
         }
     };
-    // const handleLike = async () => {
-    //     if (isLiked) {
-    //         deleteLike(postNodeId);
-    //     } else {
-    //         createLike(postNodeId);
-    //     }
-    //     setIsLiked(!isLiked);
-    // };
-    
-
-    // ${postPath}/likes/ maybe the error?
-    // object: postNodeId, -> backend cannot process this field always null
-    // even Like created, still not showing in backend
-
-    // TODO: fix this
-    // TODO: fetch likes from backend and check if user has liked this post or not (set color to show the like status)
-    // TODO: if user has liked this post, then when user click the like button, it should unlike the post (delete the like object from backend)
     
     const createLike = async (postNodeId) => {
         try {
@@ -98,6 +82,7 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
           );
           if (response.status && response.status === 201) {
             console.log('Like created: ', data);
+            setLikes(likes + 1);
         } else if (response.statusText === 'Unauthorized'){
             logoutUser();
         } else {
@@ -110,37 +95,6 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
           console.error('Error creating like: ', error);
         }
       };
-
-    //   const deleteLike = async (postNodeId) => {
-    //     try {
-    //         const response = await Backend.delete(`${postPath}/likes/delete_by_author_object/`, authTokens.access, JSON.stringify({
-    //             author: "http://localhost:8000/api/authors/" + user.user_id,
-    //             object: postNodeId
-    //         }));
-    //         const [resp, data] = response;
-    //         console.log('Like deleted: ', data);
-    //     } catch (error) {
-    //         console.error('Error deleting like: ', error);
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     fetchLikes();
-    // }, []);
-    
-    // const fetchLikes = async () => {
-    //     try {
-    //         const response = await Backend.get(`${postPath}/likes/`, authTokens.access);
-    //         const [resp, data] = response;
-    //         const userLikes = data.filter(
-    //             (like) => like.author === "http://localhost:8000/api/authors/" + user.user_id
-    //         );
-    //         setIsLiked(userLikes.length > 0);
-    //     } catch (error) {
-    //         console.error('Error fetching likes: ', error);
-    //     }
-    // };
-    
     
     const renderChips = () => {
         const chips = [];
@@ -185,12 +139,12 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
     <CardActions disableSpacing>
         {!disableLike && 
         <IconButton aria-label="like" onClick={handleLike}>
-            {likeCount ? 
-                <Badge badgeContent={likeCount} color='error'>
-                    <FavoriteIcon style={{ color: isLiked ? '#CC0000' : 'inherit' }}/>
-                </Badge>
-            :
+            {likes ? 
+            <Badge badgeContent={likes} color='error'>
                 <FavoriteIcon style={{ color: isLiked ? '#CC0000' : 'inherit' }}/>
+            </Badge>
+            :
+            <FavoriteIcon style={{ color: isLiked ? '#CC0000' : 'inherit' }}/>
             }
         </IconButton>
         }

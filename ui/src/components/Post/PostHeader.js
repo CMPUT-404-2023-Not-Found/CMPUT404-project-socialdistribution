@@ -40,6 +40,10 @@ const PostHeader = ({ author, title, subheader, time, postId }) => {
         }
     ];
 
+    menuItems[1].onClick = () => {
+        console.log('Delete post with id: ' + postIdFromUrl);
+    };
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
         setOpen(true);

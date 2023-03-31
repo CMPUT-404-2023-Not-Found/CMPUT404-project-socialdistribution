@@ -33,10 +33,6 @@ class Post(Model):
     updated_at          = models.DateTimeField(auto_now=True, auto_now_add=False, verbose_name='Last Updated At')
     rev                 = models.IntegerField(default=0)
 
-    # Stat fields
-    comment_count       = models.IntegerField(default=0, verbose_name='Total Comment Count')
-    like_count          = models.IntegerField(default=0, verbose_name='Total Like Count')
-
     # Access fields
     unlisted            = models.BooleanField(default=False, help_text='Does this post appear in authors streams')
     visibility          = models.CharField(choices=VISIBILITY_OPTIONS, max_length=16, help_text='Who can view this post')

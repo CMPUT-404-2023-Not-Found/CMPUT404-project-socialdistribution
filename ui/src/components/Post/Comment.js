@@ -9,6 +9,8 @@ import BasicAvatar from '../common/BasicAvatar/BasicAvatar';
 
 const Comment = ({ comment }) => {
 
+    console.log(comment);
+    
     const renderCommentBody = (content, contentType) => {
         switch (contentType) {
             case 'text/plain': case 'application/base64': 

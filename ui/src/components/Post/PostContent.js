@@ -36,7 +36,7 @@ const PostContent = ({ description, contentType, content }) => {
                         </ReactMarkdown>
                     </CardContent>
                 break;
-            case 'image/png;base64': case 'image/jpeg;base64': case 'image/link':
+            case 'image/png;base64': case 'image/jpeg;base64': case 'image/link': case 'image/png': case 'image/jpeg':
                 contentBodyRender = 
                     <CardMedia 
                         component='img' 
@@ -62,7 +62,6 @@ const PostContent = ({ description, contentType, content }) => {
         }
         return contentBodyRender;
     };
-
     return (<>
     <CardContent>
         <Typography variant="body2" color="text.secondary">

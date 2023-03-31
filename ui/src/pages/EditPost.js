@@ -14,6 +14,7 @@ import Backend from '../utils/Backend';
 import GridWrapper from '../components/common/GridWrapper/GridWrapper';
 import PageHeader from '../components/Page/PageHeader';
 import CommonButton from '../components/common/CommonButton/CommonButton';
+import { isObjectEmpty } from '../utils/Utils';
 
 const EditPost = () => {
     //  variable declarations -------------------------------------
@@ -31,22 +32,6 @@ const EditPost = () => {
     const visibilityMenuItems = [
         {value: 'FRIENDS', label: 'Friends'},
         {value: 'PUBLIC', label: 'Public'}
-    ];
-
-    const categoriesMenuItems = [
-        "business",
-        "education",
-        "entertainment",
-        "finance",
-        "health",
-        "lifestyle",
-        "other",
-        "science",
-        "sports",
-        "technology",
-        "travel",
-        "tutorial",
-        "web",
     ];
     
     //  event listeners --------------------------------------------
@@ -67,30 +52,25 @@ const EditPost = () => {
         getPostData();
     }, [postId, user.user_id, authTokens.access, logoutUser]);
 
-    // This code is adapted from a post by Endless on StackOverflow on 2018-01-09, retrieved on 2023-03-17, found here
-    // https://stackoverflow.com/questions/48172934/error-using-async-and-await-with-filereader
-    const getFileData = (file) => {
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result);
-            reader.readAsDataURL(file);
-        })
-    }
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Editing post id ' + postId);
-        let formData = {};
-        return;
-        const [response, data] = await Backend.post(`/api/authors/${user.user_id}/posts/${postId}/`, authTokens.access, JSON.stringify(formData));
+        // Deny updates that did not change
+        if (isObjectEmpty(newValues) ) { 
+            console.debug('No update');
+            return;
+        }
+        console.debug('Editing post id ' + postId);
+        console.debug(newValues);
+        const updatePostEndpoint = `/api/authors/${user.user_id}/posts/${postId}/`;
+        const [response, data] = await Backend.put(updatePostEndpoint, authTokens.access, JSON.stringify(newValues));
         if (response.status && response.status === 200) {
-            navigate('/posts/');
+            console.log(`Updated post ${updatePostEndpoint}`)
+            // navigate('/posts/');
         } else if (response.statusText === 'Unauthorized'){
             logoutUser();
         } else {
-            console.log('Failed to create post');
+            console.error(`Failed to update post ${updatePostEndpoint}`);
         }
-        console.log(data);
     }
 
     const handleChange = (e) => {

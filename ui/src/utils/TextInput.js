@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { TextField, IconButton, InputAdornment } from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
-const TextInput = ({ register, obj }) => {
+const TextInput = ({ register, obj, val}) => {
   const [inputValue, setInputValue] = useState('');
   const handleDeleteClick = () => {
     setInputValue('');
@@ -54,6 +54,7 @@ const TextInput = ({ register, obj }) => {
         rows={4}
         variant="outlined"
         style={{ marginBottom: 15 }}
+        defaultValue={val}
         InputLabelProps={{
                 style: {
                 fontSize: '18px', // Set the desired font size

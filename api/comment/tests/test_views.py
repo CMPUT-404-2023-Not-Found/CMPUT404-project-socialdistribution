@@ -1,17 +1,11 @@
 # 2023-02-26
-# comment/tests/test_list_create_view.py
+# comment/tests/test_view.py
 
-from django.contrib.auth import get_user_model
-from django.urls import reverse
-from django.utils.crypto import get_random_string
 from rest_framework import status
-from rest_framework.test import APIClient
-from rest_framework_simplejwt.tokens import RefreshToken
-from .base import Base
 from random import choices
-import json
 
-Author = get_user_model()
+from .base import Base
+from comment.models import Comment
 
 class CommentListCreateViewTest(Base):
     '''
@@ -27,8 +21,10 @@ class CommentListCreateViewTest(Base):
         '''
         Test getting list of comments
         '''
+        comment_count = Comment.objects.filter(post=self.post_uuid).count()
         response = self.admin_client.get(self.get_comment_url(self.author_uuid, self.post_uuid))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], comment_count)
     
     # Test Comment View POST authors/<author_uuid>/posts/<post_uuid>/comments/
     def test_post_comment(self):

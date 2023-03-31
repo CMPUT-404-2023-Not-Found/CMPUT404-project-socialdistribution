@@ -1,13 +1,12 @@
 # 2023-03-15
-# follower/tests/test_list_create_view.py
+# follower/tests/test_view.py
 
-from django.contrib.auth import get_user_model
 from rest_framework import status
 import logging
 
 from .base import Base
+from follower.models import Follower
 
-Author = get_user_model()
 logger = logging.getLogger('django')
 rev = 'rev: $jsadasd'
 
@@ -33,9 +32,10 @@ class FollowerListCreateViewTest(Base):
         '''
         Test getting list of followers
         '''
+        follower_count = Follower.objects.filter(followee=self.author_uuid).count()
         response = self.author_client.get(self.get_followers_url(self.author_uuid))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data['items']), 1)
+        self.assertEqual(response.data['count'], follower_count)
 
     # Test Follower view GET /api/authors/<author_uuid>/followers/<follower>/
     def test_get_single_follower(self):
@@ -44,6 +44,7 @@ class FollowerListCreateViewTest(Base):
         '''
         response = self.author_client.get(self.get_follower_detail_url(self.author_uuid, self.another_follower))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
 
     def test_delete_follower(self):
         '''

@@ -5,91 +5,93 @@ ui/src/pages/Stream/Stream.js
 */
 
 import React, { useContext, useEffect, useState } from 'react';
-import { Typography } from '@mui/material';
+import { Typography, InputLabel, Select, MenuItem, FormControl } from '@mui/material';
 
-import Backend from '../../utils/Backend';
-import AuthContext from '../../context/AuthContext';
-import BasicCard from '../../components/common/BasicCard/BasicCard';
+import BasicPagination from '../../components/common/BasicPagination/BasicPagination';
 import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
-import PostHeader from '../../components/Post/PostHeader';
-import PostContent from '../../components/Post/PostContent';
+import PostCard from '../../components/Post/PostCard';
 import PageHeader from '../../components/Page/PageHeader';
+import AuthContext from '../../context/AuthContext';
+import Backend from '../../utils/Backend';
 
 const Stream = () => {
     //  variable declarations -------------------------------------
-    const [ nodePosts, setNodePosts ] = useState({});
+    const itemResultsKey = 'items';
+    const [ nodePosts, setNodePosts ] = useState([]);
     const { authTokens, logoutUser } = useContext(AuthContext);
+    const [nodeURL, setNodeURL] = useState('/api/posts');
+    const [nodes, setNodes] = useState({});
 
     //  event listners --------------------------------------------
     useEffect(() => {
-        const getNodePosts = async () => {
-            const [response, data] = await Backend.get(`/api/posts/`, authTokens.access);
+        const getNodes = async () => {
+            const [response, data] = await Backend.get(`/api/node/`, authTokens.access);
             if (response.status && response.status === 200) {
                 console.log(data)
-                setNodePosts(data);
+                setNodes(data);
             } else if (response.statusText === 'Unauthorized'){
                 logoutUser();
             } else {
                 console.log('Failed to get posts');
-            }
-        };
-        getNodePosts();
-    }, [authTokens, logoutUser]);
+            }    
+        }
+        getNodes();
+    }, []);
+
+    const handleNodeURLSelect = async (event) => {
+        setNodeURL(event.target.value);
+        console.log("set it to, ", event.target.value)
+    }
 
     // RENDER APP =================================================
     const renderNodePosts = (items) => {
-        // console.log(items);
         if (!items || items.length <= 0) return (<Typography paragraph >No Posts</Typography>);
         let itemsRender = [];
         items.forEach((item, idx) => {
             console.log(item);
-            if (item['@context']) {
-                itemsRender.push(
-                    <BasicCard 
-                        key={idx}
-                        header = {
-                            <PostHeader 
-                                author={{ displayName: item.author }}
-                                title={item.summary}
-                            />
-                        }
-                        content = {
-                            <PostContent 
-                                description='Got an activitystream'
-                                content={item.object}
-                            />
-                        }
-                    />
-                );
-            } else {
-                itemsRender.push(
-                    <BasicCard 
-                        key={idx}
-                        header={
-                            <PostHeader 
-                                author={item.author} 
-                                title={item.title} 
-                                time={(item.updated_at ? item.updated_at : item.published)} 
-                            />}
-                        content={
-                            <PostContent 
-                                description={item.description}
-                                contentType={item.contentType}
-                                content={item.content}
-                            />}
-                    />
-                );
-            }
-            itemsRender.push(<br></br>);
+            itemsRender.push(<PostCard key={idx * 2} post={item} source={nodeURL}/>);
+            itemsRender.push(<br key={idx * 2 + 1} />);
         });
         return (<>{itemsRender}</>)
     };
-
     return (
         <>
             <PageHeader title='Stream'></PageHeader>
+
+            <FormControl sx={{
+                marginTop: 5,
+                marginLeft: 40,
+                width: '100%'
+            }}>
+                <InputLabel id="select-node-label">Node</InputLabel>
+                <Select
+                    labelId="select-node-label"
+                    id="select-node"
+                    value={nodeURL}
+                    label="Node"
+                    onChange={handleNodeURLSelect}
+                >
+                    <MenuItem value="/api/posts">Home</MenuItem>
+                    { nodes.items ? nodes.items.map((item, i) => {
+                        let url = `/api/node/${item.host}`;
+                        let name = item.display_name;
+                        if (name === '' || !name) {
+                            name = item.host;
+                        }
+                        return (
+                            (item.api_path) && <MenuItem key={i} value={url}>{name}</MenuItem>
+                        )
+                    }): null
+                    }
+                </Select>
+            </FormControl>
             <GridWrapper>
-            {renderNodePosts(nodePosts.items)}
+            <BasicPagination 
+                itemEndpoint={nodeURL} 
+                itemResultsKey={itemResultsKey} 
+                setItems={(posts) => setNodePosts(posts)}
+            />
+            {renderNodePosts(nodePosts)}
             </GridWrapper>
         </>
     );

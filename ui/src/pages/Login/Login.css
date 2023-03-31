@@ -52,4 +52,15 @@ pages/Login.css
     margin-left: -20px;
     cursor: pointer;
 }
+
+.signup-link {
+    background: none;
+    border: none;
+    color: #007bff;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0;
+    margin: 0;
+  }
   

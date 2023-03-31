@@ -7,36 +7,21 @@ tutorial video here:
 https://www.youtube.com/watch?v=2k8NleFjG7I
 */
 
-import React, { useContext, useEffect, useState } from 'react';
-import { Typography } from '@mui/material';
+import React, { useContext, useState } from 'react';
+import Typography from '@mui/material/Typography';
 
-import Backend from '../../utils/Backend';
-import BasicCard from '../../components/common/BasicCard/BasicCard';
 import AuthContext from '../../context/AuthContext';
+import BasicPagination from '../../components/common/BasicPagination/BasicPagination';
 import GridWrapper from '../../components/common/GridWrapper/GridWrapper';
-import PostHeader from '../../components/Post/PostHeader';
-import PostContent from '../../components/Post/PostContent';
+import PostCard from '../../components/Post/PostCard';
 import PageHeader from '../../components/Page/PageHeader';
 
 const YourPosts = () => {
     //  variable declarations -------------------------------------
     const [ posts, setPosts ] = useState([]);
-    const { user, authTokens, logoutUser } = useContext(AuthContext);
-    
-    //  event listners --------------------------------------------
-    useEffect(() => {
-        const getPosts = async () => {
-            const [response, data] = await Backend.get(`/api/authors/${user.user_id}/posts/`, authTokens.access);
-            if (response.status && response.status === 200) {
-                setPosts(data);
-            } else if (response.statusText === 'Unauthorized'){
-                logoutUser();
-            } else {
-                console.log('Failed to get posts');
-            }
-        };
-        getPosts();
-    }, [user, authTokens, logoutUser]);
+    const { user } = useContext(AuthContext);
+    const postEndpoint = `/api/authors/${user.user_id}/posts`;
+    const itemResultsKey = 'items';
 
     //  async functions -------------------------------------------
 
@@ -45,26 +30,10 @@ const YourPosts = () => {
         let itemsRender = [];
         items.forEach((item, idx) => {
             console.log(item);
-            itemsRender.push(
-                <BasicCard 
-                    key={idx}
-                    header={
-                        <PostHeader 
-                            author={item.author} 
-                            title={item.title} 
-                            time={(item.updated_at ? item.updated_at : item.published)} 
-                        />}
-                    content={
-                        <PostContent 
-                            description={item.description}
-                            contentType={item.contentType}
-                            content={item.content}
-                            isImage={(item.contentType === 'text/plain' || item.contentType === 'text/markdown')}
-                        />}
-                />
-            );
-            itemsRender.push(<br></br>);
+            itemsRender.push(<PostCard key={idx * 2} post={item} enableOptions disableLike />);
+            itemsRender.push(<br key={idx * 2 + 1}/>);
         });
+        console.log(itemsRender)
         return (<>{itemsRender}</>)
     }
     // RENDER APP =================================================
@@ -72,7 +41,12 @@ const YourPosts = () => {
         <>
             <PageHeader title='Your Posts'></PageHeader>
             <GridWrapper>
-            {renderPosts(posts.items)}
+            <BasicPagination 
+                itemEndpoint={postEndpoint} 
+                itemResultsKey={itemResultsKey} 
+                setItems={(posts) => setPosts(posts)}
+            />
+            {renderPosts(posts)}
             </GridWrapper>
         </>
     );

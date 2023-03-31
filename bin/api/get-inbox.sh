@@ -38,6 +38,7 @@ then
     echo "ERR Could not get author $author_uuid's inbox" >&2
     echo "$rsp"
 else
+    cat $hdr_dump >&2
     echo "$rsp" | jq 2>/dev/null
     e=$?; if [ $e -ne 0 ]; then echo "$rsp"; exit $e; fi
 fi

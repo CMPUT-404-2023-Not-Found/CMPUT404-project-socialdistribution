@@ -6,8 +6,9 @@ from rest_framework import serializers
 from rest_framework.fields import CharField, ChoiceField, DateTimeField, IntegerField, ListField, URLField
 
 from author.serializers import ExistingAuthorSerializer
-from comment.serializers import CommentSerializer
-from .models import Post
+from comment.models import Comment
+from like.models import Like
+from .models import Category, Post
 
 import logging
 logger = logging.getLogger('django')
@@ -23,16 +24,27 @@ class PostSerializer(serializers.ModelSerializer):
     updated_at      = DateTimeField(read_only=True, required=False)
     rev             = IntegerField(read_only=True, required=False)
 
-    commentCount    = IntegerField(source='comment_count', read_only=True, required=False)
-    likeCount       = IntegerField(source='like_count', read_only=True, required=False)
+    commentCount    = serializers.SerializerMethodField('get_commentCount', read_only=True)
+    @extend_schema_field(IntegerField)
+    def get_commentCount(self, obj):
+        comment_count = Comment.objects.filter(post=obj.id).count()
+        return comment_count
 
-    origin          = URLField(required=False)
-    source          = URLField(required=False)
+    likeCount       = serializers.SerializerMethodField('get_likeCount', read_only=True)
+    @extend_schema_field(IntegerField)
+    def get_likeCount(self, obj):
+        like_count = Like.objects.filter(post=obj.id).count()
+        return like_count
 
+    origin          = serializers.SerializerMethodField('get_id')
+    source          = serializers.SerializerMethodField('get_id')
+  
     categories      = serializers.SerializerMethodField('get_categories')
     @extend_schema_field(ListField)
     # def get_categories(self, obj): return ['this', 'is', 'a', 'hack']
+    
     def get_categories(self, obj): return obj.get_category_item_list()
+
     contentType     = ChoiceField(choices=Post.CONTENT_TYPE_OPTIONS, source='content_type', required=True)
     type            = serializers.SerializerMethodField('get_type')
     @extend_schema_field(CharField)

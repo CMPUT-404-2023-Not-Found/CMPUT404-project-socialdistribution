@@ -104,8 +104,10 @@ const EditPost = () => {
     }
 
     const showContentType = (contentType, content) => {
+        // Don't render images
         if (contentType.startsWith('image') || contentType.startsWith('application') || contentType.startsWith('base64')) {
             return false;
+        // Don't render markdown that is only an image
         } else if (content.startsWith('![]')) {
             return false;
         }

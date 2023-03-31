@@ -34,6 +34,22 @@ const EditPost = () => {
         {value: 'FRIENDS', label: 'Friends'},
         {value: 'PUBLIC', label: 'Public'}
     ];
+
+    const categoriesMenuItems = [
+        "business",
+        "education",
+        "entertainment",
+        "finance",
+        "health",
+        "lifestyle",
+        "other",
+        "science",
+        "sports",
+        "technology",
+        "travel",
+        "tutorial",
+        "web",
+      ];
     
     //  event listeners --------------------------------------------
     useEffect(() => {
@@ -143,12 +159,13 @@ const EditPost = () => {
                         required
                         defaultValue={post.categories}
                     >
-                    {post.categories.length > 0 ?
-                        post.categories.map((option) => {
+                    {categoriesMenuItems.map((option) => (
+                        <MenuItem key={option} value={option}>{option}</MenuItem>
+                    ))}
+                    {post.categories.length > 0 &&
+                        post.categories.map((option) => (
                             <MenuItem key={option} value={option}>{option}</MenuItem>
-                        })
-                    :
-                        <MenuItem key='category' value='category'>category</MenuItem>
+                        ))
                     }
                     </TextField>
                     <TextField

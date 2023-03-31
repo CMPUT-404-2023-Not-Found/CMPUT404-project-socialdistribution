@@ -11,14 +11,14 @@ import { postHeaderStyles } from './styles';
 import { getUUIDFromURL, utcToLocal } from '../../utils/Utils';
 import PostOptions from './PostOptions';
 
-const PostHeader = ({ author, title, subheader, time, postNodeId, disableOptions }) => {
+const PostHeader = ({ author, title, subheader, time, postNodeId, enableOptions=false }) => {
     const postUUID = getUUIDFromURL(postNodeId);
 
     // RENDER APP =================================================
     return (
         <CardHeader
             avatar={<BasicAvatar profile={author} size='medium'></BasicAvatar>}
-            action={!disableOptions && <PostOptions postUUID={postUUID}></PostOptions>}
+            action={enableOptions && <PostOptions postUUID={postUUID}></PostOptions>}
             title={title}
             titleTypographyProps={postHeaderStyles.cardHeader.titleTypographyProps}
             subheader={(time ? utcToLocal(time) : subheader)}

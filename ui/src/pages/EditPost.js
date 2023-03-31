@@ -49,7 +49,7 @@ const EditPost = () => {
         "travel",
         "tutorial",
         "web",
-      ];
+    ];
     
     //  event listeners --------------------------------------------
     useEffect(() => {
@@ -125,6 +125,7 @@ const EditPost = () => {
                         id='title'
                         name='title'
                         required
+                        sx={{ marginBottom: 15, width:"45%" }}
                         defaultValue={post.title}
                     />
                     <TextField 
@@ -132,6 +133,10 @@ const EditPost = () => {
                         id='description'
                         name='description'
                         defaultValue={post.description}
+                        fullWidth
+                        multiline
+                        rows={4}
+                        sx={{ marginBottom: 15 }}
                     />
                     <TextField
                         id='contentType'
@@ -139,6 +144,7 @@ const EditPost = () => {
                         label='Content Type'
                         name='contentType'
                         required
+                        sx={{ marginBottom: 15, width:"25%" }}
                         defaultValue={post.contentType} 
                     >
                     {contentTypeMenuItems.map((option) => (
@@ -149,6 +155,9 @@ const EditPost = () => {
                         label='Content'
                         id='content'
                         name='content'
+                        fullWidth
+                        multiline
+                        rows={4}
                         defaultValue={post.content}
                     />
                     <TextField
@@ -156,8 +165,12 @@ const EditPost = () => {
                         select
                         label='Categories'
                         name='categories'
-                        required
                         defaultValue={post.categories}
+                        required
+                        fullWidth
+                        multiline
+                        rows={4}
+                        sx={{ marginBottom: 15 }}
                     >
                     {categoriesMenuItems.map((option) => (
                         <MenuItem key={option} value={option}>{option}</MenuItem>
@@ -170,11 +183,13 @@ const EditPost = () => {
                     </TextField>
                     <TextField
                         id='visibility'
-                        select
                         label='Visibility'
                         name='visibility'
                         required
                         defaultValue={post.visibility} 
+                        select
+                        fullWidth
+                        sx={{ marginBottom: 15, width:"25%" }}
                     >
                     {visibilityMenuItems.map((option) => (
                         <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>

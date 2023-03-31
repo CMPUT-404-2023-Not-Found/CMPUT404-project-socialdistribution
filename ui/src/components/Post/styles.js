@@ -22,3 +22,14 @@ export const PostContentStyles = {
         }
     }
 }
+
+export const postActionStyles = {
+    chips: {
+        FRIENDS: {
+            color: 'info'
+        },
+        PUBLIC: {
+            color: 'success'
+        }
+    }
+}

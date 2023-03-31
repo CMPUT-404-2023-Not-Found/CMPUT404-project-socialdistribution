@@ -25,11 +25,12 @@ import ShareAction from '../Actions/ShareAction/ShareAction';
 import Comment from './Comment';
 import BasicPagination from '../common/BasicPagination/BasicPagination';
 import { parsePathFromURL } from '../../utils/Utils';
-import { Box, Button, TextField } from '@mui/material';
+import { Box, TextField } from '@mui/material';
 import BasicAvatar from '../common/BasicAvatar/BasicAvatar';
 import AuthContext from '../../context/AuthContext';
 import Backend from '../../utils/Backend';
-import { isValidHttpUrl, getInboxUrl } from '../../utils/Utils'
+import { getHostFromURL } from '../../utils/Utils';
+import { postActionStyles } from './styles';
 
 /*
 This code is modified from a documentation guide on Material UI Card components from Material UI SAS 2023, retrieved 2023-03-13 from mui.com
@@ -56,15 +57,14 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
     const postPath = parsePathFromURL(postNodeId);
     let commentEndpoint;
     let addComments = true;
-    console.log('out', postNodeId);
+
     if (source.includes('node')) {
         addComments = false;
-        console.log('in', postNodeId);
         commentEndpoint = `/api/node/${postNodeId}/comments`;
-
     } else {
         commentEndpoint = `${postPath}/comments`;
     }
+
     const itemResultsKey = 'comments';
     
     const handleExpandClick = () => {
@@ -101,8 +101,10 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
     }
     const renderChips = () => {
         const chips = [];
-        chips.push(<Chip key={0} label={post.origin}/>)
-        chips.push(<Chip key={1} label= {post.visibility}/>)
+        if (post.origin) { chips.push(<Chip key={0} label={getHostFromURL(post.origin)} />); }
+        if (['PUBLIC', 'FRIENDS'].includes(post.visibility)) {
+            chips.push(<Chip key={1} label={post.visibility} color={postActionStyles.chips[post.visibility].color}/>); 
+        }
         post.categories.forEach((category, idx)=>{
             chips.push(<Chip key={idx + 2} label={category}/>)
         });

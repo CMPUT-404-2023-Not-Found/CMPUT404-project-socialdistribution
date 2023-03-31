@@ -4,6 +4,17 @@ ui/src/utils/Utils.js
 
 */
 
+export function getHostFromURL(myString) {
+    let ret = '';
+    try {
+        const url = new URL(myString)
+        ret = url.protocol + '//' + url.hostname;
+    } catch (e) {
+        console.error('Invalid url for ' + myString);
+    }
+    return ret;
+}
+
 /**
  * 
  * @param {string} myString A valid URL that looks like 'http://somesite.com/api/authors/1234/posts/5678

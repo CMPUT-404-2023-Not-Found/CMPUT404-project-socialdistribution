@@ -6,7 +6,7 @@ ui/src/pages/EditPost.js
 
 import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box, Button, Checkbox, FormControl, MenuItem, Select, TextField } from '@mui/material';
+import { Box, Button, FormControlLabel, Checkbox, FormControl, MenuItem, Select, TextField } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 
 import AuthContext from '../context/AuthContext';
@@ -195,12 +195,15 @@ const EditPost = () => {
                         <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
                     ))}
                     </TextField>
-                    <Checkbox 
-                        id='unlisted'
+                    <br/>
+                    <FormControlLabel 
                         label='Unlisted'
-                        name='unlisted'
-                        defaultValue={post.unlisted}
+                        labelPlacement='start'
+                        control={
+                            <Checkbox id='unlisted' name='unlisted' defaultValue={post.unlisted} />
+                        }
                     />
+                    <br/>
                     <CommonButton variant='contained' onClick={handleSubmit}>Update</CommonButton>
                     <CommonButton variant='outlined' onClick={() => { console.log('canceled') }}>Cancel</CommonButton>
                 </Box>

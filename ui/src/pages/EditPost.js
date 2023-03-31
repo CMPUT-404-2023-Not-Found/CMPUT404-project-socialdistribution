@@ -8,6 +8,7 @@ import {useForm} from 'react-hook-form';
 
 import GridWrapper from '../components/common/GridWrapper/GridWrapper';
 import PageHeader from '../components/Page/PageHeader';
+import { TextField } from '@mui/material';
 
 /*
     This code was adapted from a video by Ssali Jonathan, 2022-02-10, retrieved on 2023-02-27, 
@@ -23,61 +24,27 @@ const EditPost = () => {
     const{ postId } = useParams(); // recieve the selected post id from PostHeader.js
     // console.log(postId);
 
+    const [ post, setPost ] = useState(null);
     const { user, authTokens, logoutUser } = useContext(AuthContext);
-    
-    const [options, setOptions] = useState(null);
-
-    const getPostData =  async () => {
-        const [response, postData] = await Backend.get(`/api/authors/${user.user_id}/posts/${postId}`, authTokens.access);
-        // console.log(postData);
-        return postData;
-    }
-    
-    let postTitle;
-    let postDescription;
-    let contentType;
-    let content;
-    let visibility;
-    let unlisted;
-    let categories;
-
-    let postData = getPostData();
-    let defaultValues = {};
-    postData.then((data) => {
-        // console.log(data);
-        postTitle = data['title'];
-        postDescription = data['description'];
-        contentType = data['contentType'];
-        content = data['content'];
-        visibility = data['visibility'];
-        unlisted = data['unlisted'];
-        categories = data['categories'];
-        defaultValues.data = data;
-    })
-    
-    const {register, handleSubmit} = useForm();
 
     
-
     //  event listeners --------------------------------------------
     useEffect(() => {
-        const getOptions = async () => {
-            const [response, data] = await Backend.options(`/api/authors/${user.user_id}/posts/`, authTokens.access);
-            data.actions.POST = {
-                ...data.actions.POST,
-                'file': {
-                    'type' : 'file',
-                    'label': 'File',
-                    'required': false,
-                    'read_only': false,
-                }
+        const getPostData =  async () => {
+            const [response, data] = await Backend.get(`/api/authors/${user.user_id}/posts/${postId}`, authTokens.access);
+            if (response.status && response.status === 200) {
+                console.log('Successfully retrieve post data');
+                console.debug(data);
+                setPost(data);
+            } else if (response.statusText === 'Unauthorized'){
+                logoutUser();
+            } else {
+                console.error('Failed to retrieve post data');
             }
-            setOptions(data);
-            // console.log(data);
         }
 
-        getOptions();
-    }, []);
+        getPostData();
+    }, [postId, user.user_id, authTokens.access, logoutUser]);
 
     //  async functions -------------------------------------------
 
@@ -91,20 +58,22 @@ const EditPost = () => {
         })
     }
 
-    const editPost = async (formData) => {
-
-        let fileContentTypes = ['image/jpeg;base64', 'image/png;base64', 'application/base64']
+    const handleSubmit = async (formData) => {
+        formData.preventDefault();
+        let fileContentTypes = ['image/jpeg;base64', 'image/png;base64', 'application/base64'];
+        console.log('Editing post id ' + postId);
+        console.log(formData);
+        // if the content type is a file upload, then get the file data
         if (fileContentTypes.includes(formData.contentType)) {
-            console.log(formData);
+            console.log('File detected, retreiving file data');
             let fileList = formData.file;
-    
             let fileBase64 = await getFileData(fileList[0]);
-
             formData.content =  fileBase64;
         }
 
         delete formData.file;
         
+        return;
         const [response, data] = await Backend.post(`/api/authors/${user.user_id}/posts/${postId}/`, authTokens.access, JSON.stringify(formData));
         if (response.status && response.status === 200) {
             navigate('/posts/');
@@ -125,10 +94,22 @@ const EditPost = () => {
         <>
             <PageHeader title='Edit the selected Post'></PageHeader>
             <GridWrapper>
-            {options ?
-                <DynamicForm options={options} formSubmitFunction={editPost} defaultValues={defaultValues.data} postId={postId} >
-                    
-                </DynamicForm>
+            {post ?
+                <form onSubmit={handleSubmit}>
+                    <TextField 
+                        label='Title'
+                        id='title'
+                        name='title'
+                        defaultValue={post.title}
+                    />
+                    <TextField 
+                        label='Description'
+                        id='description'
+                        name='description'
+                        defaultValue={post.description}
+                    />
+
+                </form>
                 : 
                 <div>
                     Loading the selected post ...

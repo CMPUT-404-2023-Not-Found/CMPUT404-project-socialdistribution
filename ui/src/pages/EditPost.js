@@ -8,7 +8,9 @@ import {useForm} from 'react-hook-form';
 
 import GridWrapper from '../components/common/GridWrapper/GridWrapper';
 import PageHeader from '../components/Page/PageHeader';
-import { TextField } from '@mui/material';
+import { MenuItem, Select, TextField } from '@mui/material';
+import SelectInput from '@mui/material/Select/SelectInput';
+import InputLabel from '@mui/material/InputLabel';
 
 /*
     This code was adapted from a video by Ssali Jonathan, 2022-02-10, retrieved on 2023-02-27, 
@@ -27,6 +29,13 @@ const EditPost = () => {
     const [ post, setPost ] = useState(null);
     const { user, authTokens, logoutUser } = useContext(AuthContext);
 
+    const contentTypeMenuItems = [
+        {id: 1, value: 'text/plain', label: 'Text'},
+        {id: 2, value: 'text/markdown', label: 'Markdown'},
+        {id: 3, value: 'image/jpeg;base64', label: 'JPEG'},
+        {id: 4, value: 'image/png;base64', label: 'PNG'},
+        {id: 5, value: 'application/base64', label: 'Base64'},
+    ]
     
     //  event listeners --------------------------------------------
     useEffect(() => {
@@ -108,6 +117,17 @@ const EditPost = () => {
                         name='description'
                         defaultValue={post.description}
                     />
+                    <InputLabel id="contentType">Content Type</InputLabel>
+                    <Select
+                        label='Content Type'
+                        id='contentType'
+                        name='contentType'
+                        defaultValue={post.contentType} 
+                    >
+                        {contentTypeMenuItems.map((item) => (
+                            <MenuItem key={item.id} value={item.value}>{item.label}</MenuItem>
+                        ))}
+                    </Select>
 
                 </form>
                 : 

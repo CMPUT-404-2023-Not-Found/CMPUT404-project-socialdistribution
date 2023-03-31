@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-const PostOptions = ({ postUUID, }) => {
+const PostOptions = ({ postUUID }) => {
     const navigate = useNavigate();
     const [ open, setOpen ] = useState(false);
     const [ anchorEl, setAnchorEl ] = useState(null);
@@ -18,7 +18,7 @@ const PostOptions = ({ postUUID, }) => {
     }
 
     const handleDelete = () => {
-        
+
     };
 
     const handleClick = (event) => {

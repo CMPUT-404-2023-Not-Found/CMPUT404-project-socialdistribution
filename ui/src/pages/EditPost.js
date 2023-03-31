@@ -20,6 +20,7 @@ const EditPost = () => {
     let navigate = useNavigate();
     const { postId } = useParams();
     const [ post, setPost ] = useState(null);
+    const [ newValues, setNewValues ] = useState({});
     const { user, authTokens, logoutUser } = useContext(AuthContext);
 
     const contentTypeMenuItems = [
@@ -76,21 +77,10 @@ const EditPost = () => {
         })
     }
 
-    const handleSubmit = async (formData) => {
-        formData.preventDefault();
-        let fileContentTypes = ['image/jpeg;base64', 'image/png;base64', 'application/base64'];
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         console.log('Editing post id ' + postId);
-        console.log(formData);
-        // if the content type is a file upload, then get the file data
-        if (fileContentTypes.includes(formData.contentType)) {
-            console.log('File detected, retreiving file data');
-            let fileList = formData.file;
-            let fileBase64 = await getFileData(fileList[0]);
-            formData.content =  fileBase64;
-        }
-
-        delete formData.file;
-        
+        let formData = {};
         return;
         const [response, data] = await Backend.post(`/api/authors/${user.user_id}/posts/${postId}/`, authTokens.access, JSON.stringify(formData));
         if (response.status && response.status === 200) {
@@ -103,6 +93,19 @@ const EditPost = () => {
         console.log(data);
     }
 
+    const handleChange = (e) => {
+        const name = e.target.name;
+        const value = e.target.value;
+        setNewValues((values) => ({ ...values, [name]: value }));
+    };
+
+    const handleCheckboxChange = (e) => {
+        const name = e.target.name;
+        const value = e.target.checked;
+        setNewValues((values) => ({ ...values, [name]: value }));
+
+    }
+
     const showContentType = (contentType, content) => {
         // Don't render images
         if (contentType.startsWith('image') || contentType.startsWith('application') || contentType.startsWith('base64')) {
@@ -112,8 +115,7 @@ const EditPost = () => {
             return false;
         }
         return true;
-    }
-
+    };
 
     return (
         <>
@@ -132,15 +134,17 @@ const EditPost = () => {
                         label='Title'
                         id='title'
                         name='title'
+                        defaultValue={post.title}
+                        onChange={handleChange}
                         required
                         sx={{ marginBottom: 15, width:"45%" }}
-                        defaultValue={post.title}
                     />
                     <TextField 
                         label='Description'
                         id='description'
                         name='description'
                         defaultValue={post.description}
+                        onChange={handleChange}
                         fullWidth
                         multiline
                         rows={4}
@@ -153,9 +157,10 @@ const EditPost = () => {
                         select
                         label='Content Type'
                         name='contentType'
+                        defaultValue={post.contentType} 
+                        onChange={handleChange}
                         required
                         sx={{ marginBottom: 15, width:"25%" }}
-                        defaultValue={post.contentType} 
                     >
                         {contentTypeMenuItems.map((option) => (
                             <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
@@ -165,10 +170,11 @@ const EditPost = () => {
                         label='Content'
                         id='content'
                         name='content'
+                        defaultValue={post.content}
+                        onChange={handleChange}
                         fullWidth
                         multiline
                         rows={4}
-                        defaultValue={post.content}
                     />
                     </>
                     }
@@ -176,8 +182,9 @@ const EditPost = () => {
                         id='visibility'
                         label='Visibility'
                         name='visibility'
+                        defaultValue={post.visibility && post.visibility}
+                        onChange={handleChange}
                         required
-                        defaultValue={post.visibility && post.visibility} 
                         select
                         fullWidth
                         sx={{ marginBottom: 15, width:"25%" }}
@@ -191,7 +198,7 @@ const EditPost = () => {
                         label='Unlisted'
                         labelPlacement='start'
                         control={
-                            <Checkbox id='unlisted' name='unlisted' defaultValue={post.unlisted} />
+                            <Checkbox id='unlisted' name='unlisted' defaultValue={post.unlisted} onChange={handleCheckboxChange} />
                         }
                     />
                     <br/>

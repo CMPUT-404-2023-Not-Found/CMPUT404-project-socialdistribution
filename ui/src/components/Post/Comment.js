@@ -6,19 +6,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 
 import BasicAvatar from '../common/BasicAvatar/BasicAvatar';
-import IconButton from '@mui/material/IconButton';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-
 const Comment = ({ comment }) => {
-    const [isThumbUp, setIsThumbUp] = React.useState(false);
-    const handleThumbUp = async () => {
-        setIsThumbUp(!isThumbUp);
-      };
-
-    // TODO: make like work for comments
-    // same as like for post
-
     const renderCommentBody = (content, contentType) => {
         switch (contentType) {
             case 'text/plain': case 'application/base64': 
@@ -50,9 +38,6 @@ const Comment = ({ comment }) => {
                 renderCommentBody(comment.comment, comment.contentType)
             }
             />
-            <IconButton aria-label="like" onClick={handleThumbUp} >
-                <ThumbUpIcon style={{ color: isThumbUp ? '#ef9645' : 'inherit' }}/>
-            </IconButton>  
         </ListItem>
     )
 }

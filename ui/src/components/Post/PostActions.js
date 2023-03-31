@@ -105,8 +105,9 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
         if (['PUBLIC', 'FRIENDS'].includes(post.visibility)) {
             chips.push(<Chip key={1} label={post.visibility} color={postActionStyles.chips[post.visibility].color}/>); 
         }
+        if (post.unlisted && post.unlisted) { chips.push(<Chip key={2} label='unlisted' color='error'/>); }
         post.categories.forEach((category, idx)=>{
-            chips.push(<Chip key={idx + 2} label={category}/>)
+            chips.push(<Chip key={idx + 3} label={category}/>)
         });
         return chips;
     }   

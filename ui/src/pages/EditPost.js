@@ -1,41 +1,39 @@
-import React from 'react';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { useContext, useState, useEffect } from 'react';
-import AuthContext from '../context/AuthContext';
-import DynamicForm from '../utils/DynamicForm';
-import Backend from '../utils/Backend';
-import {useForm} from 'react-hook-form';
+/*
+2023-03-30
+ui/src/pages/EditPost.js
 
-import GridWrapper from '../components/common/GridWrapper/GridWrapper';
-import PageHeader from '../components/Page/PageHeader';
-import { MenuItem, Select, TextField } from '@mui/material';
-import SelectInput from '@mui/material/Select/SelectInput';
+*/
+
+import React, { useContext, useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Box, Button, Checkbox, FormControl, MenuItem, Select, TextField } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 
-/*
-    This code was adapted from a video by Ssali Jonathan, 2022-02-10, retrieved on 2023-02-27, 
-    to YouTube: https://www.youtube.com/watch?v=9dwyXq9G_MQ
-
-    I also looked at Mozilla Developer Network's post "Your First Form", to design the form, 
-    found here: https://developer.mozilla.org/en-US/docs/Learn/Forms/Your_first_form
-*/
+import AuthContext from '../context/AuthContext';
+import Backend from '../utils/Backend';
+import GridWrapper from '../components/common/GridWrapper/GridWrapper';
+import PageHeader from '../components/Page/PageHeader';
+import CommonButton from '../components/common/CommonButton/CommonButton';
 
 const EditPost = () => {
     //  variable declarations -------------------------------------
     let navigate = useNavigate();
-    const{ postId } = useParams(); // recieve the selected post id from PostHeader.js
-    // console.log(postId);
-
+    const { postId } = useParams();
     const [ post, setPost ] = useState(null);
     const { user, authTokens, logoutUser } = useContext(AuthContext);
 
     const contentTypeMenuItems = [
-        {id: 1, value: 'text/plain', label: 'Text'},
-        {id: 2, value: 'text/markdown', label: 'Markdown'},
-        {id: 3, value: 'image/jpeg;base64', label: 'JPEG'},
-        {id: 4, value: 'image/png;base64', label: 'PNG'},
-        {id: 5, value: 'application/base64', label: 'Base64'},
+        {value: 'text/plain', label: 'Text'},
+        {value: 'text/markdown', label: 'Markdown'},
+        {value: 'image/jpeg;base64', label: 'JPEG'},
+        {value: 'image/png;base64', label: 'PNG'},
+        {value: 'application/base64', label: 'Base64'},
     ]
+    
+    const visibilityMenuItems = [
+        {value: 'FRIENDS', label: 'Friends'},
+        {value: 'PUBLIC', label: 'Public'}
+    ];
     
     //  event listeners --------------------------------------------
     useEffect(() => {
@@ -54,8 +52,6 @@ const EditPost = () => {
 
         getPostData();
     }, [postId, user.user_id, authTokens.access, logoutUser]);
-
-    //  async functions -------------------------------------------
 
     // This code is adapted from a post by Endless on StackOverflow on 2018-01-09, retrieved on 2023-03-17, found here
     // https://stackoverflow.com/questions/48172934/error-using-async-and-await-with-filereader
@@ -95,20 +91,24 @@ const EditPost = () => {
     }
 
 
-    // did this because options depends on the async function,
-    // so if you pass null to dynamic form it gives an error
-    // not sure of another way to fix it
-
     return (
         <>
             <PageHeader title='Edit the selected Post'></PageHeader>
             <GridWrapper>
             {post ?
-                <form onSubmit={handleSubmit}>
-                    <TextField 
+                <Box
+                    component='form'
+                    noValidate
+                    autoComplete='off'
+                    sx={{
+                        '& > :not(style)': { m: 1 },
+                    }}
+                >
+                    <TextField
                         label='Title'
                         id='title'
                         name='title'
+                        required
                         defaultValue={post.title}
                     />
                     <TextField 
@@ -117,19 +117,61 @@ const EditPost = () => {
                         name='description'
                         defaultValue={post.description}
                     />
-                    <InputLabel id="contentType">Content Type</InputLabel>
-                    <Select
-                        label='Content Type'
+                    <TextField
                         id='contentType'
+                        select
+                        label='Content Type'
                         name='contentType'
+                        required
                         defaultValue={post.contentType} 
                     >
-                        {contentTypeMenuItems.map((item) => (
-                            <MenuItem key={item.id} value={item.value}>{item.label}</MenuItem>
-                        ))}
-                    </Select>
-
-                </form>
+                    {contentTypeMenuItems.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+                    ))}
+                    </TextField>
+                    <TextField 
+                        label='Content'
+                        id='content'
+                        name='content'
+                        defaultValue={post.content}
+                    />
+                    <TextField
+                        id='categories'
+                        select
+                        label='Categories'
+                        name='categories'
+                        required
+                        defaultValue={post.categories}
+                    >
+                    {post.categories.length > 0 ?
+                        post.categories.map((option) => {
+                            <MenuItem key={option} value={option}>{option}</MenuItem>
+                        })
+                    :
+                        <MenuItem key='category' value='category'>category</MenuItem>
+                    }
+                    </TextField>
+                    <TextField
+                        id='visibility'
+                        select
+                        label='Visibility'
+                        name='visibility'
+                        required
+                        defaultValue={post.visibility} 
+                    >
+                    {visibilityMenuItems.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+                    ))}
+                    </TextField>
+                    <Checkbox 
+                        id='unlisted'
+                        label='Unlisted'
+                        name='unlisted'
+                        defaultValue={post.unlisted}
+                    />
+                    <CommonButton variant='contained' onClick={handleSubmit}>Update</CommonButton>
+                    <CommonButton variant='outlined' onClick={() => { console.log('canceled') }}>Cancel</CommonButton>
+                </Box>
                 : 
                 <div>
                     Loading the selected post ...

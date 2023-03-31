@@ -171,32 +171,11 @@ const EditPost = () => {
                     </>
                     }
                     <TextField
-                        id='categories'
-                        select
-                        label='Categories'
-                        name='categories'
-                        defaultValue={post.categories}
-                        required
-                        fullWidth
-                        multiline
-                        rows={4}
-                        sx={{ marginBottom: 15 }}
-                    >
-                    {categoriesMenuItems.map((option) => (
-                        <MenuItem key={option} value={option}>{option}</MenuItem>
-                    ))}
-                    {post.categories.length > 0 &&
-                        post.categories.map((option) => (
-                            <MenuItem key={option} value={option}>{option}</MenuItem>
-                        ))
-                    }
-                    </TextField>
-                    <TextField
                         id='visibility'
                         label='Visibility'
                         name='visibility'
                         required
-                        defaultValue={post.visibility} 
+                        defaultValue={post.visibility && post.visibility} 
                         select
                         fullWidth
                         sx={{ marginBottom: 15, width:"25%" }}

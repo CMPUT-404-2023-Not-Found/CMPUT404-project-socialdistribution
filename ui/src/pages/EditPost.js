@@ -65,7 +65,7 @@ const EditPost = () => {
         const [response, data] = await Backend.put(updatePostEndpoint, authTokens.access, JSON.stringify(newValues));
         if (response.status && response.status === 200) {
             console.log(`Updated post ${updatePostEndpoint}`)
-            // navigate('/posts/');
+            navigate('/posts');
         } else if (response.statusText === 'Unauthorized'){
             logoutUser();
         } else {
@@ -84,6 +84,10 @@ const EditPost = () => {
         const value = e.target.checked;
         setNewValues((values) => ({ ...values, [name]: value }));
 
+    }
+
+    const handleCancel = () => {
+        navigate('/posts/');
     }
 
     const showContentType = (contentType, content) => {
@@ -183,7 +187,7 @@ const EditPost = () => {
                     />
                     <br/>
                     <CommonButton variant='contained' onClick={handleSubmit}>Update</CommonButton>
-                    <CommonButton variant='outlined' onClick={() => { console.log('canceled') }}>Cancel</CommonButton>
+                    <CommonButton variant='outlined' onClick={handleCancel}>Cancel</CommonButton>
                 </Box>
                 : 
                 <div>

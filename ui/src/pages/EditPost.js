@@ -23,11 +23,8 @@ const EditPost = () => {
     const { user, authTokens, logoutUser } = useContext(AuthContext);
 
     const contentTypeMenuItems = [
-        {value: 'text/plain', label: 'Text'},
         {value: 'text/markdown', label: 'Markdown'},
-        {value: 'image/jpeg;base64', label: 'JPEG'},
-        {value: 'image/png;base64', label: 'PNG'},
-        {value: 'application/base64', label: 'Base64'},
+        {value: 'text/plain', label: 'Plain Text'}
     ]
     
     const visibilityMenuItems = [
@@ -106,6 +103,15 @@ const EditPost = () => {
         console.log(data);
     }
 
+    const showContentType = (contentType, content) => {
+        if (contentType.startsWith('image') || contentType.startsWith('application') || contentType.startsWith('base64')) {
+            return false;
+        } else if (content.startsWith('![]')) {
+            return false;
+        }
+        return true;
+    }
+
 
     return (
         <>
@@ -138,6 +144,8 @@ const EditPost = () => {
                         rows={4}
                         sx={{ marginBottom: 15 }}
                     />
+                    {showContentType(post.contentType, post.content) &&
+                    <>
                     <TextField
                         id='contentType'
                         select
@@ -147,9 +155,9 @@ const EditPost = () => {
                         sx={{ marginBottom: 15, width:"25%" }}
                         defaultValue={post.contentType} 
                     >
-                    {contentTypeMenuItems.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
-                    ))}
+                        {contentTypeMenuItems.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+                        ))}
                     </TextField>
                     <TextField 
                         label='Content'
@@ -160,6 +168,8 @@ const EditPost = () => {
                         rows={4}
                         defaultValue={post.content}
                     />
+                    </>
+                    }
                     <TextField
                         id='categories'
                         select

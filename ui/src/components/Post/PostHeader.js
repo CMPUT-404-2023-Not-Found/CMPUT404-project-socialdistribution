@@ -12,64 +12,17 @@ import { useNavigate } from 'react-router-dom';
 import BasicAvatar from '../common/BasicAvatar/BasicAvatar';
 import BasicMenu from '../common/BasicMenu/BasicMenu';
 import { postHeaderStyles } from './styles';
-import { utcToLocal } from '../../utils/Utils';
+import { getUUIDFromURL, utcToLocal } from '../../utils/Utils';
+import PostOptions from './PostOptions';
 
-
-
-const PostHeader = ({ author, title, subheader, time, postId }) => {
-    const [ open, setOpen ] = React.useState(false);
-    const [ anchorEl, setAnchorEl ] = React.useState(null);
-    const navigate = useNavigate();
-
-    const regex = /\/([\w-]+)$/;
-    const match = postId.match(regex);
-    if (match) {
-        const postIdFromUrl = match[1];
-    }
-    const postIdFromUrl = match[1];
-
-    const menuItems = [
-        {
-            id: 1,
-            label: 'Edit',
-            route: '/editpost/' + postIdFromUrl,
-        }, 
-        {
-            id: 2,
-            label: 'Delete',
-        }
-    ];
-
-    menuItems[1].onClick = () => {
-        console.log('Delete post with id: ' + postIdFromUrl);
-    };
-
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-        setOpen(true);
-      }
-
-    const handleClose = () => {
-        setAnchorEl(null);
-        setOpen(false);
-    };
+const PostHeader = ({ author, title, subheader, time, postNodeId }) => {
+    const postUUID = getUUIDFromURL(postNodeId);
 
     // RENDER APP =================================================
     return (
         <CardHeader
             avatar={<BasicAvatar profile={author} size='medium'></BasicAvatar>}
-            action={
-            <><IconButton aria-label="settings" onClick={handleClick}>
-                    <MoreVertIcon />
-                </IconButton>
-                <BasicMenu
-                    open={open}
-                    anchorEl={anchorEl}
-                    handleClose={handleClose}
-                    menuItems={menuItems}
-                />
-                </>
-            }
+            action={<PostOptions postUUID={postUUID}></PostOptions>}
             title={title}
             titleTypographyProps={postHeaderStyles.cardHeader.titleTypographyProps}
             subheader={(time ? utcToLocal(time) : subheader)}

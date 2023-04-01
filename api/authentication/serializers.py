@@ -12,5 +12,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['displayName'] = user.display_name
         token['profileImage'] = user.profile_image
         token['github'] = user.github
+        token['url'] = user.get_node_id()
 
         return token

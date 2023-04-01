@@ -4,6 +4,36 @@ ui/src/utils/Utils.js
 
 */
 
+export function getHostFromURL(myString) {
+    let ret = '';
+    try {
+        const url = new URL(myString)
+        ret = url.protocol + '//' + url.hostname;
+    } catch (e) {
+        console.error('Invalid url for ' + myString);
+    }
+    return ret;
+}
+
+/**
+ * 
+ * @param {string} myString A valid URL that looks like 'http://somesite.com/api/authors/1234/posts/5678
+ * @returns The ending UUID, for example 5678, from a URL or null
+ */
+export function getUUIDFromURL(myString) {
+    let ret = null;
+    try {
+        const url = new URL(myString)
+        const path = url.pathname;
+        const path_array = path.split('/');
+        let uuid = path_array[path_array.length - 1]
+        return (uuid.endsWith('/')) ?  uuid.slice(0, -1) : uuid;
+    } catch (e) {
+        console.error('Invalid url for ' + myString);
+        return ret;
+    }
+}
+
 /**
  * 
  * @param {string} myString

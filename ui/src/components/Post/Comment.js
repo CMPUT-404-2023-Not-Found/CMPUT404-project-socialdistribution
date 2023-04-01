@@ -7,6 +7,9 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 
 import BasicAvatar from '../common/BasicAvatar/BasicAvatar';
 const Comment = ({ comment }) => {
+
+    console.debug(comment);
+    
     const renderCommentBody = (content, contentType) => {
         switch (contentType) {
             case 'text/plain': case 'application/base64': 

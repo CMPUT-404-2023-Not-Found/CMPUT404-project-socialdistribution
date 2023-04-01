@@ -6,10 +6,9 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 
 import BasicAvatar from '../common/BasicAvatar/BasicAvatar';
-
 const Comment = ({ comment }) => {
 
-    console.log(comment);
+    console.debug(comment);
     
     const renderCommentBody = (content, contentType) => {
         switch (contentType) {
@@ -28,7 +27,7 @@ const Comment = ({ comment }) => {
                 )
         }
     }
-
+    console.log('comment: ', comment);
     // This code is adapted from the Material UI docs, retrieved on 2023-03-26
     // https://mui.com/material-ui/react-list/
     return (

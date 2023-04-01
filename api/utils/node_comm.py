@@ -11,6 +11,7 @@ from author.models import Author
 from author.serializers import ExistingAuthorSerializer
 from comment.models import Comment
 from comment.serializers import CommentSerializer
+from like.models import Like
 from node.models import Node
 from post.models import Post
 from post.serializers import PostSerializer
@@ -218,6 +219,8 @@ class NodeComm():
                 serializer.save(author=author_obj)
                 ret = serializer.data
                 ret_status = 201
+                if ret['type'].lower() == 'like':
+                    self.create_like_object(data)
             except Exception as e:
                 logger.error('Failed to create inbox object for author_uuid [%s]. e [%s]', author_uuid, e)
                 ret = e
@@ -226,6 +229,14 @@ class NodeComm():
             ret = serializer.errors
         return ret, ret_status
     
+    def create_like_object(self, data):
+        logger.info('Creating like object')
+        post_node_id = data.get('object')
+        post_uuid = self.parse_object_uuid(post_node_id)
+        post = Post.objects.get(id=post_uuid)
+        likeobj = Like.objects.create(post=post, author=data.get('author', {}).get('url'), summary=data.get('summary'))
+        logger.info('Created like object: [%s]', likeobj)
+
     def send_external_object(self, inbox_url, data):
         ret = None
         ret_status = 500

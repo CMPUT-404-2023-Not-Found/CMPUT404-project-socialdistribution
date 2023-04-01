@@ -11,6 +11,7 @@ from .serializers import LikeSerializer
 from post.models import Post
 from .pagination import LikePagination
 from comment.models import Comment
+from rest_framework.generics import ListAPIView
 from utils.helper_funcs import toLastModifiedHeader
 
 import logging

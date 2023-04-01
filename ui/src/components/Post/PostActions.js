@@ -4,7 +4,7 @@ ui/src/components/Post/PostActions.js
 
 */
 
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import CardActions from '@mui/material/CardActions';
@@ -24,13 +24,15 @@ import ShareAction from '../Actions/ShareAction/ShareAction';
 
 import Comment from './Comment';
 import BasicPagination from '../common/BasicPagination/BasicPagination';
-import { parsePathFromURL } from '../../utils/Utils';
+import { getInboxUrl, parsePathFromURL } from '../../utils/Utils';
 import { Box, TextField } from '@mui/material';
 import BasicAvatar from '../common/BasicAvatar/BasicAvatar';
 import AuthContext from '../../context/AuthContext';
 import Backend from '../../utils/Backend';
 import { getHostFromURL } from '../../utils/Utils';
 import { postActionStyles } from './styles';
+
+
 
 /*
 This code is modified from a documentation guide on Material UI Card components from Material UI SAS 2023, retrieved 2023-03-13 from mui.com
@@ -48,9 +50,11 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-const PostActions = ({ disableLike=false, disableShare=false, disableComments=false, postNodeId, likeCount, commentCount, post, source='' }) => {    
+const PostActions = ({ disableLike=false, disableShare=false, disableComments=false, postAuthor, postNodeId, likeCount, commentCount, post, source='' }) => {    
     const [expanded, setExpanded] = React.useState(false);
     const [comments, setComments] = React.useState([]);
+    const [isLiked, setIsLiked] = React.useState(false);
+    const [likes, setLikes] = React.useState(likeCount);
     const [commentText, setCommentText] = React.useState('');
 
     const { user, authTokens, logoutUser } = React.useContext(AuthContext);
@@ -70,7 +74,6 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
-
     const sendComment = async () => {
         const url = new URL(postNodeId);
 
@@ -99,6 +102,43 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
 
         // removed sending comment to inbox
     }
+    const handleLike = async () => {
+        setIsLiked(!isLiked);
+        if (!isLiked) {
+            createLike(postNodeId);
+        }
+    };
+    
+    const createLike = async (postNodeId) => {
+        try {
+            let author_url = postAuthor.url || postAuthor.id;
+            let author_name = user.displayName || user.username;
+            let inbox_data = {
+                type: 'like',
+                summary: author_name + " liked your post",
+                object: postNodeId,
+                inbox_urls: [getInboxUrl(author_url)]
+            }
+          const [ response, data ] = await Backend.post('/api/node/object/',
+            authTokens.access,
+            JSON.stringify(inbox_data)
+          );
+          if (response.status && response.status === 201) {
+            console.log('Like created: ', data);
+            setLikes(likes + 1);
+        } else if (response.statusText === 'Unauthorized'){
+            logoutUser();
+        } else {
+            console.log('Failed to send like');
+            console.debug(response);
+        }
+          console.log('PostNodeID ', postNodeId);
+          console.log('Like created: ', data);
+        } catch (error) {
+          console.error('Error creating like: ', error);
+        }
+    };
+
     const renderChips = () => {
         const chips = [];
         if (post.origin) { chips.push(<Chip key={0} label={getHostFromURL(post.origin)} />); }
@@ -146,13 +186,13 @@ const PostActions = ({ disableLike=false, disableShare=false, disableComments=fa
     return (<>
     <CardActions disableSpacing>
         {!disableLike && 
-        <IconButton aria-label="like">
-            {likeCount ? 
-                <Badge badgeContent={likeCount} color='error'>
-                    <FavoriteIcon />
-                </Badge>
+        <IconButton aria-label="like" onClick={handleLike}>
+            {likes ? 
+            <Badge badgeContent={likes} color='error'>
+                <FavoriteIcon style={{ color: isLiked ? '#CC0000' : 'inherit' }}/>
+            </Badge>
             :
-                <FavoriteIcon />
+            <FavoriteIcon style={{ color: isLiked ? '#CC0000' : 'inherit' }}/>
             }
         </IconButton>
         }

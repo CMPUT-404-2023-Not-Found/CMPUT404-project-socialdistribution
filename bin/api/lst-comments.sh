@@ -24,18 +24,21 @@ else
 fi
 
 auth_hdr=$(./get-auth.sh 'bearer' $(cat .username) $(cat .password))
-list_comment_url=`printf "${COMMENT_API}/" $author_uuid $post_uuid`
+list_comment_url=`printf "${COMMENT_API}/${page_query}" $author_uuid $post_uuid`
 
-rsp=`curl -s -H "$auth_hdr" "$list_comment_url"`
+hdr_dump=`mktemp`
+rsp=`curl -s -D "$hdr_dump" -H "$auth_hdr" "$list_comment_url"`
 e=$?; if [ $e -ne 0 ]; then echo -n "ERR Could not GET to $list_comment_url"; echo "$rsp"; exit $e; fi
 
 echo "$rsp" | grep -q "$rand"
 e=$?
 if [ $e -ne 0 ]
 then
+    cat "$hdr_dump" >&2
     echo "ERR Failed GET request"
     echo "$rsp"
 else
+    cat "$hdr_dump" >&2
     echo "$rsp" | jq 2>/dev/null
     e=$?; if [ $e -ne 0 ]; then echo "$rsp"; exit $e; fi
 fi

@@ -34,6 +34,7 @@ const BasicPagination = ({ itemEndpoint, itemResultsKey, setItems }) => {
             const [response, data] = await Backend.get(pagination_endpoint, authTokens.access);
             if (response.status && response.status === 200) {
                 console.debug(data)
+                console.log(data)
                 setPagination(pagination => ({...pagination, count: data.count}));
                 setItems(data[itemResultsKey]);
             } else if (response.statusText === 'Unauthorized'){

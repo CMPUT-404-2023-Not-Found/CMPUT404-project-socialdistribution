@@ -9,9 +9,14 @@ from rest_framework.response import Response
 
 from author.models import Author
 from inbox.models import Inbox
+from like.models import Like
+from post.models import Post
 from .pagination import InboxPagination
 from .serializer import InboxSerializer
 from utils.permissions import IsOwner, NodesCanPost, NonOwnerCanPost
+from utils.node_comm import NodeComm
+NodeComm = NodeComm()
+from utils.helper_funcs import getMaxLastModifiedHeader
 
 import logging
 logger = logging.getLogger('django')
@@ -36,8 +41,10 @@ class InboxListCreateDeleteView(DestroyAPIView, ListCreateAPIView):
         author_uuid = self.kwargs.get(self.lookup_url_kwarg)
         if 'count' in request.query_params or request.query_params.get('count', '') == 'true':
             logger.info('Getting count of objects in author [%s] inbox', author_uuid)
-            queryset_count = self.get_queryset().count()
-            return Response(status=status.HTTP_200_OK, data={'count': queryset_count})
+            queryset = self.get_queryset()
+            last_modified = getMaxLastModifiedHeader([inbox.received_at for inbox in queryset])
+            queryset_count = len(queryset)
+            return Response(status=status.HTTP_200_OK, data={'count': queryset_count}, headers={'Last-Modified': last_modified})
         else:
             return self.list(request, *args, **kwargs)
 
@@ -56,7 +63,19 @@ class InboxListCreateDeleteView(DestroyAPIView, ListCreateAPIView):
         POST Add new object to author's inbox
         '''
         logger.info(rev)
-        return super().post(request, *args, **kwargs)
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            self.perform_create(serializer)
+            if (request.data.get('type').lower() == 'like'):
+                logger.info('Creating like object')
+                post_node_id = request.data.get('object')
+                post_uuid = NodeComm.parse_object_uuid(post_node_id)
+                post = Post.objects.get(id=post_uuid)
+                likeobj = Like.objects.create(post=post, author=request.data.get('author', {}).get('url'), summary=request.data.get('summary'))
+                logger.info('Created like object: [%s]', likeobj)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def perform_create(self, serializer):
         '''

@@ -60,6 +60,26 @@ class Backend {
         return [ response, (responseData ? responseData : false)]
     }
 
+    async put(path, token, requestData, requestDataType='application/json') {
+        const url = this.API_URL + path;
+        let response = null;
+        try {
+            response = await fetch(url, {
+                headers: {
+                    'Authorization': 'Bearer ' + String(token),
+                    'Content-Type': requestDataType ? requestDataType : null
+                },
+                method: 'put',
+                body: requestData ? requestData : null
+            });
+        } catch (error) {
+            console.error('Failed to call backend. e ');
+            console.error(error);
+        }
+        const responseData = response ? await response.json() : null;
+        return [ response, (responseData ? responseData : false)]
+    }
+
     async delete(path, token) {
         const url = this.API_URL + path;
         const response = await fetch(url, {

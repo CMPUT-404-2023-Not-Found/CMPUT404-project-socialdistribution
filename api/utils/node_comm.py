@@ -5,17 +5,18 @@ from django.conf import settings
 import json
 import logging
 import requests
-from threading import Thread
 from urllib.parse import urlsplit
 
 from author.models import Author
 from author.serializers import ExistingAuthorSerializer
 from comment.models import Comment
 from comment.serializers import CommentSerializer
+from like.models import Like
 from node.models import Node
 from post.models import Post
 from post.serializers import PostSerializer
 from inbox.serializer import InboxSerializer
+from utils.custom_thread import CustomThread
 
 logger = logging.getLogger('django')
 rev = 'rev: $xAnad89$x'
@@ -70,9 +71,9 @@ class NodeComm():
                 lookup_target, lookup_type = ('object', source_item['type']) 
             source_item_url = source_item[lookup_target]
             if self.is_host_internal(source_item_url):
-                thread_list[i] = Thread(target=self.get_internal_object, args=(source_item, results, lookup_target, lookup_type, i))
+                thread_list[i] = CustomThread(target=self.get_internal_object, args=(source_item, results, lookup_target, lookup_type, i))
             else:
-                thread_list[i] = Thread(target=self.get_external_object, args=(source_item, lookup_target, results, i))
+                thread_list[i] = CustomThread(target=self.get_external_object, args=(source_item, lookup_target, results, i))
             thread_list[i].start()
         for thread in thread_list:
             thread.join()
@@ -199,9 +200,9 @@ class NodeComm():
         thread_list = []
         for inbox_url in inbox_urls:
             if self.is_host_internal(inbox_url):
-                thread = Thread(target=self.send_internal_object, args=(inbox_url, data))
+                thread = CustomThread(target=self.send_internal_object, args=(inbox_url, data))
             else:
-                thread = Thread(target=self.send_external_object, args=(inbox_url, data))
+                thread = CustomThread(target=self.send_external_object, args=(inbox_url, data))
             thread_list.append(thread)
             thread.start()
         for thread in thread_list:
@@ -218,6 +219,8 @@ class NodeComm():
                 serializer.save(author=author_obj)
                 ret = serializer.data
                 ret_status = 201
+                if ret['type'].lower() == 'like':
+                    self.create_like_object(data)
             except Exception as e:
                 logger.error('Failed to create inbox object for author_uuid [%s]. e [%s]', author_uuid, e)
                 ret = e
@@ -226,6 +229,14 @@ class NodeComm():
             ret = serializer.errors
         return ret, ret_status
     
+    def create_like_object(self, data):
+        logger.info('Creating like object')
+        post_node_id = data.get('object')
+        post_uuid = self.parse_object_uuid(post_node_id)
+        post = Post.objects.get(id=post_uuid)
+        likeobj = Like.objects.create(post=post, author=data.get('author', {}).get('url'), summary=data.get('summary'))
+        logger.info('Created like object: [%s]', likeobj)
+
     def send_external_object(self, inbox_url, data):
         ret = None
         ret_status = 500
@@ -252,7 +263,7 @@ class NodeComm():
         return ret, ret_status
 
     # Helper functions
-    def create_inbox_obj_data(self, author, request_data):
+    def create_inbox_obj_data(self, author, request_data, inbox_type):
         ret = None
         data = {
             'author': { 'url': author.get_node_id()}
@@ -261,7 +272,11 @@ class NodeComm():
         serializer = InboxSerializer(data=data)
         if serializer.is_valid():
             ret = serializer.data
-            ret['author'] = ExistingAuthorSerializer(Author.objects.get(id=author.id)).data
+            if inbox_type == 'follow':
+                ret['actor'] = ExistingAuthorSerializer(Author.objects.get(id=author.id)).data
+                ret['object'] = { 'url': ret.pop('object') }
+            else:
+                ret['author'] = ExistingAuthorSerializer(Author.objects.get(id=author.id)).data
         else:
             logger.info('Could not create inbox object e %s', serializer.errors)
         return ret

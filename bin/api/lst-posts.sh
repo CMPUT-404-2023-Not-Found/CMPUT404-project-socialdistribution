@@ -31,16 +31,16 @@ else
     list_post_url=`printf "${POST_API}/${page_query}" $author_uuid`
 fi
 
-rsp=`curl -s -H "$auth_hdr" "$list_post_url"`
-e=$?; if [ $e -ne 0 ]; then echo -n "ERR Could not GET to $list_post_url"; echo "$rsp"; exit $e; fi
-
-echo "$rsp" | grep -q "$rand"
+hdr_dump=`mktemp`
+rsp=`curl -s -D "$hdr_dump" -H "$auth_hdr" "$list_post_url"`
 e=$?
 if [ $e -ne 0 ]
 then
+    cat $hdr_dump >&2
     echo "ERR Failed GET request"
     echo "$rsp"
 else
+    cat $hdr_dump >&2
     echo "$rsp" | jq 2>/dev/null
     e=$?; if [ $e -ne 0 ]; then echo "$rsp"; exit $e; fi
 fi
